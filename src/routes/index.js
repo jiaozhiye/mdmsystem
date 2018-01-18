@@ -1,12 +1,39 @@
-/**
- * @Author: jzy
- * @Date: 2017/9/19
- * @Last Modified by: jzy
- * @Last Modified time: 2017/9/19
- */
+const Home = () => import('components/Home.vue')
+
 const routes = {
     routes: [
-        
+        {
+            path: '/home',
+            component: Home,
+            children: [
+                {
+                    path: '/home/dept',
+                    component: Home
+                },
+                {
+                    path: '/home/employ',
+                    component: Home
+                }
+            ]
+        },
+        {
+            path: '/tasks',
+            component: Home,
+            children: [
+                {
+                    path: '/tasks/my',
+                    component: Home
+                },
+                {
+                    path: '/tasks/follow',
+                    component: Home
+                }
+            ]
+        },
+        {
+            path: '*',
+            redirect: '/home'
+        }
     ]
 }
 
