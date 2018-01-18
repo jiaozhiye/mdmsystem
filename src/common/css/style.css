@@ -67,3 +67,14 @@ a:hover {
 .clearFix {
     zoom: 1;
 }
+.icon {
+    background-image: url(../img/icons.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/**
+ * app style
+ */
+ 

@@ -4,8 +4,21 @@
  * @Last Modified by: jzy
  * @Last Modified time: 2017/9/19
  */
-const actions = {
+import * as types from './types'
 
+const actions = {
+    createNavInfo ({commit}, params){
+        commit({
+            type: types.NAVINFO,
+            info: params
+        })
+    },
+    changeNavtActive ({commit}, params){
+        commit({
+            type: types.NAVACTIVE,
+            info: params
+        })
+    }
 }
 
 export default actions
