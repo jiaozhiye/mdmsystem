@@ -8,13 +8,13 @@ Vue.use(VeeValidate, {locale: 'zh_CN'})
 // 自定义validate
 const dictionary = {
     zh_CN: {
-       messages: {
-         required: field => field + '不能为空.'
-       },
-       attributes:{
-         username: '用户名',
-         password: '密码'
-       }
+      messages: {
+        required: field => field + '不能为空.'
+      },
+      attributes:{
+        username: '用户名',
+        password: '密码'
+      }
    }
 }
  

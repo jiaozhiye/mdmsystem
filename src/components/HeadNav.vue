@@ -89,10 +89,12 @@ export default {
             this.curIndex = this.list.findIndex(item => {
                 return item.link === '/' + _hash.split('/')[1]
             })
+            // vuex 设置导航菜单信息
             this.createNavInfo(this.list[this.curIndex].list)
             if (!(_hash.split('/').length >= 3 && _hash.split('/')[2] != '')){
                 _hash = this.list[this.curIndex].list[0].list[0].link
             }
+            // vuex 切换导航菜单选中状态
             this.changeNavtActive(_hash)
         },
         iterFunc(arr, str){
@@ -128,17 +130,16 @@ export default {
     width: 16px;
     margin-top: -3px;
 }
-.head-nav ul li a i.graph-home {
-    background-position: 0 0;
-}
-.head-nav ul li a i.graph-task {
-    background-position: -96px 0;
-}
 .head-nav ul li a span {
     margin-left: 6px;
     font-size: 16px;
     color: #fff;
 }
 
-
+.head-nav ul li a i.graph-home {
+    background-position: 0 0;
+}
+.head-nav ul li a i.graph-task {
+    background-position: -96px 0;
+}
 </style>

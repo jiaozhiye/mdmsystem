@@ -1,6 +1,7 @@
 <template>
-    <el-menu router :default-active="getNavActive" :default-openeds="openeds" 
-        class="el-menu-vertical-demo" 
+    <el-menu router class="el-menu-vertical-demo" 
+        :default-active="getNavActive" 
+        :default-openeds="openeds" 
         background-color="#273240" 
         text-color="#fff" 
         active-text-color="#ffd04b">
@@ -23,6 +24,7 @@ export default {
     name: 'Sidebar',
     data(){
         return {
+            menuItemList: [],
             openeds: []
         }
     },
@@ -32,6 +34,14 @@ export default {
         }
     },
     methods: {
+        toggleNavStyle(index){
+            for (let i = 0; i < this.menuItemList.length; i++){
+                this.menuItemList[i].classList.remove('is-active')
+                this.menuItemList[i].style.color = 'rgb(255, 255, 255)'
+            }
+            this.menuItemList[index].classList.add('is-active')
+            this.menuItemList[index].style.color = 'rgb(255, 208, 75)'
+        },
         getOpenedsKey(){
             for (let i = 0; i < this.getNavInfo.length; i++){
                 for (let k = 0; k < this.getNavInfo[i].list.length; k++){
@@ -41,6 +51,20 @@ export default {
                 }
             }
         }
+    },
+    mounted(){
+        this.menuItemList = this.$el.getElementsByClassName('el-menu-item')
+        const _this = this
+        for (let i = 0; i < this.menuItemList.length; i++){
+            this.menuItemList[i].index = i
+            this.menuItemList[i].onclick = function(ev){
+                ev.stopPropagation()
+                _this.toggleNavStyle(this.index)
+            }
+        }
+    },
+    updated(){
+        this.toggleNavStyle(0)
     },
     computed: {
         ...mapGetters([
