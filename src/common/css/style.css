@@ -74,7 +74,25 @@ a:hover {
     vertical-align: middle;
 }
 
+ /**
+ * scrollbar style
+ */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: rgba(0, 0, 0, .2);
+}
+::-webkit-scrollbar-thumb:vertical {
+    height: 6px;
+    background-color: rgba(0, 0, 0, .6);
+}
+::-webkit-scrollbar-thumb:horizontal {
+    width: 6px;
+    background-color: rgba(0, 0, 0, .6);
+}
+
 /**
  * app style
  */
- 
