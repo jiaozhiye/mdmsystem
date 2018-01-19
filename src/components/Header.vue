@@ -3,18 +3,18 @@
     <div class="app-head-logo fl">
         <router-link to="/">长春市面对面管理系统</router-link>
     </div>
-    <div class="fl">
+    <div class="app-top-nav fl">
         <HeadNav></HeadNav>
     </div>
-    <div class="fr">
+    <div class="user-setting fr">
         <DropdownMenu placement="right">
             <span slot="title">管理员</span>
             <div slot="list" class="user-setting-list">
                 <ul>
-                    <li @click.stop.native="jumpToPersonal">
+                    <li @click.stop.native="">
                         个人设置
                     </li>
-                    <li @click.stop.native="doLogout">
+                    <li @click.stop.native="">
                         安全退出
                     </li>
                 </ul>
@@ -50,6 +50,9 @@ export default {
     color: #fff;
 }
 
+.user-setting {
+    height: 50px;
+}
 .user-setting-list {
     padding: 6px 0;
 }

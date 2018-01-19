@@ -21,23 +21,25 @@ export default {
         return {
             curIndex: 0,
             list: [
-                {
+                { // 一级
                     title: '首页',
                     link: '/home',
                     iconName: 'home',
                     list: [
-                        {
+                        { // 二级
                             title: '系统门户',
                             link: '',
                             iconName: 'location',
                             list: [
-                                {
-                                    title: '部门',
-                                    link: '/home/dept'
+                                { // 三级
+                                    title: '部门管理',
+                                    link: '/home/dept',
+                                    iconName: ''
                                 },
                                 {
-                                    title: '员工',
-                                    link: '/home/employ'
+                                    title: '员工管理',
+                                    link: '/home/employ',
+                                    iconName: ''
                                 }
                             ]
                         }
@@ -49,17 +51,19 @@ export default {
                     iconName: 'task',
                     list: [
                         {
-                            title: '任务评论',
+                            title: '任务社区',
                             link: '',
-                            iconName: 'location',
+                            iconName: 'menu',
                             list: [
                                 {
                                     title: '我的任务',
-                                    link: '/tasks/my'
+                                    link: '/tasks/my',
+                                    iconName: ''
                                 },
                                 {
                                     title: '关注任务',
-                                    link: '/tasks/follow'
+                                    link: '/tasks/follow',
+                                    iconName: ''
                                 }
                             ]
                         }

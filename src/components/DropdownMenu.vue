@@ -39,9 +39,9 @@ export default {
 
 <style>
 .dropdown-menu {
-    display: inline-block;
     height: 50px;
     position: relative;
+    display: inline-block;
     z-index: 1;
 }
 .dropdown-link {

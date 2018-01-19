@@ -6,14 +6,14 @@
         text-color="#fff" 
         active-text-color="#ffd04b">
       <el-submenu v-for="(val, key) in getNavInfo" :index="val.index">
-        <template slot="title">
-          <i :class="'el-icon-' + val.iconName"></i>
-          <span>{{ val.title }}</span>
-        </template>
-        <el-menu-item v-for="(item, index) in val.list" :index="item.link">
-          {{ item.title }}
-        </el-menu-item>
-      </el-submenu>
+            <template slot="title">
+                <i :class="'el-icon-' + val.iconName"></i>
+                <span>{{ val.title }}</span>
+            </template>
+            <el-menu-item v-for="(item, index) in val.list" :index="item.link">
+                {{ item.title }}
+            </el-menu-item>
+        </el-submenu>
     </el-menu>
 </template>
 
