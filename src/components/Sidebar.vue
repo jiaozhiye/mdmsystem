@@ -1,11 +1,11 @@
 <template>
-    <el-menu router class="el-menu-vertical-demo" 
+    <el-menu router class="app-sidebar-menu" 
         :default-active="getNavActive.hash" 
         :default-openeds="[getNavActive.depth]" 
         background-color="#273240" 
         text-color="#fff" 
         active-text-color="#ffd04b">
-      <el-submenu v-for="(val, key) in getNavInfo" :index="val.depth">
+        <el-submenu v-for="(val, key) in getNavInfo" :index="val.depth">
             <template slot="title">
                 <i :class="'el-icon-' + val.iconName"></i>
                 <span>{{ val.title }}</span>
@@ -24,8 +24,7 @@ export default {
     name: 'Sidebar',
     data(){
         return {
-            menuItemList: [],
-            openeds: []
+            menuItemList: []
         }
     },
     methods: {
@@ -62,7 +61,7 @@ export default {
 </script>
 
 <style>
-.el-menu-vertical-demo {
+.app-sidebar-menu {
     border-right: none;
 }
 </style>
