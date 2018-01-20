@@ -19,7 +19,8 @@ export default {
     name: 'HeadNav',
     data(){
         return {
-            curIndex: 0,
+            curIndex: 0, // 当前一级分类索引
+            parentDepth: '', // 父级元素的深度
             list: [
                 { // 一级
                     title: '首页',
@@ -89,7 +90,8 @@ export default {
             'changeNavtActive'
         ]),
         setNavInfo(){
-            let _hash = getUrlHash()
+            let _hash = getUrlHash() == '/' ? '/home' : getUrlHash()
+            // 获取一级分类索引
             this.curIndex = this.list.findIndex(item => {
                 return item.link === '/' + _hash.split('/')[1]
             })
@@ -98,14 +100,30 @@ export default {
             if (!(_hash.split('/').length >= 3 && _hash.split('/')[2] != '')){
                 _hash = this.list[this.curIndex].list[0].list[0].link
             }
+            // 获取父元素的深度
+            this.findParDepth(this.list, _hash)
             // vuex 切换导航菜单选中状态
-            this.changeNavtActive(_hash)
+            this.changeNavtActive({
+                hash: _hash,
+                depth: this.parentDepth
+            })
         },
         iterFunc(arr, str){
-            for (var i = 0; i < arr.length; i++){
-                arr[i].index = str + i
+            for (let i = 0; i < arr.length; i++){
+                arr[i].depth = str + i
                 if (_.isArray(arr[i].list)){
-                    this.iterFunc(arr[i].list, arr[i].index + '-')
+                    this.iterFunc(arr[i].list, arr[i].depth + '-')
+                }
+            }
+        },
+        findParDepth(arr, str){
+            for (let i = 0; i < arr.length; i++){
+                if (arr[i].link === str){
+                    this.parentDepth = arr[i].depth.slice(0, -2)
+                } else {
+                    if (_.isArray(arr[i].list)){
+                        this.findParDepth(arr[i].list, str)
+                    }
                 }
             }
         }
