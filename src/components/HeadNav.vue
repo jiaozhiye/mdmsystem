@@ -109,7 +109,7 @@ export default {
             })
         },
         iterFunc(arr, str){
-            for (var i = 0; i < arr.length; i++){
+            for (let i = 0; i < arr.length; i++){
                 arr[i].depth = str + i
                 if (_.isArray(arr[i].list)){
                     this.iterFunc(arr[i].list, arr[i].depth + '-')
@@ -117,7 +117,7 @@ export default {
             }
         },
         findParDepth(arr, str){
-            for (var i = 0; i < arr.length; i++){
+            for (let i = 0; i < arr.length; i++){
                 if (arr[i].link === str){
                     this.parentDepth = arr[i].depth.slice(0, -2)
                 } else {
