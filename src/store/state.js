@@ -6,7 +6,7 @@
  */
 const state = {
     navInfo: [],
-    defaultActive: ''
+    defaultActive: {}
 }
 
 export default state

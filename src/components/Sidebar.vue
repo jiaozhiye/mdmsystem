@@ -1,11 +1,11 @@
 <template>
     <el-menu router class="el-menu-vertical-demo" 
-        :default-active="getNavActive" 
-        :default-openeds="openeds" 
+        :default-active="getNavActive.hash" 
+        :default-openeds="[getNavActive.depth]" 
         background-color="#273240" 
         text-color="#fff" 
         active-text-color="#ffd04b">
-      <el-submenu v-for="(val, key) in getNavInfo" :index="val.index">
+      <el-submenu v-for="(val, key) in getNavInfo" :index="val.depth">
             <template slot="title">
                 <i :class="'el-icon-' + val.iconName"></i>
                 <span>{{ val.title }}</span>
@@ -28,11 +28,6 @@ export default {
             openeds: []
         }
     },
-    watch: {
-        getNavActive(){
-            this.openeds.splice(0, 1, this.getOpenedsKey())
-        }
-    },
     methods: {
         toggleNavStyle(index){
             for (let i = 0; i < this.menuItemList.length; i++){
@@ -41,15 +36,6 @@ export default {
             }
             this.menuItemList[index].classList.add('is-active')
             this.menuItemList[index].style.color = 'rgb(255, 208, 75)'
-        },
-        getOpenedsKey(){
-            for (let i = 0; i < this.getNavInfo.length; i++){
-                for (let k = 0; k < this.getNavInfo[i].list.length; k++){
-                    if (this.getNavInfo[i].list[k].link === this.getNavActive){
-                        return this.getNavInfo[i].index
-                    }
-                }
-            }
         }
     },
     mounted(){
