@@ -1,38 +1,24 @@
 const Home = () => import('components/Home.vue')
+const DeptManager = () => import('components/DeptManager.vue')
+const EmployManager = () => import('components/EmployManager.vue')
 
 const routes = {
     routes: [
         {
-            path: '/home',
-            component: Home,
-            children: [
-                {
-                    path: '/home/dept',
-                    component: Home
-                },
-                {
-                    path: '/home/employ',
-                    component: Home
-                }
-            ]
+            path: '/sys_setting',
+            component: DeptManager
         },
         {
-            path: '/tasks',
-            component: Home,
-            children: [
-                {
-                    path: '/tasks/my',
-                    component: Home
-                },
-                {
-                    path: '/tasks/follow',
-                    component: Home
-                }
-            ]
+            path: '/sys_setting/dept_manger',
+            component: DeptManager
+        },
+        {
+            path: '/sys_setting/staff_manager',
+            component: EmployManager
         },
         {
             path: '*',
-            redirect: '/home'
+            redirect: '/sys_setting'
         }
     ]
 }

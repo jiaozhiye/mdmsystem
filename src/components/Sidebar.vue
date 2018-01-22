@@ -23,33 +23,7 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
     name: 'Sidebar',
     data(){
-        return {
-            menuItemList: []
-        }
-    },
-    methods: {
-        toggleNavStyle(index){
-            for (let i = 0; i < this.menuItemList.length; i++){
-                this.menuItemList[i].classList.remove('is-active')
-                this.menuItemList[i].style.color = 'rgb(255, 255, 255)'
-            }
-            this.menuItemList[index].classList.add('is-active')
-            this.menuItemList[index].style.color = 'rgb(255, 208, 75)'
-        }
-    },
-    mounted(){
-        this.menuItemList = this.$el.getElementsByClassName('el-menu-item')
-        const _this = this
-        for (let i = 0; i < this.menuItemList.length; i++){
-            this.menuItemList[i].index = i
-            this.menuItemList[i].onclick = function(ev){
-                ev.stopPropagation()
-                _this.toggleNavStyle(this.index)
-            }
-        }
-    },
-    updated(){
-        this.toggleNavStyle(0)
+        return {}
     },
     computed: {
         ...mapGetters([

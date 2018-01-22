@@ -21,65 +21,18 @@ export default {
         return {
             curIndex: 0, // 当前一级分类索引
             parentDepth: '', // 父级元素的深度
-            list: [
-                { // 一级
-                    title: '首页',
-                    link: '/home',
-                    iconName: 'home',
-                    list: [
-                        { // 二级
-                            title: '系统门户',
-                            link: '',
-                            iconName: 'location',
-                            list: [
-                                { // 三级
-                                    title: '部门管理',
-                                    link: '/home/dept',
-                                    iconName: ''
-                                },
-                                {
-                                    title: '员工管理',
-                                    link: '/home/employ',
-                                    iconName: ''
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    title: '任务',
-                    link: '/tasks',
-                    iconName: 'task',
-                    list: [
-                        {
-                            title: '任务社区',
-                            link: '',
-                            iconName: 'menu',
-                            list: [
-                                {
-                                    title: '我的任务',
-                                    link: '/tasks/my',
-                                    iconName: ''
-                                },
-                                {
-                                    title: '关注任务',
-                                    link: '/tasks/follow',
-                                    iconName: ''
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
+            list: []
         }
     },
     created(){
-        this.iterFunc(this.list, '')
-        this.setNavInfo()
+        this.getMenuList(() => {
+            this.iterFunc(this.list, '')
+            this.setNavInfo()
+        })
     },
     watch: {
         $route(to, from){
-            if (to.path.split('/').length < 3){
+            if (this.list.length > 0 && to.path.split('/').length < 3){
                 this.setNavInfo()
             }
         }
@@ -89,15 +42,28 @@ export default {
             'createNavInfo',
             'changeNavtActive'
         ]),
+        getMenuList(callback){
+            this.$http.get('/mgr/menu', {
+                params: {}
+            })
+            .then(response => {
+                if (response.data.code == 1){
+                    this.list = response.data.list
+                    callback && callback()
+                } else {
+                    console.error(response.data.message)
+                }
+            })
+        },
         setNavInfo(){
-            let _hash = getUrlHash() == '/' ? '/home' : getUrlHash()
+            let _hash = getUrlHash() == '/' ? '/sys_setting' : getUrlHash()
             // 获取一级分类索引
             this.curIndex = this.list.findIndex(item => {
                 return item.link === '/' + _hash.split('/')[1]
             })
             // vuex 设置导航菜单信息
             this.createNavInfo(this.list[this.curIndex].list)
-            if (!(_hash.split('/').length >= 3 && _hash.split('/')[2] != '')){
+            if (_hash.split('/').length < 3 || _hash.split('/')[2] == ''){
                 _hash = this.list[this.curIndex].list[0].list[0].link
             }
             // 获取父元素的深度
@@ -158,10 +124,7 @@ export default {
     color: #fff;
 }
 
-.head-nav ul li a i.graph-home {
+.head-nav ul li a i.graph-sys_setting {
     background-position: 0 0;
-}
-.head-nav ul li a i.graph-task {
-    background-position: -96px 0;
 }
 </style>

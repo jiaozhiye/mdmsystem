@@ -13,7 +13,11 @@ const dictionary = {
       },
       attributes:{
         username: '用户名',
-        password: '密码'
+        password: '密码',
+        deptname: '部门名称',
+        account: '帐号',
+        phone: '手机号',
+        email: '邮箱'
       }
    }
 }

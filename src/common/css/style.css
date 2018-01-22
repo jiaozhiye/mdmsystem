@@ -54,6 +54,12 @@ a:hover {
 .fr {
     float: right;
 }
+.tc {
+    text-align: center;
+}
+.tr {
+    text-align: right;
+}
 .clear {
     clear: both;
 }
@@ -96,3 +102,85 @@ a:hover {
 /**
  * app style
  */
+.appManager-wrapper {}
+.appManager-top {
+    height: 40px;
+}
+
+.appManager-list {
+    margin-top: 20px;
+}
+.appManager-list .el-table__body-wrapper {
+    overflow-x: hidden;
+}
+.appManager-list .el-table__body td {
+    padding: 5px 0;
+}
+
+/**
+ * form box style
+ */
+ .app-form-panel {
+    padding: 30px 40px 20px 20px;
+}
+.app-form-item {
+  margin-bottom: 15px;
+  clear: both;
+}
+.app-form-label {
+  float: left;
+  display: block;
+  padding: 10px 15px;
+  width: 80px;
+  font-weight: 400;
+  text-align: right;
+  line-height: 20px;
+  position: relative;
+}
+.app-form-label > i {
+    color: #ff4545;
+}
+.app-input-block {
+  margin-left: 110px;
+  min-height: 40px;
+  line-height: 40px;
+  position: relative;
+}
+.form-group-apart {
+    font-weight: 700;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.form-group-apart .icon {
+    color: #409eff;
+    margin-right: 5px;
+    font-size: 20px;
+    vertical-align: middle;
+}
+.app-input-block .el-tree {
+    background: none;
+}
+.app-input-block .el-radio + .el-radio {
+    margin-left: 12px;
+}
+
+/**
+ * paginatio style
+ */
+#app .el-pagination {
+    text-align: center;
+    padding-top: 20px;
+}
+
+/**
+ * form 校验提醒
+ */
+ #app .formDanger > input {
+    border-color: #fa5555!important;
+}
+#app .prompt-title {
+    color: #fa5555;
+    display: inline-block;
+}
