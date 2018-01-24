@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import {getDeptInfo, getDeptRecord, updateDeptRecord} from 'api'
+
 export default {
     name: 'ModDeptPanel',
     props: {
@@ -48,70 +50,60 @@ export default {
         this.getDeptList()
     },
     methods: {
-        getItemInfo(){
-            const _this = this
-            this.$http.get('/mgr/dept/showById', {
-                params: {
-                    id: _this.itemId
-                }
-            })
-            .then(function (response){
-                // console.log(response.data)
-                
-                if (response.data.code != 1){
-                    return _this.$message({
+        async getItemInfo(){
+            try {
+                const response = await getDeptRecord({id: this.itemId})
+                if (response.data.code == 1){
+                    this.superdeptId = response.data.data.parent_id == '0' ? '' : response.data.data.parent_id
+                    this.dept = response.data.data.name
+                    this.deptdesc = response.data.data.descr || ''
+                } else {
+                    this.$message({
                         type: 'error',
-                        message: '部门数据有误!'
+                        message: response.data.message
                     })
                 }
-                
-                _this.superdeptId = response.data.data.parent_id == '0' ? '' : response.data.data.parent_id
-                _this.dept = response.data.data.name
-                _this.deptdesc = response.data.data.descr || ''
-            })
+            } catch (err){
+                console.error(err)
+            }
         },
-        getDeptList(){
-            const _this = this
-            this.$http.get('/mgr/dept/tree', {
-                params: {}
-            })
-            .then(function (response){
-                _this.superdeptList = response.data
-            })
+        async getDeptList(){
+            try {
+                const response = await getDeptInfo()
+                this.superdeptList = response.data
+            } catch (err){
+                console.error(err)
+            }
         },
         submitHandle(){
-            const _this = this
-            
-            this.updateDeptInfo(function(){
-                _this.$emit('reloadEvent', 'reload')
-                _this.closePanelHandle()
+            this.updateDeptInfo(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
             })
         },
-        updateDeptInfo(callback){
-            const _this = this
-            
-            this.$http.get('/mgr/dept/updateById', {
-                params: {
-                    id: _this.itemId,
-                    parent_id: _this.superdeptId,
-                    name: _this.dept,
-                    descr: _this.deptdesc
-                }
-            })
-            .then(function (response){
+        async updateDeptInfo(callback){
+            try {
+                const response = await updateDeptRecord({
+                    id: this.itemId,
+                    parent_id: this.superdeptId,
+                    name: this.dept,
+                    descr: this.deptdesc
+                })
                 if (response.data.id){
-                    _this.$message({
+                    this.$message({
                         type: 'success',
                         message: '修改部门成功!'
                     })
                     callback && callback()
                 } else {
-                    _this.$message({
+                    this.$message({
                         type: 'error',
                         message: response.data.message
                     })
                 }
-            })
+            } catch (err){
+                console.error(err)
+            }
         },
         closePanelHandle(){
             this.params.isPlay = false

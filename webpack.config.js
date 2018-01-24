@@ -26,8 +26,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /(node_modules|bower_components)/,
         options: {
-          presets: ['es2015'],
-          plugins: ['transform-object-rest-spread']
+          presets: ['es2015', 'stage-0']
         }
       },
       {
@@ -51,9 +50,10 @@ module.exports = {
       },
 	    {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          'file-loader'
-        ]
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
       }
     ]
   },
@@ -61,13 +61,15 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       'components': path.resolve(__dirname, './src/components'),
-	  'common': path.resolve(__dirname, './src/common'),
+	    'common': path.resolve(__dirname, './src/common'),
       'assets': path.resolve(__dirname, './src/assets'),
-      'store': path.resolve(__dirname, './src/store')
-    }
+      'store': path.resolve(__dirname, './src/store'),
+      'api': path.resolve(__dirname, './src/api')
+    },
+    extensions: ['.js', '.vue', '.json']
   },
   devServer: {
-    // host: '192.168.1.102',
+    host: '192.168.1.164',
     historyApiFallback: true,
     noInfo: true
   },
@@ -96,8 +98,8 @@ if (process.env.NODE_ENV === 'production'){
       minimize: true
     }),
 	  new CopyWebpackPlugin([{
-      from: path.join(__dirname, '/src/assets/img'),
-      to: path.join(__dirname, '/dist')
+      from: path.join(__dirname, 'src/assets'),
+      to: path.join(__dirname, 'dist')
     }])
   ])
 }

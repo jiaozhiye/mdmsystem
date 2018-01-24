@@ -1,15 +1,13 @@
 <template>
 <div class="appManager-wrapper">
     <div class="appManager-top">
-        <el-button class="fl" @click.stop="addDeptHandle">新增部门</el-button>
-        <el-input class="dept-search fr" placeholder="请输入部门名称" prefix-icon="el-icon-search"
-            v-model="searchVal" @keyup.enter.native="searchHandle" clearable>
-        </el-input>
+        <el-button class="fl" @click.stop="addDataHandle">新增职务</el-button>
     </div>
     <div class="appManager-list">
         <el-table :data="list" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="name" label="部门名称"></el-table-column>
-            <el-table-column prop="parent_name" label="上级部门"></el-table-column>
+            <el-table-column prop="name" label="职务名称" width="200"></el-table-column>
+            <el-table-column prop="staffs_count" label="人数" width="100"></el-table-column>
+            <el-table-column prop="staffs" label="人员"></el-table-column>
             <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
                     <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
@@ -22,55 +20,54 @@
             </el-table-column>
         </el-table>
     </div>
-    <ExtractPanel :params="addDeptExtract">
-        <span slot="title">新增部门</span>
-        <AddDeptPanel slot="panel" :params="addDeptExtract" @reloadEvent="reloadGetData"></AddDeptPanel>
+    <ExtractPanel :params="addPowerExtract">
+        <span slot="title">新增职务</span>
+        <AddPowerPanel slot="panel" :params="addPowerExtract" @reloadEvent="reloadGetData"></AddPowerPanel>
     </ExtractPanel>
-    <ExtractPanel :params="modDeptExtract">
-        <span slot="title">修改部门信息</span>
-        <ModDeptPanel slot="panel" :params="modDeptExtract" @reloadEvent="reloadGetData"></ModDeptPanel>
+    <ExtractPanel :params="modPowerExtract">
+        <span slot="title">修改职务信息</span>
+        <ModPowerPanel slot="panel" :params="modPowerExtract" @reloadEvent="reloadGetData"></ModPowerPanel>
     </ExtractPanel>
 </div>
 </template>
 
 <script>
 import ExtractPanel from './ExtractPanel.vue'
-import AddDeptPanel from './AddDeptPanel.vue'
-import ModDeptPanel from './ModDeptPanel.vue'
+import AddPowerPanel from './AddPowerPanel.vue'
+import ModPowerPanel from './ModPowerPanel.vue'
 
-import {getDeptInfo, delDeptRecord, searchDeptInfo} from 'api'
+import {getPowerInfo, delPowerRecord} from 'api'
 
 export default {
-    name: 'DeptManager',
+    name: 'PowerManager',
     data(){
         return {
             list: [],
-            searchVal: '',
             loading: false,
-            addDeptExtract: {
+            addPowerExtract: {
                 isPlay: false
             },
-            modDeptExtract: {
+            modPowerExtract: {
                 isPlay: false
             }
         }
     },
     methods: {
-        addDeptHandle(){
-            this.addDeptExtract.isPlay = true
+        addDataHandle(){
+            this.addPowerExtract.isPlay = true
         },
         modItemHandle(_id){
-            this.modDeptExtract.isPlay = true
-            this.modDeptExtract.itemId = _id
+            this.modPowerExtract.isPlay = true
+            this.modPowerExtract.itemId = _id
         },
         delItemHandle(_id){
-            this.$confirm('此操作将永久删除该部门, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
                 try {
-                    const response = await delDeptRecord({id: _id})
+                    const response = await delPowerRecord({id: _id})
                     if (response.data.code == 1){
                         this.removeItemById(_id)
                         this.$message({
@@ -83,38 +80,26 @@ export default {
                             message: response.data.message
                         })
                     }
-                } catch (err){
-                    console.error(err)
+                } catch (error){
+                    console.error(error)
                 }
             }).catch(() => {})
         },
-        async getDeptList(){
-            const _this = this
+        async getPowerList(){
             this.loading = !0
             try {
-                const response = await getDeptInfo()
+                const response = await getPowerInfo()
                 // console.log(response.data)
                 this.loading = !1
-                this.list = response.data
-            } catch (err){
+                this.list = response.data.list
+            } catch (error){
                 this.loading = !1
-                console.error(err)
+                console.error(error)
             }
         },
         reloadGetData(res){
             if (res == 'reload'){
-                this.getDeptList()
-            }
-        },
-        async searchHandle(){
-            if (this.searchVal == ''){
-                return this.getDeptList()
-            }
-            try {
-                const response = await searchDeptInfo({name: this.searchVal})
-                this.list = response.data
-            } catch (error){
-                console.error(error)
+                this.getPowerList()
             }
         },
         removeItemById(_id){
@@ -127,18 +112,25 @@ export default {
         }
     },
     created(){
-        this.getDeptList()
+        this.getPowerList()
     },
     components: {
         ExtractPanel,
-        AddDeptPanel,
-        ModDeptPanel
+        AddPowerPanel,
+        ModPowerPanel
     }
 }
 </script>
 
 <style>
-.dept-search {
-    width: 260px;
+.power-setting {
+    padding-top: 0px;
+    line-height: 24px;
+}
+.power-setting .icon {
+    font-size: 16px;
+    color: #409eff;
+    position: relative;
+    top: -2px;
 }
 </style>

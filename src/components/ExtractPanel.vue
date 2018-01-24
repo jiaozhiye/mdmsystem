@@ -50,8 +50,9 @@ export default {
     mounted(){
         document.addEventListener('click', (ev) => {
             ev.stopPropagation()
-            ev.preventDefault()
-            this.params.isPlay = false
+            if (this.params.isPlay){
+                this.params.isPlay = false
+            }
         }, false)
     }
 }

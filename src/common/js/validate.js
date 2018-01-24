@@ -17,7 +17,8 @@ const dictionary = {
         deptname: '部门名称',
         account: '帐号',
         phone: '手机号',
-        email: '邮箱'
+        email: '邮箱',
+        postname: '职务名称'
       }
    }
 }

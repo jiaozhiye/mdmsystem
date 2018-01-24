@@ -66,15 +66,16 @@
 </template>
 
 <script>
-import {getJobInfo, getDeptList, saveEmployRecord} from 'api'
+import {getJobInfo, getDeptList, getEmployRecord, updateEmployRecord} from 'api'
 
 export default {
-    name: 'AddEmployPanel',
+    name: 'ModStorePanel',
     props: {
         params: Object
     },
     data(){
         return {
+            itemId: this.params.itemId,
             deptList: [],
             jobList: [],
             form: {
@@ -90,10 +91,33 @@ export default {
         }
     },
     created(){
+        this.getItemInfo()
         this.getDeptList()
         this.getJobList()
     },
     methods: {
+        async getItemInfo(){
+            try {
+                const response = await getEmployRecord({id: this.itemId})
+                if (response.data.code == 1){
+                    this.form.account = response.data.data.username
+                    this.form.password = response.data.data.password || ''
+                    this.form.name = response.data.data.name
+                    this.form.sex = response.data.data.gender.toString() || '1'
+                    this.form.phone = response.data.data.phone || ''
+                    this.form.email = response.data.data.email || ''
+                    this.form.deptId = response.data.data.dept || ''
+                    this.form.jobId = response.data.data.job.toString() || ''
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.message
+                    })
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
         async getJobList(){
             try {
                 const response = await getJobInfo()
@@ -111,20 +135,15 @@ export default {
             }
         },
         submitHandle(){
-            this.insertDeptInfo(() => {
+            this.updateDeptInfo(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        async insertDeptInfo(callback){
-            if (this.form.account == '' || this.form.name == ''){
-                return this.$message({
-                    message: '请正确填写员工信息再提交！',
-                    type: 'warning'
-                })
-            }
+        async updateDeptInfo(callback){
             try {
-                const response = await saveEmployRecord({
+                const response = await updateEmployRecord({
+                    id: this.itemId,
                     username: this.form.account,
                     password: this.form.password,
                     name: this.form.name,
@@ -137,7 +156,7 @@ export default {
                 if (response.data.id){
                     this.$message({
                         type: 'success',
-                        message: '添加员工成功!'
+                        message: '修改员工成功!'
                     })
                     callback && callback()
                 } else {

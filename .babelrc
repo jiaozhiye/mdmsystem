@@ -1,9 +1,15 @@
 {
   "presets": [
-    ["env", { "modules": false }]
+    ["env", {"modules": false}]
   ],
   "plugins": [
-      "syntax-dynamic-import",
-      "transform-object-rest-spread"
-    ]
+    "syntax-dynamic-import",
+    "transform-object-rest-spread",
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }]
+  ]
 }

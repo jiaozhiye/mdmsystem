@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import {getDeptInfo, saveDeptInfo} from 'api'
+
 export default {
     name: 'AddDeptPanel',
     props: {
@@ -46,53 +48,48 @@ export default {
         this.getDeptList()
     },
     methods: {
-        getDeptList(){
-            const _this = this
-            this.$http.get('/mgr/dept/tree', {
-                params: {}
-            })
-            .then(function (response){
-                _this.superdeptList = response.data
+        async getDeptList(){
+            try {
+                const response = await getDeptInfo()
+                this.superdeptList = response.data
+            } catch (err){
+                console.error(err)
+            }
+        },
+        submitHandle(){  
+            this.insertDeptInfo(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
             })
         },
-        submitHandle(){
-            const _this = this   
-            this.insertDeptInfo(function(){
-                _this.$emit('reloadEvent', 'reload')
-                _this.closePanelHandle()
-            })
-        },
-        insertDeptInfo(callback){
-            const _this = this
-
+        async insertDeptInfo(callback){
             if (this.superdeptId == '' || this.dept == ''){
                 return this.$message({
                     message: '请正确填写部门信息再提交！',
                     type: 'warning'
                 })
             }
-            
-            this.$http.get('/mgr/dept/save', {
-                params: {
-                    parent_id: _this.superdeptId,
-                    name: _this.dept,
-                    descr: _this.deptdesc
-                }
-            })
-            .then(function (response){
+            try {
+                const response = await saveDeptInfo({
+                    parent_id: this.superdeptId,
+                    name: this.dept,
+                    descr: this.deptdesc
+                })
                 if (response.data.id){
-                    _this.$message({
+                    this.$message({
                         type: 'success',
                         message: '添加部门成功!'
                     })
                     callback && callback()
                 } else {
-                    _this.$message({
+                    this.$message({
                         type: 'error',
                         message: response.data.message
                     })
                 }
-            })
+            } catch (err){
+                console.error(err)
+            }
         },
         closePanelHandle(){
             this.params.isPlay = false

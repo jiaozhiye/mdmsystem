@@ -19,17 +19,54 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import {getUrlHash} from 'common/js/tools'
 
 export default {
     name: 'Sidebar',
     data(){
-        return {}
+        return {
+            menuItemList: []
+        }
     },
     computed: {
         ...mapGetters([
             'getNavInfo',
             'getNavActive'
         ])
+    },
+    watch: {
+        getNavActive (newVal, oldVal){
+            if (getUrlHash().split('/').length < 3){
+                setTimeout(() => {
+                    this.getDomList()
+                    this.bindEvent(this.menuItemList)
+                    this.toggleNavStyle(this.menuItemList, 0)
+                }, 0)
+            }
+        }
+    },
+    methods: {
+        getDomList(){
+            this.menuItemList = this.$el.getElementsByClassName('el-menu-item')
+        },
+        toggleNavStyle(arr, index){
+            for (let i = 0; i < arr.length; i++){
+                arr[i].classList.remove('is-active')
+                arr[i].style.color = 'rgb(255, 255, 255)'
+            }
+            arr[index].classList.add('is-active')
+            arr[index].style.color = 'rgb(255, 208, 75)'
+        },
+        bindEvent(arr){
+            const _this = this
+            for (let i = 0; i < arr.length; i++){
+                arr[i].index = i
+                arr[i].onclick = function(ev){
+                    ev.stopPropagation()
+                    _this.toggleNavStyle(arr, this.index)
+                }
+            }
+        }
     }
 }
 </script>
