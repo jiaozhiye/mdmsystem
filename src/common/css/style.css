@@ -9,6 +9,13 @@ body {
     position: relative;
     word-break: break-all;
 }
+button, input, optgroup, option, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    outline: 0;
+}
 .w1200 {
     width: 1200px;
     margin: 0 auto;

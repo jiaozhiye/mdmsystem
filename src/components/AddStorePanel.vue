@@ -69,7 +69,7 @@
 import {getJobInfo, getDeptList, saveEmployRecord} from 'api'
 
 export default {
-    name: 'AddEmployPanel',
+    name: 'AddStorePanel',
     props: {
         params: Object
     },

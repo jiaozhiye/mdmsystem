@@ -14,6 +14,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import {getUrlHash} from 'common/js/tools'
+import {getMenuInfo} from 'api'
 
 export default {
     name: 'HeadNav',
@@ -42,18 +43,19 @@ export default {
             'createNavInfo',
             'changeNavtActive'
         ]),
-        getMenuList(callback){
-            this.$http.get('/mgr/menu', {
-                params: {}
-            })
-            .then(response => {
+        async getMenuList(callback){
+            try {
+                const response = await getMenuInfo()
+                // console.log(response)
                 if (response.data.code == 1){
                     this.list = response.data.list
                     callback && callback()
                 } else {
                     console.error(response.data.message)
                 }
-            })
+            } catch (err){
+                console.error(err)
+            }
         },
         setNavInfo(){
             let _hash = getUrlHash() == '/' ? '/sys_setting' : getUrlHash()
@@ -68,6 +70,7 @@ export default {
             }
             // 获取父元素的深度
             this.findParDepth(this.list, _hash)
+            // console.log(_hash, this.parentDepth)
             // vuex 切换导航菜单选中状态
             this.changeNavtActive({
                 hash: _hash,

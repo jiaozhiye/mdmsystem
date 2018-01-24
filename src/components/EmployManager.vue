@@ -34,8 +34,12 @@
             <el-table-column prop="phone" label="手机"></el-table-column>
             <el-table-column label="操作" width="250">
                 <template slot-scope="scope">
-                    <el-button @click.stop="modItemHandle(scope.row.id)" type="text">修改</el-button>
-                    <el-button @click.stop="delItemHandle(scope.row.id)" type="text">离职</el-button>
+                    <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
+                        <i class="el-icon-edit"></i> 修改
+                    </el-button>
+                    <el-button @click.stop="delItemHandle(scope.row.id)" type="text">
+                        <i class="el-icon-delete"></i> 离职
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -58,6 +62,8 @@
 import ExtractPanel from './ExtractPanel.vue'
 import AddEmployPanel from './AddEmployPanel.vue'
 import ModEmployPanel from './ModEmployPanel.vue'
+
+import {getJobInfo, getDeptList, getEmployInfo, delEmployRecord} from 'api'
 
 export default {
     name: 'EmployManager',
@@ -89,75 +95,68 @@ export default {
             this.modEmployExtract.isPlay = !0
             this.modEmployExtract.itemId = _id
         },
-        getJobList(){
-            const _this = this
-            this.$http.get('/mgr/job/showJobs', {
-                params: {}
-            })
-            .then(function (response){
-                _this.jobList = response.data
-            })
+        async getJobList(){
+            try {
+                const response = await getJobInfo()
+                this.jobList = response.data
+            } catch (error){
+                console.error(error)
+            }
         },
-        getDeptList(){
-            const _this = this
-            this.$http.get('/mgr/dept/toWebSearch', {
-                params: {}
-            })
-            .then(function (response){
-                _this.deptList = response.data
-            })
+        async getDeptList(){
+            try {
+                const response = await getDeptList()
+                this.deptList = response.data
+            } catch (error){
+                console.error(error)
+            }
         },
         delItemHandle(_id){
-            const _this = this
             this.$confirm('确认此员工离职吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                _this.$http.get('/mgr/staff/updateById', {
-                    params: {
-                        id: _id
-                    }
-                }).then(function (response){
+            }).then(async () => {
+                try {
+                    const response = await delEmployRecord({id: _id})
                     if (response.data.code == 1){
-                        _this.removeItemById(_id)
-                        _this.$message({
+                        this.removeItemById(_id)
+                        this.$message({
                             type: 'success',
                             message: '操作成功!'
                         })
                     } else {
-                        _this.$message({
+                        this.$message({
                             type: 'error',
                             message: response.data.message
                         })
                     }
-                })
+                } catch (error){
+                    console.error(error)
+                }
             }).catch(() => {})
         },
-        getEmployList(curPage, callback){
-            const _this = this
+        async getEmployList(curPage, callback){
             if (typeof curPage == 'undefined'){
                 curPage = this.curPageIndex
             }
             this.loading = !0
-            this.$http.get('/mgr/staff/query', {
-                params: {
+            try {
+                const response = await getEmployInfo({
                     pageNum: curPage,
                     pageSize: 10,
-                    keyword: _this.search.searchVal,
-                    dept: _this.search.deptId,
-                    job: _this.search.jobId
-                }
-            })
-            .then(function (response){
-                _this.loading = !1
-                _this.list = response.data.list
-                _this.list.total = response.data.totalRow
+                    keyword: this.search.searchVal,
+                    dept: this.search.deptId,
+                    job: this.search.jobId
+                })
+                this.loading = !1
+                this.list = response.data.list
+                this.list.total = response.data.totalRow
                 callback && callback()
-            })
-            .catch(function (error){
-                _this.loading = !1
-            })
+            } catch (error){
+                this.loading = !1
+                console.error(error)
+            }
         },
         handleCurrentChange(index){
             this.curPageIndex = index

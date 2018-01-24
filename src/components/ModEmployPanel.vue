@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import {getJobInfo, getDeptList, getEmployRecord, updateEmployRecord} from 'api'
+
 export default {
     name: 'ModEmployPanel',
     props: {
@@ -94,91 +96,78 @@ export default {
         this.getJobList()
     },
     methods: {
-        getItemInfo(){
-            const _this = this
-            this.$http.get('/mgr/staff/showById', {
-                params: {
-                    id: _this.itemId
-                }
-            })
-            .then(function (response){
-                console.log(response.data)
-
-                if (response.data.code != 1){
-                    return _this.$message({
+        async getItemInfo(){
+            try {
+                const response = await getEmployRecord({id: this.itemId})
+                if (response.data.code == 1){
+                    this.form.account = response.data.data.username
+                    this.form.password = response.data.data.password || ''
+                    this.form.name = response.data.data.name
+                    this.form.sex = response.data.data.gender.toString() || '1'
+                    this.form.phone = response.data.data.phone || ''
+                    this.form.email = response.data.data.email || ''
+                    this.form.deptId = response.data.data.dept || ''
+                    this.form.jobId = response.data.data.job.toString() || ''
+                } else {
+                    this.$message({
                         type: 'error',
-                        message: '员工数据有误!'
+                        message: response.data.message
                     })
                 }
-
-                _this.form.account = response.data.data.username
-                _this.form.password = response.data.data.password || ''
-                _this.form.name = response.data.data.name
-                _this.form.sex = response.data.data.gender.toString() || '1'
-                _this.form.phone = response.data.data.phone || ''
-                _this.form.email = response.data.data.email || ''
-                _this.form.deptId = response.data.data.dept || ''
-                _this.form.jobId = response.data.data.job.toString() || ''
-            })
+            } catch (error){
+                console.error(error)
+            }
         },
-        getJobList(){
-            const _this = this
-            this.$http.get('/mgr/job/showJobs', {
-                params: {}
-            })
-            .then(function (response){
-                _this.jobList = response.data
-            })
+        async getJobList(){
+            try {
+                const response = await getJobInfo()
+                this.jobList = response.data
+            } catch (error){
+                console.error(error)
+            }
         },
-        getDeptList(){
-            const _this = this
-            this.$http.get('/mgr/dept/tree', {
-                params: {
-                    dbObj: 'dept',
-                    order: 'sort asc'
-                }
-            })
-            .then(function (response){
-                _this.deptList = response.data
-            })
+        async getDeptList(){
+            try {
+                const response = await getDeptList()
+                this.deptList = response.data
+            } catch (error){
+                console.error(error)
+            }
         },
         submitHandle(){
-            const _this = this
-            this.updateDeptInfo(function(){
-                _this.$emit('reloadEvent', 'reload')
-                _this.closePanelHandle()
+            this.updateDeptInfo(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
             })
         },
-        updateDeptInfo(callback){
-            const _this = this
-            
-            this.$http.get('/mgr/job/updateById', {
-                params: {
-                    id: _this.itemId,
-                    username: _this.form.account,
-                    password: _this.form.password,
-                    name: _this.form.name,
-                    gender: _this.form.sex,
-                    phone: _this.form.phone,
-                    email: _this.form.email,
-                    dept: _this.form.deptId,
-                    job: _this.form.jobId
-                }
-            })
-            .then(function (response){
+        async updateDeptInfo(callback){
+            try {
+                const response = await updateEmployRecord({
+                    id: this.itemId,
+                    username: this.form.account,
+                    password: this.form.password,
+                    name: this.form.name,
+                    gender: this.form.sex,
+                    phone: this.form.phone,
+                    email: this.form.email,
+                    dept: this.form.deptId,
+                    job: this.form.jobId
+                })
                 if (response.data.id){
-                    _this.$message({
+                    this.$message({
                         type: 'success',
                         message: '修改员工成功!'
                     })
                     callback && callback()
                 } else {
-                    _this.$message({
+                    this.$message({
                         type: 'error',
                         message: response.data.message
                     })
                 }
-            })
+            } catch (error){
+                console.error(error)
+            }
         },
         closePanelHandle(){
             this.params.isPlay = false
