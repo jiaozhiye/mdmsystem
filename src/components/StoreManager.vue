@@ -109,8 +109,12 @@ export default {
                 })
                 // console.log(response.data)
                 this.loading = !1
-                this.list = response.data.data.list
-                this.list.total = response.data.data.totalRow
+                if (response.data.code == 1){
+                    this.list = response.data.data.list
+                    this.list.total = response.data.data.totalRow
+                } else {
+                    this.list.total = 0
+                }
                 callback && callback()
             } catch (error){
                 this.loading = !1

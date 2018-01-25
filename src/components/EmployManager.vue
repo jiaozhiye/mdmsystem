@@ -149,6 +149,7 @@ export default {
                     dept: this.search.deptId,
                     job: this.search.jobId
                 })
+                // console.log(response.data)
                 this.loading = !1
                 this.list = response.data.list
                 this.list.total = response.data.totalRow

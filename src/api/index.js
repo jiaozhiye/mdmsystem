@@ -86,7 +86,14 @@ export const getStoreInfo = params => instance.get('/mgr/store/query', {params})
 // 删除门店记录
 export const delStoreRecord = params => instance.get('/mgr/store/stop', {params})
 
+// 保存门店信息
+export const saveStoreRecord = params => instance.post('/mgr/store/add', params)
 
+// 根据ID获取门店信息
+export const getStoreRecord = params => instance.get('/mgr/store/showById', {params})
+
+// 更新门店信息
+export const updateStoreRecord = params => instance.post('/mgr/store/updateById', params)
 
 
 

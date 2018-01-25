@@ -18,7 +18,8 @@ const dictionary = {
         account: '帐号',
         phone: '手机号',
         email: '邮箱',
-        postname: '职务名称'
+        postname: '职务名称',
+        storename: '门店名称'
       }
    }
 }
