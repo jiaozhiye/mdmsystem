@@ -46,7 +46,7 @@ export default {
         async getMenuList(callback){
             try {
                 const response = await getMenuInfo()
-                // console.log(response)
+                // console.log(response.data.list)
                 if (response.data.code == 1){
                     this.list = response.data.list
                     callback && callback()

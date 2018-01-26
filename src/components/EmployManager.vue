@@ -150,14 +150,13 @@ export default {
                     job: this.search.jobId
                 })
                 // console.log(response.data)
-                this.loading = !1
                 this.list = response.data.list
                 this.list.total = response.data.totalRow
                 callback && callback()
             } catch (error){
-                this.loading = !1
                 console.error(error)
             }
+            this.loading = !1
         },
         handleCurrentChange(index){
             this.curPageIndex = index

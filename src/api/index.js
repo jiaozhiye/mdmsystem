@@ -95,6 +95,39 @@ export const getStoreRecord = params => instance.get('/mgr/store/showById', {par
 // 更新门店信息
 export const updateStoreRecord = params => instance.post('/mgr/store/updateById', params)
 
+// 获取商品类别信息
+export const getGdtypeInfo = params => instance.get('/mgr/goodsType/query', {params})
+
+// 删除商品类别信息
+export const delGdtypeRecord = params => instance.get('/mgr/goodsType/deleteById', {params})
+
+// 获取商品类别一级分类
+export const getFirGdtypeInfo = () => instance.get('/mgr/goodsType/getFirstType')
+
+// 保存商品分类信息
+export const saveGdtypeInfo = params => instance.post('/mgr/goodsType/add', params)
+
+// 根据ID获取商品分类信息
+export const getGdtypeRecord = params => instance.get('/mgr/goodsType/showById', {params})
+
+// 更新商品分类信息
+export const updateGdtypeRecord = params => instance.post('/mgr/goodsType/updateById', params)
+
+// 更新商品分类排序
+export const updateGdtypeSort = params => instance.post('/mgr/goodsType/sort', params)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

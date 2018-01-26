@@ -19,7 +19,9 @@ const dictionary = {
         phone: '手机号',
         email: '邮箱',
         postname: '职务名称',
-        storename: '门店名称'
+        storename: '门店名称',
+        gdtypename: '商品分类名称',
+        gdtypecode: '商品分类编码'
       }
    }
 }
