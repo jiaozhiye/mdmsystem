@@ -108,7 +108,6 @@ export default {
                     keyword: this.search.searchVal
                 })
                 // console.log(response.data)
-                this.loading = !1
                 if (response.data.code == 1){
                     this.list = response.data.data.list
                     this.list.total = response.data.data.totalRow
@@ -117,9 +116,9 @@ export default {
                 }
                 callback && callback()
             } catch (error){
-                this.loading = !1
                 console.error(error)
             }
+            this.loading = !1
         },
         handleCurrentChange(index){
             this.curPageIndex = index

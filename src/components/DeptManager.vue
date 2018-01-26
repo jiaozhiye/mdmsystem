@@ -94,12 +94,12 @@ export default {
             try {
                 const response = await getDeptInfo()
                 // console.log(response.data)
-                this.loading = !1
                 this.list = response.data
             } catch (err){
                 this.loading = !1
                 console.error(err)
             }
+            this.loading = !1
         },
         reloadGetData(res){
             if (res == 'reload'){

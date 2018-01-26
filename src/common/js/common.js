@@ -10,7 +10,8 @@ export default (function (env){
 		envObj.serverUrl = 'http://123.57.140.115:2080'
 	} else if (env == 'development'){
 		envObj.env = '当前工程环境：development'
-		envObj.serverUrl = 'http://192.168.1.163:8081'
+		// envObj.serverUrl = 'http://192.168.1.163:8081'
+		envObj.serverUrl = 'http://192.168.1.107:8080'
 	}
 	return envObj
 })('development')

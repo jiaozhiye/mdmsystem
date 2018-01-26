@@ -90,12 +90,11 @@ export default {
             try {
                 const response = await getPowerInfo()
                 // console.log(response.data)
-                this.loading = !1
                 this.list = response.data.list
             } catch (error){
-                this.loading = !1
                 console.error(error)
             }
+             this.loading = !1
         },
         reloadGetData(res){
             if (res == 'reload'){
