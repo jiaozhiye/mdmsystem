@@ -21,7 +21,10 @@ const dictionary = {
         postname: '职务名称',
         storename: '门店名称',
         gdtypename: '商品分类名称',
-        gdtypecode: '商品分类编码'
+        gdtypecode: '商品分类编码',
+        stufftypename: '原材料分类名称',
+        stufftypecode: '原材料分类编码',
+        unitname: '单位名称'
       }
    }
 }

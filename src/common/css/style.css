@@ -3,7 +3,7 @@
  */
 body {
     font-family: "Microsoft YaHei", "Arial", "Helvetica", "sans-serif";
-    font-size: 12px;
+    font-size: 14px;
     color: #333;
     line-height: 1.5em;
     position: relative;
@@ -190,4 +190,64 @@ a:hover {
 #app .prompt-title {
     color: #fa5555;
     display: inline-block;
+}
+
+/**
+ * 显示连接线的树结构
+ */
+.tree-show-line {
+    background-color: #fff;
+    border: 1px solid #dcdfe6;
+    min-height: 40px;
+    padding: 5px 0 5px 20px;
+}
+.tree-show-line .tree-norecord {
+    text-align: center;
+    line-height: 40px;
+}
+.tree-show-line li {
+    position: relative;
+    white-space: nowrap;
+}
+.tree-show-line li:not(:last-child)::before {
+    content: '';
+    width: 1px;
+    border-left: 1px solid #d9d9d9;
+    height: 100%;
+    position: absolute;
+    left: 12px;
+    top: 32px;
+}
+.tree-show-line .child-tree {
+    padding-left: 20px;
+    overflow: hidden;
+}
+.tree-show-line .tree-item {
+    display: flex;
+    height: 24px;
+    line-height: 24px;
+    padding: 8px 0;
+}
+.tree-show-line .tree-item > span:first-child {
+    width: 24px;
+    height: 24px;
+    line-height: 22px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    background-color: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+}
+.tree-show-line .tree-item > span:first-child > .tree-item-icon {
+    font-size: 12px;
+    border: 1px solid #d9d9d9;
+    padding: 1px 0 0 1px;
+}
+.tree-show-line .tree-item > span > a {
+    display: inline-block;
+    padding: 0 5px;
+    color: #409eff;
+}
+.tree-show-line .tree-item > span > a:hover {
+    color: #66b1ff;
 }

@@ -1,9 +1,10 @@
-const Home = () => import('components/Home.vue')
 const DeptManager = () => import('components/DeptManager.vue')
 const EmployManager = () => import('components/EmployManager.vue')
 const PowerManager = () => import('components/PowerManager.vue')
 const StoreManager = () => import('components/StoreManager.vue')
 const GoodsTypeManager = () => import('components/GoodsTypeManager.vue')
+const StuffTypeManager = () => import('components/StuffTypeManager.vue')
+const UnitTypeManager = () => import('components/UnitTypeManager.vue')
 
 const routes = {
     routes: [
@@ -30,6 +31,14 @@ const routes = {
         {
             path: '/sys_setting/gdtype_manager',
             component: GoodsTypeManager
+        },
+        {
+            path: '/sys_setting/mtype_manager',
+            component: StuffTypeManager
+        },
+        {
+            path: '/sys_setting/unit_manager',
+            component: UnitTypeManager
         },
         {
             path: '*',

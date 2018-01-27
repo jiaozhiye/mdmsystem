@@ -1,8 +1,8 @@
 <template>
 <div class="appManager-wrapper">
     <div class="appManager-top">
-        <el-button class="fl" @click.stop="addGdtypeHandle">新增商品类别</el-button>
-        <el-input class="gdtype-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
+        <el-button class="fl" @click.stop="addStuffTypeHandle">新增原材料类别</el-button>
+        <el-input class="stuffType-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
             v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
         </el-input>
     </div>
@@ -20,7 +20,7 @@
                         <span style="flex: 1">{{ item.desc }}</span>
                         <span style="width: 220px">
                             <a href="javascript:;" @click.stop="modItemHandle(item.id)"><i class="el-icon-edit"></i> 编辑</a>
-                            <a href="javascript:;" @click.stop="sortGdtypeHandle(list, item.parent_id)"><i class="el-icon-sort"></i> 排序</a>
+                            <a href="javascript:;" @click.stop="sortStuffTypeHandle(list, item.parent_id)"><i class="el-icon-sort"></i> 排序</a>
                             <a href="javascript:;" @click.stop="delItemHandle(item.id)"><i class="el-icon-delete"></i> 删除</a>
                         </span>
                     </div>
@@ -33,7 +33,7 @@
                                 <span style="flex: 1">{{ val.desc }}</span>
                                 <span style="width: 220px">
                                     <a href="javascript:;" @click.stop="modItemHandle(val.id)"><i class="el-icon-edit"></i> 编辑</a>
-                                    <a href="javascript:;" @click.stop="sortGdtypeHandle(item.children, val.parent_id)"><i class="el-icon-sort"></i> 排序</a>
+                                    <a href="javascript:;" @click.stop="sortStuffTypeHandle(item.children, val.parent_id)"><i class="el-icon-sort"></i> 排序</a>
                                     <a href="javascript:;" @click.stop="delItemHandle(val.id)"><i class="el-icon-delete"></i> 删除</a>
                                 </span>
                             </div>
@@ -45,21 +45,21 @@
             <dl class="tree-norecord" v-if="list.noRecord">暂无数据...</dl>
         </div>
     </div>
-    <ExtractPanel :params="addGdtypeExtract">
-        <span slot="title">新增商品类别</span>
-        <AddGoodsTypePanel slot="panel" :params="addGdtypeExtract" @reloadEvent="reloadGetData"></AddGoodsTypePanel>
+    <ExtractPanel :params="addStuffTypeExtract">
+        <span slot="title">新增原材料类别</span>
+        <AddStuffTypePanel slot="panel" :params="addStuffTypeExtract" @reloadEvent="reloadGetData"></AddStuffTypePanel>
     </ExtractPanel>
-    <ExtractPanel :params="modGdtypeExtract">
-        <span slot="title">修改商品类别</span>
-        <ModGoodsTypePanel slot="panel" :params="modGdtypeExtract" @reloadEvent="reloadGetData"></ModGoodsTypePanel>
+    <ExtractPanel :params="modStuffTypeExtract">
+        <span slot="title">修改原材料类别</span>
+        <ModStuffTypePanel slot="panel" :params="modStuffTypeExtract" @reloadEvent="reloadGetData"></ModStuffTypePanel>
     </ExtractPanel>
-    <ExtractPanel :params="sortGdtypeExtract">
-        <span slot="title">修改商品类别排序 - 拖拽排序</span>
+    <ExtractPanel :params="sortStuffTypeExtract">
+        <span slot="title">修改原材料类别排序 - 拖拽排序</span>
         <DragTreeSort slot="panel" 
             :list="sort.list"
             :pid="sort.pid"
-            :params="sortGdtypeExtract" 
-            @updateSort="updateGdtypeSort">
+            :params="sortStuffTypeExtract" 
+            @updateSort="updateStuffTypeSort">
         </DragTreeSort>
     </ExtractPanel>
 </div>
@@ -67,14 +67,14 @@
 
 <script>
 import ExtractPanel from './ExtractPanel.vue'
-import AddGoodsTypePanel from './AddGoodsTypePanel.vue'
-import ModGoodsTypePanel from './ModGoodsTypePanel.vue'
+import AddStuffTypePanel from './AddStuffTypePanel.vue'
+import ModStuffTypePanel from './ModStuffTypePanel.vue'
 import DragTreeSort from './DragTreeSort.vue'
 
-import {getGdtypeInfo, delGdtypeRecord, updateGdtypeSort} from 'api'
+import {getStuffTypeInfo, delStuffTypeRecord, updateStuffTypeSort} from 'api'
 
 export default {
-    name: 'GoodsTypeManager',
+    name: 'StuffTypeTypeManager',
     data(){
         return {
             list: [],
@@ -87,30 +87,30 @@ export default {
                 searchVal: ''
             },
             loading: false,
-            addGdtypeExtract: {
+            addStuffTypeExtract: {
                 isPlay: false
             },
-            modGdtypeExtract: {
+            modStuffTypeExtract: {
                 isPlay: false
             },
-            sortGdtypeExtract: {
+            sortStuffTypeExtract: {
                 isPlay: false
             }
         }
     },
     methods: {
-        addGdtypeHandle(){
-            this.addGdtypeExtract.isPlay = !0
+        addStuffTypeHandle(){
+            this.addStuffTypeExtract.isPlay = !0
         },
-        sortGdtypeHandle(arr, pid){
+        sortStuffTypeHandle(arr, pid){
             this.sort.pid = pid
             this.sort.list = arr
-            this.sortGdtypeExtract.isPlay = !0
-            this.sortGdtypeExtract.recovery = !0
+            this.sortStuffTypeExtract.isPlay = !0
+            this.sortStuffTypeExtract.recovery = !0
         },
         modItemHandle(_id){
-            this.modGdtypeExtract.isPlay = !0
-            this.modGdtypeExtract.itemId = _id
+            this.modStuffTypeExtract.isPlay = !0
+            this.modStuffTypeExtract.itemId = _id
         },
         delItemHandle(_id){
             this.$confirm('确认删除此分类吗?', '提示', {
@@ -119,9 +119,9 @@ export default {
                 type: 'warning'
             }).then(async () => {
                 try {
-                    const response = await delGdtypeRecord({id: _id})
+                    const response = await delStuffTypeRecord({id: _id})
                     if (response.data.code == 1){
-                        this.getGdtypeList()
+                        this.getStuffTypeList()
                         this.$message({
                             type: 'success',
                             message: '操作成功!'
@@ -137,10 +137,10 @@ export default {
                 }
             }).catch(() => {})
         },
-        async getGdtypeList(callback){
+        async getStuffTypeList(callback){
             this.loading = !0
             try {
-                const response = await getGdtypeInfo({
+                const response = await getStuffTypeInfo({
                     keyword: this.search.searchVal
                 })
                 // console.log(response.data)
@@ -155,15 +155,15 @@ export default {
             // 是否显示暂无数据
             this.list.noRecord = !this.list.length
         },
-        async updateGdtypeSort(res, callback){
+        async updateStuffTypeSort(res, callback){
             try {
-                const response = await updateGdtypeSort({
+                const response = await updateStuffTypeSort({
                     pid: res.pid,
                     sort: res.sort
                 })
                 if (response.data.code == 1){
                     // 更新陈功，不需要恢复数据
-                    this.sortGdtypeExtract.recovery = false
+                    this.sortStuffTypeExtract.recovery = false
                     this.$message({
                         type: 'success',
                         message: '排序成功!'
@@ -181,11 +181,11 @@ export default {
         },
         reloadGetData(res){
             if (res == 'reload'){
-                this.getGdtypeList()
+                this.getStuffTypeList()
             }
         },
         searchHandle(){
-            this.getGdtypeList()
+            this.getStuffTypeList()
         },
         childTreeHandle(item){
             item.showChild = !item.showChild
@@ -195,7 +195,7 @@ export default {
         }
     },
     watch: {
-        sortGdtypeExtract: {
+        sortStuffTypeExtract: {
             handler(newVal, oldVal){
                 if (newVal.isPlay){
                     // 深拷贝数据
@@ -210,19 +210,19 @@ export default {
         }
     },
     created(){
-        this.getGdtypeList()
+        this.getStuffTypeList()
     },
     components: {
         ExtractPanel,
-        AddGoodsTypePanel,
-        ModGoodsTypePanel,
+        AddStuffTypePanel,
+        ModStuffTypePanel,
         DragTreeSort
     }
 }
 </script>
 
 <style>
-.gdtype-search {
+.stuffType-search {
     width: 300px;
 }
 </style>
