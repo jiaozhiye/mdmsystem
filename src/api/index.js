@@ -116,12 +116,44 @@ export const updateGdtypeRecord = params => instance.post('/mgr/goodsType/update
 // 更新商品分类排序
 export const updateGdtypeSort = params => instance.post('/mgr/goodsType/sort', params)
 
+// 获取原材料类别信息
+export const getStuffTypeInfo = params => instance.get('/mgr/materialType/query', {params})
 
+// 删除原材料类别信息
+export const delStuffTypeRecord = params => instance.get('/mgr/materialType/deleteById', {params})
 
+// 更新原材料分类排序
+export const updateStuffTypeSort = params => instance.post('/mgr/materialType/sort', params)
 
+// 获取原材料类别一级分类
+export const getFirStuffTypeInfo = () => instance.get('/mgr/materialType/getFirstType')
 
+// 保存原材料分类信息
+export const saveStuffTypeInfo = params => instance.post('/mgr/materialType/add', params)
 
+// 根据ID获取原材料分类信息
+export const getStuffTypeRecord = params => instance.get('/mgr/materialType/showById', {params})
 
+// 更新原材料分类信息
+export const updateStuffTypeRecord = params => instance.post('/mgr/materialType/updateById', params)
+
+// 获取单位类别信息
+export const getUnitTypeInfo = params => instance.get('/mgr/goodsUnit/query', {params})
+
+// 删除单位类别信息
+export const delUnitTypeRecord = params => instance.get('/mgr/goodsUnit/deleteById', {params})
+
+// 更新单位分类排序
+export const updateUnitTypeSort = params => instance.post('/mgr/goodsUnit/sort', params)
+
+// 保存单位分类信息
+export const saveUnitTypeInfo = params => instance.post('/mgr/goodsUnit/add', params)
+
+// 根据ID获取单位分类信息
+export const getUnitTypeRecord = params => instance.get('/mgr/goodsUnit/showById', {params})
+
+// 更新单位分类信息
+export const updateUnitTypeRecord = params => instance.post('/mgr/goodsUnit/updateById', params)
 
 
 

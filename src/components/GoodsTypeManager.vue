@@ -2,7 +2,7 @@
 <div class="appManager-wrapper">
     <div class="appManager-top">
         <el-button class="fl" @click.stop="addGdtypeHandle">新增商品类别</el-button>
-        <el-input class="store-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
+        <el-input class="gdtype-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
             v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
         </el-input>
     </div>
@@ -18,7 +18,7 @@
                         </span>
                         <span style="width: 320px">{{ item.name }}</span>
                         <span style="flex: 1">{{ item.desc }}</span>
-                        <span style="width: 200px">
+                        <span style="width: 220px">
                             <a href="javascript:;" @click.stop="modItemHandle(item.id)"><i class="el-icon-edit"></i> 编辑</a>
                             <a href="javascript:;" @click.stop="sortGdtypeHandle(list, item.parent_id)"><i class="el-icon-sort"></i> 排序</a>
                             <a href="javascript:;" @click.stop="delItemHandle(item.id)"><i class="el-icon-delete"></i> 删除</a>
@@ -31,7 +31,7 @@
                                 <span><i class="el-icon-document"></i></span>
                                 <span style="width: 300px">{{ val.name }}</span>
                                 <span style="flex: 1">{{ val.desc }}</span>
-                                <span style="width: 200px">
+                                <span style="width: 220px">
                                     <a href="javascript:;" @click.stop="modItemHandle(val.id)"><i class="el-icon-edit"></i> 编辑</a>
                                     <a href="javascript:;" @click.stop="sortGdtypeHandle(item.children, val.parent_id)"><i class="el-icon-sort"></i> 排序</a>
                                     <a href="javascript:;" @click.stop="delItemHandle(val.id)"><i class="el-icon-delete"></i> 删除</a>
@@ -69,7 +69,7 @@
 import ExtractPanel from './ExtractPanel.vue'
 import AddGoodsTypePanel from './AddGoodsTypePanel.vue'
 import ModGoodsTypePanel from './ModGoodsTypePanel.vue'
-import DragTreeSort from './SortGoodsTypePanel.vue'
+import DragTreeSort from './DragTreeSort.vue'
 
 import {getGdtypeInfo, delGdtypeRecord, updateGdtypeSort} from 'api'
 
@@ -166,7 +166,7 @@ export default {
                     this.sortGdtypeExtract.recovery = false
                     this.$message({
                         type: 'success',
-                        message: '操作成功!'
+                        message: '排序成功!'
                     })
                 } else {
                     this.$message({
@@ -222,65 +222,7 @@ export default {
 </script>
 
 <style>
-.store-search {
+.gdtype-search {
     width: 300px;
-}
-
-/**
- * 显示连接线的树结构
- */
-.tree-show-line {
-    background-color: #fff;
-    border: 1px solid #dcdfe6;
-    min-height: 40px;
-    padding: 5px 0 5px 20px;
-}
-.tree-show-line .tree-norecord {
-    text-align: center;
-    line-height: 40px;
-}
-.tree-show-line li {
-    position: relative;
-    white-space: nowrap;
-}
-.tree-show-line li:not(:last-child)::before {
-    content: '';
-    width: 1px;
-    border-left: 1px solid #d9d9d9;
-    height: 100%;
-    position: absolute;
-    left: 12px;
-    top: 32px;
-}
-.tree-show-line .child-tree {
-    padding-left: 20px;
-    overflow: hidden;
-}
-.tree-show-line .tree-item {
-    display: flex;
-    height: 24px;
-    line-height: 24px;
-    padding: 8px 0;
-}
-.tree-show-line .tree-item > span:first-child {
-    width: 24px;
-    height: 24px;
-    text-align: center;
-    color: rgba(0, 0, 0, 0.5);
-    background-color: #fff;
-    cursor: pointer;
-    margin-right: 4px;
-}
-.tree-show-line .tree-item > span:first-child > .tree-item-icon {
-    border: 1px solid #d9d9d9;
-    padding: 1px 0 0 1px;
-}
-.tree-show-line .tree-item > span > a {
-    display: inline-block;
-    padding: 0 5px;
-    color: #409eff;
-}
-.tree-show-line .tree-item > span > a:hover {
-    color: #66b1ff;
 }
 </style>

@@ -125,11 +125,10 @@ export default {
 .power-setting {
     padding-top: 0px;
     line-height: 24px;
+    vertical-align: middle;
 }
 .power-setting .icon {
     font-size: 16px;
     color: #409eff;
-    position: relative;
-    top: -2px;
 }
 </style>

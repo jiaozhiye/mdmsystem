@@ -11,7 +11,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>分类名称</label>
         <div class="app-input-block">
-            <el-input name="gdtypename" v-model="form.name" v-validate="'required|spechar'" :class="{'formDanger': errors.has('gdtypename')}" clearable placeholder="请输入部门名称..." ></el-input>
+            <el-input name="gdtypename" v-model="form.name" v-validate="'required|spechar'" :class="{'formDanger': errors.has('gdtypename')}" clearable placeholder="请输入商品分类名称..." ></el-input>
             <span v-if="errors.has('gdtypename')" class="prompt-title">{{ errors.first('gdtypename') }}</span>
         </div>
     </div>
@@ -76,9 +76,9 @@ export default {
             })
         },
         async insertGdtypeInfo(callback){
-            if (this.superdeptId == '' || this.dept == ''){
+            if (this.form.superGdtypeId == '' || this.form.name == ''){
                 return this.$message({
-                    message: '请正确填写部门信息再提交！',
+                    message: '请正确填写分类信息再提交！',
                     type: 'warning'
                 })
             }

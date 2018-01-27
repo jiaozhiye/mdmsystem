@@ -63,7 +63,7 @@ export default {
         async getItemInfo(){
             try {
                 const response = await getGdtypeRecord({id: this.itemId})
-                console.log(response.data)
+                // console.log(response.data)
                 if (response.data.code == 1){
                     this.form.superGdtypeId = response.data.data.parent_id == '0' ? '' : response.data.data.parent_id
                     this.form.name = response.data.data.name || ''

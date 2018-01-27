@@ -90,15 +90,15 @@ export default {
     padding-bottom: 20px;
 }
 .drag-wrapper {
-    width: 60%;
+    width: 50%;
     position: relative;
 }
 .drag-wrapper li {
-    height: 38px;
-    line-height: 38px;
+    height: 34px;
+    line-height: 34px;
     border: 1px dashed transparent;
-    margin-top: 10px;
-    padding-left: 12px;
+    margin-top: 5px;
+    padding-left: 10px;
     position: relative;
     cursor: move;
 }
@@ -122,9 +122,9 @@ export default {
 /* 站位元素样式 */
 .drag-wrapper > i.ref-item {
     display: block;
-    height: 38px;
+    height: 34px;
     border: 1px dashed #43acf7;
-    margin-top: 10px;
+    margin-top: 5px;
     background-color: rgba(255, 255, 255, .7);
 }
 </style>
