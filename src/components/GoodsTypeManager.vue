@@ -8,6 +8,11 @@
     </div>
     <div class="appManager-list">
         <div class="tree-show-line" v-loading="loading">
+            <dl class="tree-tb-top">
+                <dd style="width: 348px">分类名称</dd>
+                <dd style="flex: 1">分类编码</dd>
+                <dd style="width: 215px">操作</dd>
+            </dl>
             <ul class="">
                 <li v-for="(item, index) in list" :key="index">
                     <div class="tree-item">
@@ -17,7 +22,7 @@
                             </i>
                         </span>
                         <span style="width: 320px">{{ item.name }}</span>
-                        <span style="flex: 1">{{ item.desc }}</span>
+                        <span style="flex: 1">{{ item.code }}</span>
                         <span style="width: 220px">
                             <a href="javascript:;" @click.stop="modItemHandle(item.id)"><i class="el-icon-edit"></i> 编辑</a>
                             <a href="javascript:;" @click.stop="sortGdtypeHandle(list, item.parent_id)"><i class="el-icon-sort"></i> 排序</a>
@@ -30,7 +35,7 @@
                             <div class="tree-item">
                                 <span><i class="el-icon-document"></i></span>
                                 <span style="width: 300px">{{ val.name }}</span>
-                                <span style="flex: 1">{{ val.desc }}</span>
+                                <span style="flex: 1">{{ val.code }}</span>
                                 <span style="width: 220px">
                                     <a href="javascript:;" @click.stop="modItemHandle(val.id)"><i class="el-icon-edit"></i> 编辑</a>
                                     <a href="javascript:;" @click.stop="sortGdtypeHandle(item.children, val.parent_id)"><i class="el-icon-sort"></i> 排序</a>
