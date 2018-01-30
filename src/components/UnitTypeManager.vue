@@ -1,18 +1,18 @@
 <template>
 <div class="appManager-wrapper">
     <div class="appManager-top">
-        <el-button class="fl" @click.stop="addUnitTypeHandle">新增单位类别</el-button>
-        <el-input class="store-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
+        <el-button class="fl" @click.stop="addUnitTypeHandle">新增单位</el-button>
+        <!-- <el-input class="store-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
             v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
-        </el-input>
+        </el-input> -->
     </div>
     <div class="appManager-list">
         <el-table :data="list" border style="width: 100%" v-loading="loading">
-            <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="name" label="单位名称"></el-table-column>
             <el-table-column prop="modify_time" label="创建时间" width="250"></el-table-column>
             <el-table-column label="操作" width="250">
                 <template slot-scope="scope">
+                    <!-- <el-table-column type="selection" width="50"></el-table-column> -->
                     <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-edit"></i> 修改
                     </el-button>

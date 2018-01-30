@@ -155,10 +155,26 @@ export const getUnitTypeRecord = params => instance.get('/mgr/goodsUnit/showById
 // 更新单位分类信息
 export const updateUnitTypeRecord = params => instance.post('/mgr/goodsUnit/updateById', params)
 
+// 获取商品分类树形结构
+export const getGdtypeTree = () => instance.get('/mgr/goods/showGoodsTypeTree')
 
+// 获取商品列表信息
+export const getGoodsInfo = params => instance.get('/mgr/goods/query', {params})
 
+// 删除商品记录
+export const delGoodsRecord = params => instance.get('/mgr/goods/stop', {params})
 
+// 批量删除商品记录
+export const batchDelGoodsRecord = params => instance.get('/mgr/goods/deleteByIds', {params})
 
+// 保存商品信息
+export const saveGoodsInfo = params => instance.post('', params)
+
+// 根据ID获取商品信息
+export const getGoodsRecord = params => instance.get('', {params})
+
+// 更新商品信息
+export const updateGoodsRecord = params => instance.post('', params)
 
 
 

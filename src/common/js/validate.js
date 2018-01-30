@@ -24,7 +24,8 @@ const dictionary = {
         gdtypecode: '商品分类编码',
         stufftypename: '原材料分类名称',
         stufftypecode: '原材料分类编码',
-        unitname: '单位名称'
+        unitname: '单位名称',
+        goodsname: '商品名称'
       }
    }
 }
