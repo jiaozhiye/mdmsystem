@@ -6,6 +6,8 @@ const GoodsTypeManager = () => import('components/GoodsTypeManager.vue')
 const StuffTypeManager = () => import('components/StuffTypeManager.vue')
 const UnitTypeManager = () => import('components/UnitTypeManager.vue')
 const GoodsManager = () => import('components/GoodsManager.vue')
+const MaterialManager = () => import('components/MaterialManager.vue')
+const RelationManager = () => import('components/RelationManager.vue')
 
 const routes = {
     routes: [
@@ -44,6 +46,14 @@ const routes = {
         {
             path: '/sys_setting/goods_manager',
             component: GoodsManager
+        },
+        {
+            path: '/sys_setting/material_manager',
+            component: MaterialManager
+        },
+        {
+            path: '/sys_setting/bom_manager',
+            component: RelationManager
         },
         {
             path: '*',

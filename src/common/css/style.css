@@ -123,6 +123,9 @@ a:hover {
 .appManager-list .el-table__body td {
     padding: 5px 0;
 }
+.fixedTable-list .el-table__body-wrapper {
+    overflow-x: auto;
+}
 
 /**
  * form box style

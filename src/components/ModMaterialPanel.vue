@@ -3,8 +3,8 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>所属分类</label>
         <div class="app-input-block">
-            <el-select v-model="form.gdtypeId" placeholder="请选择商品分类">
-                <el-option v-for="(item, key) in gdtypeList" 
+            <el-select v-model="form.stufftypeId" placeholder="请选择原材料分类">
+                <el-option v-for="(item, key) in stufftypeList" 
                     :key="key" 
                     :label="item.name" 
                     :value="item.id"
@@ -13,16 +13,16 @@
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label"><i>*</i>商品名称</label>
+        <label class="app-form-label"><i>*</i>原材料名称</label>
         <div class="app-input-block">
-            <el-input name="goodsname" v-model="form.name" v-validate="'required|spechar'" :class="{'formDanger': errors.has('goodsname')}" clearable placeholder="请输入商品名称..." ></el-input>
-            <span v-if="errors.has('goodsname')" class="prompt-title">{{ errors.first('goodsname') }}</span>
+            <el-input name="materialname" v-model="form.name" v-validate="'required|spechar'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称..." ></el-input>
+            <span v-if="errors.has('materialname')" class="prompt-title">{{ errors.first('materialname') }}</span>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label">商品编号</label>
+        <label class="app-form-label">原材料编号</label>
         <div class="app-input-block">
-            <el-input v-model="form.code" clearable placeholder="请输入商品编号..." ></el-input>
+            <el-input :disabled="true" v-model="form.code" clearable placeholder="请输入原材料编号..." ></el-input>
         </div>
     </div>
     <div class="app-form-item">
@@ -34,6 +34,15 @@
         </div>
     </div>
     <div class="app-form-item">
+        <label class="app-form-label"><i>*</i>出成率</label>
+        <div class="app-input-block">
+            <el-input name="yieldrate" v-model="form.yield_rate" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('yieldrate')}" clearable placeholder="请输入出成率..." >
+                <template slot="append">%</template>
+            </el-input>
+            <span v-if="errors.has('yieldrate')" class="prompt-title">{{ errors.first('yieldrate') }}</span>
+        </div>
+    </div>
+    <div class="app-form-item">
         <label class="app-form-label"><i>*</i>单位</label>
         <div class="app-input-block">
             <el-select v-model="form.unitId" placeholder="请选商品单位">
@@ -42,29 +51,29 @@
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label"><i>*</i>商品定价</label>
+        <label class="app-form-label"><i>*</i>采购价</label>
         <div class="app-input-block">
-            <el-input name="goodsprice" v-model="form.price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('goodsprice')}"  clearable placeholder="请输入商品价格..." ></el-input>
-            <span v-if="errors.has('goodsprice')" class="prompt-title">{{ errors.first('goodsprice') }}</span>
+            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价..." ></el-input>
+            <span v-if="errors.has('purchaseprice')" class="prompt-title">{{ errors.first('purchaseprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label">商品状态</label>
+        <label class="app-form-label"><i>*</i>默认结算价</label>
         <div class="app-input-block">
-            <el-radio v-model="form.state" label="1">启用</el-radio>
-            <el-radio v-model="form.state" label="0">停用</el-radio>
+            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价..." ></el-input>
+            <span v-if="errors.has('balanceprice')" class="prompt-title">{{ errors.first('balanceprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label">商品排序</label>
+        <label class="app-form-label">原材料排序</label>
         <div class="app-input-block">
-            <el-input v-model="form.sort" clearable placeholder="请输入商品排序..." ></el-input>
+            <el-input v-model="form.sort" clearable placeholder="请输入原材料排序..." ></el-input>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label">商品描述</label>
+        <label class="app-form-label">原材料描述</label>
         <div class="app-input-block">
-            <el-input :rows="5" v-model="form.desc" placeholder="请输入商品描述..." type="textarea"></el-input>
+            <el-input :rows="5" v-model="form.desc" placeholder="请输入原材料描述..." type="textarea"></el-input>
         </div>
     </div>
     <div class="app-form-item tr">
@@ -75,46 +84,50 @@
 </template>
 
 <script>
-import {getGdtypeTree, getInventoryList, getUnitList, getGoodsRecord, updateGoodsRecord} from 'api'
+import {getMaterialRecord, getMaterialSelTree, getStuffToryList, getUnitList, updateMaterialRecord} from 'api'
 
 export default {
-    name: 'ModGoodsPanel',
+    name: 'ModMaterialPanel',
     props: {
-        params: Object
+        params: Object,
+        classid: {
+            type: String,
+            default: ''
+        }
     },
     data(){
         return {
             itemId: this.params.itemId,
-            gdtypeList: [],
+            stufftypeList: [],
             repTypeList: [], // 库存类型列表
             unitList: [],
             form: {
-                gdtypeId: '',
+                stufftypeId: this.classid,
                 name: '',
                 code: '',
                 reptypeId: '',
+                yield_rate: '',
                 unitId: '',
-                price: '',
-                state: '',
+                purchase_price: '',
+                balance_price: '',
                 sort: '',
                 desc: ''
             }
         }
     },
-    created(){
-        this.getItemInfo()
-        this.getGdtypeList()
-        this.getStoryList()
-        this.getUnitList()
+    watch: {
+        classid(val){
+            this.form.stufftypeId = val
+        }
     },
     methods: {
-        async getGdtypeList(){
+        async getStufftypeList(){
             try {
-                const response = await getGdtypeTree()
+                const response = await getMaterialSelTree()
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.gdtypeList = response.data.list
-                    this.gdtypeList.forEach(item => {
+                    this.stufftypeList = response.data.list
+                    this.stufftypeList.forEach(item => {
                         if (item.parent_id === '0'){
                             item.disabled = true
                         }
@@ -126,7 +139,7 @@ export default {
         },
         async getStoryList(){
             try {
-                const response = await getInventoryList()
+                const response = await getStuffToryList({type: 'query'})
                 if (response.data.code == 1){
                     this.repTypeList = response.data.list
                 }
@@ -146,16 +159,17 @@ export default {
         },
         async getItemInfo(){
             try {
-                const response = await getGoodsRecord({id: this.itemId})
+                const response = await getMaterialRecord({id: this.itemId})
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.form.gdtypeId = response.data.data.type_2 || ''
+                    this.form.stufftypeId = response.data.data.type_2 || ''
                     this.form.name = response.data.data.name || ''
                     this.form.code = response.data.data.code
                     this.form.reptypeId = response.data.data.wm_type
+                    this.form.yield_rate = response.data.data.yield_rate
                     this.form.unitId = response.data.data.unit
-                    this.form.price = response.data.data.price
-                    this.form.state = response.data.data.status
+                    this.form.purchase_price = response.data.data.purchase_price
+                    this.form.balance_price = response.data.data.balance_price
                     this.form.sort = response.data.data.sort
                     this.form.desc = response.data.data.desc
                 } else {
@@ -169,29 +183,36 @@ export default {
             }
         },
         submitHandle(){
-            this.updateGoodsInfo(() => {
+            this.updateMaterialInfo(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        async updateGoodsInfo(callback){
+        async updateMaterialInfo(callback){
+            if (this.form.stufftypeId == '' || this.form.name == ''){
+                return this.$message({
+                    message: '请正确填写原材料信息再提交！',
+                    type: 'warning'
+                })
+            }
             try {
-                const response = await updateGoodsRecord({
+                const response = await updateMaterialRecord({
                     id: this.itemId,
-                    type: this.form.gdtypeId,
+                    type: this.form.stufftypeId,
                     name: this.form.name,
                     code: this.form.code,
                     wm_type: this.form.reptypeId,
+                    yield_rate: this.form.yield_rate,
                     unit: this.form.unitId,
-                    price: this.form.price,
-                    state: this.form.state,
+                    purchase_price: this.form.purchase_price,
+                    balance_price: this.form.balance_price,
                     sort: this.form.sort,
                     desc: this.form.desc
                 })
                 if (response.data.code == 1){
                     this.$message({
                         type: 'success',
-                        message: '修改商品成功!'
+                        message: '原材料修改成功!'
                     })
                     callback && callback()
                 } else {
@@ -207,6 +228,12 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created(){
+        this.getItemInfo()
+        this.getStufftypeList()
+        this.getStoryList()
+        this.getUnitList()
     }
 }
 </script>
