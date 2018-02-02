@@ -1,0 +1,279 @@
+<template>
+<div class="appManager-wrapper relation-wrapper">
+    <div class="appManager-top">
+        <el-button class="fl" @click.stop="addMaterialHandle">添加原材料</el-button>
+        <el-button class="fl" @click.stop="batchDeleteHandle">批量删除</el-button>
+        <span class="fl relation-top-tit">
+            <i class="el-icon-question"></i> 配方估算成本：{{ totalPrice }} 元/份
+        </span>
+        <el-button class="fr" type="primary" @click.stop="saveHandle"> 保 存 </el-button>
+    </div>
+    <div class="appManager-list fixedTable-list">
+        <el-table 
+            :data="list" 
+            border 
+            v-loading="loading" 
+            @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="50" fixed></el-table-column>
+            <el-table-column prop="name" label="原材料名称" width="200" sortable></el-table-column>
+            <el-table-column prop="type_2_text" label="原材料中类" width="120"></el-table-column>
+            <el-table-column prop="code" label="原材料编号" width="120"></el-table-column>
+            <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
+            <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
+            <el-table-column prop="purchase_price" label="估算单价" width="100"></el-table-column>
+            <el-table-column label="净料数量" width="120">
+                <template slot-scope="scope">
+                    <span v-if="!scope.row.isEdit">{{ scope.row.net_num }}</span>
+                    <el-input-number v-model="scope.row.net_num" class="relation-input-number"
+                        controls-position="right" 
+                        v-if="scope.row.isEdit" 
+                        @change="computeJlPrice(scope.row)" 
+                        size="small" 
+                        :min="0" 
+                        :max="1000">
+                    </el-input-number>
+                </template>
+            </el-table-column>
+            <el-table-column label="出成率" width="100">
+                <template slot-scope="scope">{{ scope.row.yield_rate * 100 + '%' }}</template>
+            </el-table-column>
+            <el-table-column label="毛料数量" width="120">
+                <template slot-scope="scope">
+                    <span v-if="!scope.row.isEdit">{{ scope.row.gross_num }}</span>
+                    <el-input-number v-model="scope.row.gross_num" class="relation-input-number"
+                        controls-position="right" 
+                        v-if="scope.row.isEdit" 
+                        @change="computeMlPrice(scope.row)" 
+                        size="small" 
+                        :min="0" 
+                        :max="1000">
+                    </el-input-number>
+                </template>
+            </el-table-column>
+            <el-table-column prop="total_price" label="估算金额"></el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+                <template slot-scope="scope">
+                    <el-button @click.stop="editItemHandle(scope.row)" type="text">
+                        <i class="el-icon-edit"></i> {{ scope.row.isEdit ? '完成' : '编辑' }}
+                    </el-button>
+                    <el-button @click.stop="delItemHandle(scope.row.id)" type="text">
+                        <i class="el-icon-delete"></i> 删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <ExtractPanel :params="addFormulaExtract" width="60%" top="0px">
+        <span slot="title">添加配方(原材料)</span>
+        <AddFormulaPanel slot="panel" :params="addFormulaExtract" @reloadEvent="addMaterialList"></AddFormulaPanel>
+    </ExtractPanel>
+</div>
+</template>
+
+<script>
+import ExtractPanel from './ExtractPanel.vue'
+import AddFormulaPanel from './AddFormulaPanel'
+
+import {getGoodsFormulaInfo, saveGdRelation} from 'api'
+
+export default {
+    name: 'EditRelationPanel',
+    props: {
+        params: Object
+    },
+    data(){
+        return {
+            goodsId: this.params.itemId, // 当前商品ID
+            list: [],
+            totalPrice: 0, // 配方估算成本
+            loading: false,
+            multipleSelection: [], // 选中记录的数组
+            addFormulaExtract: {
+                formulaIds: [], // 配方(原材料)记录的ID数组
+                isPlay: false
+            }
+        }
+    },
+    methods: {
+        handleSelectionChange(val){
+            this.multipleSelection = val
+        },
+        editItemHandle(item){
+            item.isEdit = !item.isEdit
+        },
+        delItemHandle(_id){
+            this.$confirm('确认删除此原材料吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.removeItemById(_id)
+                // 从 formulaIds 数组中移除当前删除元素的ID
+                this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(_id), 1)
+                this.sumTotalPrice()
+                this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                })
+            }).catch(() => {})
+            // 绑定事件
+            document.getElementsByClassName('el-message-box__wrapper')[0]
+            .addEventListener('click', ev => ev.stopPropagation(), false)
+        },
+        batchDeleteHandle(){
+            if (this.multipleSelection.length == 0){
+                return this.$message({
+                    type: 'warning',
+                    message: '请勾选原材料记录再进行批量删除!'
+                })
+            }
+            this.$confirm(`确认要批量删除选中的${this.multipleSelection.length}原材料吗？删除后将不能恢复！`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.multipleSelection.forEach(item => {
+                    this.removeItemById(item.id)
+                    // 从 formulaIds 数组中移除批量选中元素的ID
+                    this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(item.id), 1)
+                })
+                // 清空 multipleSelection
+                this.multipleSelection.splice(0)
+                this.sumTotalPrice()
+                this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                })
+            }).catch(() => {})
+            // 绑定事件
+            document.getElementsByClassName('el-message-box__wrapper')[0]
+            .addEventListener('click', ev => ev.stopPropagation(), false)
+        },
+        computeJlPrice(item){ // 净料数量 和 毛料数量 的计算
+            setTimeout(() => {
+                let val = item.net_num / item.yield_rate
+                item.gross_num = parseFloat(val.toFixed(3))
+                this.computePrice(item)
+            }, 0)
+        },
+        computeMlPrice(item){ // 净料数量 和 毛料数量 的计算
+            setTimeout(() => {
+                let val = item.gross_num * item.yield_rate
+                item.net_num = parseFloat(val.toFixed(3))
+                this.computePrice(item)
+            }, 0)
+        },
+        computePrice(item){
+            // 计算估算价格
+            let val = item.purchase_price * item.gross_num
+            item.total_price = parseFloat(val.toFixed(3))
+            // 求和
+            this.sumTotalPrice()
+        },
+        sumTotalPrice(){
+            let sum = 0
+            this.list.forEach(item => sum += item.total_price)
+            this.totalPrice = sum
+        },
+        addMaterialHandle(){
+            this.addFormulaExtract.isPlay = !0
+        },
+        addMaterialList(res){
+            // console.log(res)
+            setTimeout(() => {
+                this.list = res
+                // 原材料联动 重设 formulaIds 数组
+                this.addFormulaExtract.formulaIds = res.map(item => item.id)
+            }, 0)
+        },
+        async getGoodsFormulaList(callback){
+            try {
+                const response = await getGoodsFormulaInfo({
+                    id: this.goodsId
+                })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    response.data.list.map(item => {
+                        item.isEdit = false
+                        // 初始化 formulaIds 数组，同步原材料默认选中
+                        this.addFormulaExtract.formulaIds.push(item.id)
+                    })
+                    // console.log(response.data.list)
+                    this.list = response.data.list
+                    callback && callback()
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
+        saveHandle(){
+            this.insertRelationInfo(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
+            })
+        },
+        async insertRelationInfo(callback){
+            try {
+                const response = await saveGdRelation({
+                    id: this.goodsId,
+                    list: this.list,
+                    totalPrice: this.totalPrice
+                })
+                if (response.data.code == 1){
+                    this.$message({
+                        type: 'success',
+                        message: '商品配方关联成功!'
+                    })
+                    callback && callback()
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.message
+                    })
+                }
+            } catch (err){
+                console.error(err)
+            }
+        },
+        removeItemById(_id){
+            for (let i = 0; i < this.list.length; i++){
+                if (this.list[i].id == _id){
+                    this.list.splice(i, 1)
+                    break
+                }
+            }
+        },
+        closePanelHandle(){
+            this.params.isPlay = false
+        }
+    },
+    created(){
+        this.getGoodsFormulaList(() => {
+            this.sumTotalPrice()
+        })
+    },
+    components: {
+        ExtractPanel,
+        AddFormulaPanel
+    }
+}
+</script>
+
+<style>
+.relation-wrapper {
+    padding: 20px;
+}
+.relation-top-tit {
+    line-height: 40px;
+    margin-left: 10px;
+    color: #909399;
+}
+.relation-top-tit i {
+    font-size: 20px;
+    vertical-align: middle;
+    margin-top: -2px;
+}
+.relation-wrapper .relation-input-number {
+    width: 100px;
+}
+</style>

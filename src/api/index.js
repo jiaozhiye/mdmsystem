@@ -168,13 +168,68 @@ export const delGoodsRecord = params => instance.get('/mgr/goods/stop', {params}
 export const batchDelGoodsRecord = params => instance.get('/mgr/goods/deleteByIds', {params})
 
 // 保存商品信息
-export const saveGoodsInfo = params => instance.post('', params)
+export const saveGoodsInfo = params => instance.post('/mgr/goods/add', params)
+
+// 获取商品库存类型列表
+export const getInventoryList = () => instance.get('/mgr/goodsInitForm/showWmTypeList')
+
+// 获取商品单位列表
+export const getUnitList = () => instance.get('/mgr/goodsInitForm/showUnitList')
 
 // 根据ID获取商品信息
-export const getGoodsRecord = params => instance.get('', {params})
+export const getGoodsRecord = params => instance.get('/mgr/goods/showById', {params})
 
 // 更新商品信息
-export const updateGoodsRecord = params => instance.post('', params)
+export const updateGoodsRecord = params => instance.post('/mgr/goods/updateById', params)
+
+// 获取原材料信息
+export const getMaterialInfo = params => instance.get('/mgr/material/query', {params})
+
+// 获取原材料分类树
+export const getMaterialTree = () => instance.get('/mgr/material/showMaterialTypeTree')
+
+// 批量删除原材料记录
+export const batchDelMaterialRecord = params => instance.get('/mgr/material/deleteByIds', {params})
+
+// 获取原材料库存类型列表
+export const getStuffToryList = params => instance.get('/mgr/goodsInitForm/showMaterialWmTypeList', {params})
+
+// 删除原材料记录
+export const delMaterialRecord = params => instance.get('/mgr/material/stop', {params})
+
+// 获取原材料分类(下拉菜单)
+export const getMaterialSelTree = params => instance.get('/mgr/material/showMaterialTypeTreeForm', {params})
+
+// 保存原材料信息
+export const saveMaterialInfo = params => instance.post('/mgr/material/add', params)
+
+// 根据ID获取原材料信息
+export const getMaterialRecord = params => instance.get('/mgr/material/showById', {params})
+
+// 更新原材料记录
+export const updateMaterialRecord = params => instance.post('/mgr/material/updateById', params)
+
+// 获取商品分类树结构(关联)
+export const getGoodsTypeTree = () => instance.get('/mgr/bomMgr/showGoodsTypeTree')
+
+// 获取商品列表(关联)
+export const getGoodsList = params => instance.get('/mgr/bomMgr/queryGoodsList', {params})
+
+// 获取商品库存类型(关联)
+export const getGdToryList = params => instance.get('/mgr/goodsInitForm/showWmTypeList', {params})
+
+// 获取配方状态(关联)
+export const getFormulaList = () => instance.get('/mgr/goodsInitForm/showBomStatusList')
+
+// 获取配方(原材料)信息
+export const getFormulaInfo = params => instance.get('/mgr/bomMgr/queryMaterialList', {params})
+
+// 根据ID，获取商品配方(原材料)列表
+export const getGoodsFormulaInfo = params => instance.get('/mgr/bomMgr/queryBomByGoodsId', {params})
+
+// 保存商品配方(原材料)关联
+export const saveGdRelation = params => instance.post('/mgr/bomMgr/save', params)
+
 
 
 

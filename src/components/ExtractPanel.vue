@@ -1,7 +1,7 @@
 <template>
 <transition name="app-side">
     <div class="extract-wrapper" 
-        :style="{width: width}" 
+        :style="{width: width, top: top, height: computHeight}" 
         v-if="params.isPlay" 
         @click.stop="stopPropagationHandle">
         <div class="extract-top">
@@ -37,6 +37,10 @@ export default {
         width: {
             type: String,
             default: '50%'
+        },
+        top: {
+            type: String,
+            default: '50px'
         }
     },
     methods: {
@@ -45,6 +49,14 @@ export default {
         },
         stopPropagationHandle(){
             event.stopPropagation()
+        }
+    },
+    computed: {
+        computHeight(){
+            if (this.top.search('px') == -1){
+                this.top += 'px'
+            }
+            return `calc(100% - ${this.top})`
         }
     },
     mounted(){
@@ -97,9 +109,16 @@ export default {
 .extract-top .extract-close {
     position: absolute;
     right: 12px;
-    top: 15px;
-    font-size: 20px;
+    top: 10px;
+    font-size: 22px;
+    padding: 5px;
     cursor: pointer;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+}
+.extract-top .extract-close:hover {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 .extract-main {
     height: calc(100% - 51px);

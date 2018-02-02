@@ -25,7 +25,12 @@ const dictionary = {
         stufftypename: '原材料分类名称',
         stufftypecode: '原材料分类编码',
         unitname: '单位名称',
-        goodsname: '商品名称'
+        goodsname: '商品名称',
+        goodsprice: '商品定价',
+        materialname: '原材料名称',
+        purchaseprice: '采购价',
+        balance_price: '默认结算价',
+        yieldrate: '出成率'
       }
    }
 }

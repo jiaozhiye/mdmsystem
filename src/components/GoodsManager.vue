@@ -13,7 +13,7 @@
             </el-dropdown-menu>
         </el-dropdown>
         <ul class="fr">
-            <el-select class="fl" v-model="search.gdtypeId" @change="searchHandle" placeholder="请选商品分类">
+            <el-select class="fl" v-model="search.gdtypeId" @change="searchHandle" placeholder="请选择商品分类">
                 <el-option
                     v-for="(item, key) in gdtypeList"
                     :key="key"
@@ -28,7 +28,6 @@
     </div>
     <div class="appManager-list">
         <el-table 
-            ref="appTable"
             :data="list" 
             border 
             v-loading="loading"
@@ -38,17 +37,23 @@
             <el-table-column prop="type_2_text" label="商品中类"></el-table-column>
             <el-table-column prop="code" label="商品编号" sortable></el-table-column>
             <el-table-column prop="wm_type_text" label="库存类型"></el-table-column>
-            <el-table-column prop="goods_unit_text" label="单位"></el-table-column>
+            <el-table-column prop="goods_unit_text" label="单位(标准)"></el-table-column>
             <el-table-column prop="price" label="定价" sortable></el-table-column>
             <el-table-column prop="sort" label="排序" sortable></el-table-column>
-            <el-table-column prop="status_text" label="状态"></el-table-column>
+            <el-table-column label="状态">
+                <template slot-scope="scope">
+                    <el-tag size="medium" :type="scope.row.status == '1' ? '' : 'danger'">
+                        {{ scope.row.status == '1' ? '启用' : '停用' }}
+                    </el-tag>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
                     <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-edit"></i> 修改
                     </el-button>
-                    <el-button @click.stop="delItemHandle(scope.row.id)" type="text">
-                        <i class="el-icon-delete"></i> 停用
+                    <el-button @click.stop="delItemHandle(scope.row)" type="text">
+                        <i class="el-icon-delete"></i> {{ scope.row.status == '1' ? '停用' : '启用' }}
                     </el-button>
                 </template>
             </el-table-column>
@@ -58,11 +63,11 @@
         </el-pagination>
     </div>
     <ExtractPanel :params="addGoodsExtract">
-        <span slot="title">新增员工</span>
+        <span slot="title">新增商品</span>
         <AddGoodsPanel slot="panel" :params="addGoodsExtract" @reloadEvent="reloadGetData"></AddGoodsPanel>
     </ExtractPanel>
     <ExtractPanel :params="modGoodsExtract">
-        <span slot="title">修改员工信息</span>
+        <span slot="title">修改商品信息</span>
         <ModGoodsPanel slot="panel" :params="modGoodsExtract" @reloadEvent="reloadGetData"></ModGoodsPanel>
     </ExtractPanel>
 </div>
@@ -115,16 +120,20 @@ export default {
                 console.error(error)
             }
         },
-        delItemHandle(_id){
-            this.$confirm('确认删除此商品吗？删除后将不能恢复！', '提示', {
+        delItemHandle(item){
+            this.$confirm(`确认${item.status == '1' ? '停用' : '启用'}此商品吗？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
                 try {
-                    const response = await delGoodsRecord({id: _id})
+                    const response = await delGoodsRecord({
+                        id: item.id,
+                        state: item.status == '1' ? '0' : '1' // 1 -> 启用    0 -> 停用
+                    })
                     if (response.data.code == 1){
-                        this.removeItemById(_id)
+                        // this.removeItemById(_id)
+                        this.getGoodsList(this.curPageIndex)
                         this.$message({
                             type: 'success',
                             message: '操作成功!'
@@ -200,7 +209,9 @@ export default {
                         ids: this.multipleSelection.map(item => item.id)
                     })
                     if (response.data.code == 1){
-                        this.multipleSelection.forEach(item => this.removeItemById(item))
+                        this.multipleSelection.forEach(item => this.removeItemById(item.id))
+                        // 清空 multipleSelection
+                        this.multipleSelection.splice(0)
                         this.$message({
                             type: 'success',
                             message: '操作成功!'
