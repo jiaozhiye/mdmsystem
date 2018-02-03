@@ -115,7 +115,7 @@ export default {
             }).then(() => {
                 this.removeItemById(_id)
                 // 从 formulaIds 数组中移除当前删除元素的ID
-                this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(_id), 1)
+                this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.findIndex(item => item.id == _id), 1)
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
@@ -140,7 +140,7 @@ export default {
                 this.multipleSelection.forEach(item => {
                     this.removeItemById(item.id)
                     // 从 formulaIds 数组中移除批量选中元素的ID
-                    this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(item.id), 1)
+                    this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.findIndex(val => val.id == item.id), 1)
                 })
                 // 清空 multipleSelection
                 this.multipleSelection.splice(0)
@@ -180,7 +180,7 @@ export default {
             setTimeout(() => {
                 this.list = res
                 // 原材料联动 重设 formulaIds 数组
-                this.addFormulaExtract.formulaIds = res.map(item => item.id)
+                this.addFormulaExtract.formulaIds = res.map(item => ({id: item.id, data: item}))
             }, 0)
         },
         async getGoodsFormulaList(callback){
@@ -193,7 +193,10 @@ export default {
                     response.data.list.map(item => {
                         item.isEdit = false
                         // 初始化 formulaIds 数组，同步原材料默认选中
-                        this.addFormulaExtract.formulaIds.push(item.id)
+                        this.addFormulaExtract.formulaIds.push({
+                            id: item.id,
+                            data: item
+                        })
                     })
                     // console.log(response.data.list)
                     this.list = response.data.list

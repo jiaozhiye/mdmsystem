@@ -129,9 +129,14 @@ export default {
                     this.list = response.data.data.list
                     this.list.total = response.data.data.totalRow
                     setTimeout(() => {
+                        // 定义需要选中原材料id数组
+                        let idsArr = this.params.formulaIds.map(item => item.id)
                         this.list.forEach(item => {
-                            if (this.params.formulaIds.indexOf(item.id) != -1){
+                            if (idsArr.indexOf(item.id) != -1){
                                 this.$refs.multipleTable.toggleRowSelection(item, true)
+                                // 同步父组件传递进来的数据
+                                let obj = this.params.formulaIds.find(val => val.id == item.id).data
+                                for (let i in item) item[i] = obj[i]
                             }
                         })
                     }, 0)
