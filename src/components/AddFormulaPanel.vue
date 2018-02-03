@@ -17,6 +17,7 @@
             multiple 
             collapse-tags 
             class="fl" 
+            clearable 
             @change="searchHandle" 
             placeholder="请选原材料分类">
             <el-option

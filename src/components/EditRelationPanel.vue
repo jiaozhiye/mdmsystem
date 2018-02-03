@@ -85,13 +85,19 @@ export default {
         return {
             goodsId: this.params.itemId, // 当前商品ID
             list: [],
-            totalPrice: 0, // 配方估算成本
             loading: false,
             multipleSelection: [], // 选中记录的数组
             addFormulaExtract: {
                 formulaIds: [], // 配方(原材料)记录的ID数组
                 isPlay: false
             }
+        }
+    },
+    computed: {
+        totalPrice(){ // 估算成本求和
+            let sum = 0
+            this.list.forEach(item => sum += item.total_price)
+            return sum
         }
     },
     methods: {
@@ -110,7 +116,6 @@ export default {
                 this.removeItemById(_id)
                 // 从 formulaIds 数组中移除当前删除元素的ID
                 this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(_id), 1)
-                this.sumTotalPrice()
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
@@ -139,7 +144,6 @@ export default {
                 })
                 // 清空 multipleSelection
                 this.multipleSelection.splice(0)
-                this.sumTotalPrice()
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
@@ -167,13 +171,6 @@ export default {
             // 计算估算价格
             let val = item.purchase_price * item.gross_num
             item.total_price = parseFloat(val.toFixed(3))
-            // 求和
-            this.sumTotalPrice()
-        },
-        sumTotalPrice(){
-            let sum = 0
-            this.list.forEach(item => sum += item.total_price)
-            this.totalPrice = sum
         },
         addMaterialHandle(){
             this.addFormulaExtract.isPlay = !0
@@ -200,8 +197,8 @@ export default {
                     })
                     // console.log(response.data.list)
                     this.list = response.data.list
-                    callback && callback()
                 }
+                callback && callback()
             } catch (error){
                 console.error(error)
             }
@@ -248,9 +245,7 @@ export default {
         }
     },
     created(){
-        this.getGoodsFormulaList(() => {
-            this.sumTotalPrice()
-        })
+        this.getGoodsFormulaList()
     },
     components: {
         ExtractPanel,

@@ -9,8 +9,9 @@
     <div class="appManager-list">
         <div class="tree-show-line" v-loading="loading">
             <dl class="tree-tb-top">
-                <dd style="width: 348px">分类名称</dd>
+                <dd style="width: 448px">分类名称</dd>
                 <dd style="flex: 1">分类编码</dd>
+                <dd style="width: 304px">最后修改时间</dd>
                 <dd style="width: 215px">操作</dd>
             </dl>
             <ul class="">
@@ -21,8 +22,9 @@
                                 :class="{'el-icon-minus': item.showChild, 'el-icon-plus': !item.showChild}">
                             </i>
                         </span>
-                        <span style="width: 320px">{{ item.name }}</span>
+                        <span style="width: 420px">{{ item.name }}</span>
                         <span style="flex: 1">{{ item.code }}</span>
+                        <span style="width: 300px">{{ item.modify_time }}</span>
                         <span style="width: 220px">
                             <a href="javascript:;" @click.stop="modItemHandle(item.id)"><i class="el-icon-edit"></i> 编辑</a>
                             <a href="javascript:;" @click.stop="sortStuffTypeHandle(list, item.parent_id)"><i class="el-icon-sort"></i> 排序</a>
@@ -34,8 +36,9 @@
                         <li v-for="(val, key) in item.children" :key="key">
                             <div class="tree-item">
                                 <span><i class="el-icon-document"></i></span>
-                                <span style="width: 300px">{{ val.name }}</span>
+                                <span style="width: 400px">{{ val.name }}</span>
                                 <span style="flex: 1">{{ val.code }}</span>
+                                <span style="width: 300px">{{ item.modify_time }}</span>
                                 <span style="width: 220px">
                                     <a href="javascript:;" @click.stop="modItemHandle(val.id)"><i class="el-icon-edit"></i> 编辑</a>
                                     <a href="javascript:;" @click.stop="sortStuffTypeHandle(item.children, val.parent_id)"><i class="el-icon-sort"></i> 排序</a>

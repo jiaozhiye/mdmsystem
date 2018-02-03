@@ -3,7 +3,7 @@
     <div class="appManager-top employ-top">
         <el-button class="fl" @click.stop="addEmployHandle">新增员工</el-button>
         <ul class="fr">
-            <el-select class="fl" v-model="search.jobId" @change="searchHandle" placeholder="请选择职务">
+            <el-select class="fl" v-model="search.jobId" clearable @change="searchHandle" placeholder="请选择职务">
                 <el-option
                     v-for="(item, key) in jobList"
                     :key="key"
@@ -11,7 +11,7 @@
                     :value="item.id">
                 </el-option>
             </el-select>
-            <el-select class="fl" v-model="search.deptId" @change="searchHandle" placeholder="请选择部门">
+            <el-select class="fl" v-model="search.deptId" clearable @change="searchHandle" placeholder="请选择部门">
                 <el-option
                     v-for="(item, key) in deptList"
                     :key="key"

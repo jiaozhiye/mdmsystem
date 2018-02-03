@@ -4,7 +4,7 @@ const PowerManager = () => import('components/PowerManager.vue')
 const StoreManager = () => import('components/StoreManager.vue')
 const GoodsTypeManager = () => import('components/GoodsTypeManager.vue')
 const StuffTypeManager = () => import('components/StuffTypeManager.vue')
-const UnitTypeManager = () => import('components/UnitTypeManager.vue')
+const UnitManager = () => import('components/UnitManager.vue')
 const GoodsManager = () => import('components/GoodsManager.vue')
 const MaterialManager = () => import('components/MaterialManager.vue')
 const RelationManager = () => import('components/RelationManager.vue')
@@ -41,7 +41,7 @@ const routes = {
         },
         {
             path: '/sys_setting/unit_manager',
-            component: UnitTypeManager
+            component: UnitManager
         },
         {
             path: '/sys_setting/goods_manager',

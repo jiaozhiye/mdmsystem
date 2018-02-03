@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import {getUnitTypeRecord, updateUnitTypeRecord} from 'api'
+import {getUnitRecord, updateUnitRecord} from 'api'
 
 export default {
-    name: 'ModUnitTypePanel',
+    name: 'ModUnitPanel',
     props: {
         params: Object
     },
@@ -36,7 +36,7 @@ export default {
     methods: {
         async getItemInfo(){
             try {
-                const response = await getUnitTypeRecord({id: this.itemId})
+                const response = await getUnitRecord({id: this.itemId})
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.form.name = response.data.data.name || ''
@@ -51,14 +51,14 @@ export default {
             }
         },
         submitHandle(){
-            this.updateUnitTypeInfo(() => {
+            this.updateUnitInfo(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        async updateUnitTypeInfo(callback){
+        async updateUnitInfo(callback){
             try {
-                const response = await updateUnitTypeRecord({
+                const response = await updateUnitRecord({
                     id: this.itemId,
                     name: this.form.name
                 })

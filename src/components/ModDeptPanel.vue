@@ -3,7 +3,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>上级部门</label>
         <div class="app-input-block">
-            <el-select v-model="superdeptId" placeholder="请选择上级部门">
+            <el-select v-model="superdeptId" clearable placeholder="请选择上级部门">
                 <el-option v-for="(item, key) in superdeptList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>

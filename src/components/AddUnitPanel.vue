@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import {saveUnitTypeInfo} from 'api'
+import {saveUnitInfo} from 'api'
 
 export default {
-    name: 'AddUnitTypePanel',
+    name: 'AddUnitPanel',
     props: {
         params: Object
     },
@@ -31,12 +31,12 @@ export default {
     },
     methods: {
         submitHandle(){  
-            this.insertUnitTypeInfo(() => {
+            this.insertUnitInfo(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        async insertUnitTypeInfo(callback){
+        async insertUnitInfo(callback){
             if (this.form.name == ''){
                 return this.$message({
                     message: '请正确填写单位信息再提交！',
@@ -44,7 +44,7 @@ export default {
                 })
             }
             try {
-                const response = await saveUnitTypeInfo({
+                const response = await saveUnitInfo({
                     name: this.form.name
                 })
                 if (response.data.code == 1){

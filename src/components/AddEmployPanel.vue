@@ -45,7 +45,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>部门</label>
         <div class="app-input-block">
-            <el-select v-model="form.deptId" placeholder="请选择">
+            <el-select v-model="form.deptId" clearable placeholder="请选择部门">
                 <el-option v-for="(item, key) in deptList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>
@@ -53,7 +53,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>职务</label>
         <div class="app-input-block">
-            <el-select v-model="form.jobId" placeholder="请选择">
+            <el-select v-model="form.jobId" clearable placeholder="请选择职务">
                 <el-option v-for="(item, key) in jobList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>

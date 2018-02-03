@@ -13,7 +13,7 @@
             </el-dropdown-menu>
         </el-dropdown>
         <ul class="fr">
-            <el-select class="fl" v-model="search.gdtypeId" @change="searchHandle" placeholder="请选择商品分类">
+            <el-select class="fl" v-model="search.gdtypeId" clearable @change="searchHandle" placeholder="请选择商品分类">
                 <el-option
                     v-for="(item, key) in gdtypeList"
                     :key="key"

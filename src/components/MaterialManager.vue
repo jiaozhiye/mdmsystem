@@ -33,7 +33,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <ul class="fr">
-                <el-select class="fl" v-model="search.inventoryId" @change="searchHandle" placeholder="请选择库存类型">
+                <el-select class="fl" v-model="search.inventoryId" clearable @change="searchHandle" placeholder="请选择库存类型">
                     <el-option
                         v-for="(item, key) in inventoryList"
                         :key="key"
@@ -58,9 +58,9 @@
                 <el-table-column prop="code" label="原材料编号" width="150" sortable></el-table-column>
                 <el-table-column prop="wm_type_text" label="库存类型" width="150"></el-table-column>
                 <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
-                <el-table-column prop="purchase_price" label="采购价" width="100" sortable></el-table-column>
+                <el-table-column prop="purchase_price" label="采购价(成本价)" width="150" sortable></el-table-column>
                 <el-table-column prop="balance_price" label="默认结算价" width="130" sortable></el-table-column>
-                <el-table-column label="状态" width="120">
+                <el-table-column label="状态">
                     <template slot-scope="scope">
                         <el-tag size="medium" :type="scope.row.status == '1' ? '' : 'danger'">
                             {{ scope.row.status == '1' ? '启用' : '停用' }}

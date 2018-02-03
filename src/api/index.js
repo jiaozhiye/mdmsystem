@@ -138,22 +138,22 @@ export const getStuffTypeRecord = params => instance.get('/mgr/materialType/show
 export const updateStuffTypeRecord = params => instance.post('/mgr/materialType/updateById', params)
 
 // 获取单位类别信息
-export const getUnitTypeInfo = params => instance.get('/mgr/goodsUnit/query', {params})
+export const getUnitInfo = params => instance.get('/mgr/goodsUnit/query', {params})
 
 // 删除单位类别信息
-export const delUnitTypeRecord = params => instance.get('/mgr/goodsUnit/deleteById', {params})
+export const delUnitRecord = params => instance.get('/mgr/goodsUnit/deleteById', {params})
 
 // 更新单位分类排序
-export const updateUnitTypeSort = params => instance.post('/mgr/goodsUnit/sort', params)
+export const updateUnitSort = params => instance.post('/mgr/goodsUnit/sort', params)
 
 // 保存单位分类信息
-export const saveUnitTypeInfo = params => instance.post('/mgr/goodsUnit/add', params)
+export const saveUnitInfo = params => instance.post('/mgr/goodsUnit/add', params)
 
 // 根据ID获取单位分类信息
-export const getUnitTypeRecord = params => instance.get('/mgr/goodsUnit/showById', {params})
+export const getUnitRecord = params => instance.get('/mgr/goodsUnit/showById', {params})
 
 // 更新单位分类信息
-export const updateUnitTypeRecord = params => instance.post('/mgr/goodsUnit/updateById', params)
+export const updateUnitRecord = params => instance.post('/mgr/goodsUnit/updateById', params)
 
 // 获取商品分类树形结构
 export const getGdtypeTree = () => instance.get('/mgr/goods/showGoodsTypeTree')
