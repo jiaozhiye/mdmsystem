@@ -42,7 +42,7 @@ export default {
     height: 50px;
     position: relative;
     display: inline-block;
-    z-index: 1;
+    z-index: 999;
 }
 .dropdown-link {
     height: 50px;
@@ -66,7 +66,7 @@ export default {
     min-width: 120px;
     background: #fff;
     box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .1);
-    z-index: 1;
+    z-index: 999;
 }
 .dropdown-menu.open .dropdown-link {
     background: #fff;

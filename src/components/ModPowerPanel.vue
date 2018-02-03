@@ -13,9 +13,10 @@
             <el-input :rows="5" v-model="form.desc" placeholder="请输入职务描述..." type="textarea"></el-input>
         </div>
     </div>
-    <div class="app-form-item power-form-item">
+    <div class="app-form-item">
         <label class="app-form-label power-setting"><i class="icon el-icon-edit-outline"></i> 权限设置</label>
         <div class="app-input-block">
+            <h4 style="color: #909399">选中分类才会拥有操作权限</h4>
             <el-tree
                 :data="list"
                 show-checkbox
@@ -107,4 +108,8 @@ export default {
 </script>
 
 <style>
+.power-setting .icon {
+    font-size: 16px;
+    color: #409eff;
+}
 </style>

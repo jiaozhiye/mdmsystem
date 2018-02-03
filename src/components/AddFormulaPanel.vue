@@ -17,6 +17,7 @@
             multiple 
             collapse-tags 
             class="fl" 
+            clearable 
             @change="searchHandle" 
             placeholder="请选原材料分类">
             <el-option
@@ -41,10 +42,10 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50" fixed></el-table-column>
             <el-table-column prop="name" label="原材料名称" sortable></el-table-column>
-            <el-table-column prop="goods_unit_text" label="单位(标准)" width="150"></el-table-column>
-            <el-table-column prop="type_2_text" label="原材料中类" width="150" sortable></el-table-column>
-            <el-table-column prop="code" label="原材料编号" width="150"></el-table-column>
-            <el-table-column prop="wm_type_text" label="库存类型" width="150"></el-table-column>
+            <el-table-column prop="goods_unit_text" label="单位(标准)" width="120"></el-table-column>
+            <el-table-column prop="type_2_text" label="原材料中类" width="120" sortable></el-table-column>
+            <el-table-column prop="code" label="原材料编号" width="120"></el-table-column>
+            <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
         </el-table>
         <el-pagination background layout="prev, pager, next, jumper"
             :total="list.total" @current-change="handleCurrentChange">
@@ -128,9 +129,14 @@ export default {
                     this.list = response.data.data.list
                     this.list.total = response.data.data.totalRow
                     setTimeout(() => {
+                        // 定义需要选中原材料id数组
+                        let idsArr = this.params.formulaIds.map(item => item.id)
                         this.list.forEach(item => {
-                            if (this.params.formulaIds.indexOf(item.id) != -1){
+                            if (idsArr.indexOf(item.id) != -1){
                                 this.$refs.multipleTable.toggleRowSelection(item, true)
+                                // 同步父组件传递进来的数据
+                                let obj = this.params.formulaIds.find(val => val.id == item.id).data
+                                for (let i in item) item[i] = obj[i]
                             }
                         })
                     }, 0)

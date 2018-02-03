@@ -3,7 +3,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>所属分类</label>
         <div class="app-input-block">
-            <el-select v-model="form.superStuffTypeId" disabled placeholder="请选所属原材料分类">
+            <el-select v-model="form.superStuffTypeId" disabled clearable placeholder="所属原材料分类">
                 <el-option v-for="(item, key) in superStuffTypeList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>
@@ -97,6 +97,12 @@ export default {
             })
         },
         async updateStuffTypeInfo(callback){
+            if (this.form.name == '' || this.form.code == ''){
+                return this.$message({
+                    message: '请正确填写分类信息再提交！',
+                    type: 'warning'
+                })
+            }
             try {
                 const response = await updateStuffTypeRecord({
                     id: this.itemId,

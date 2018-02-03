@@ -13,15 +13,17 @@
             <el-input :rows="5" v-model="form.desc" placeholder="请输入职务描述..." type="textarea"></el-input>
         </div>
     </div>
-    <div class="app-form-item power-form-item">
+    <div class="app-form-item">
         <label class="app-form-label power-setting"><i class="icon el-icon-edit-outline"></i> 权限设置</label>
         <div class="app-input-block">
+            <h4 style="color: #909399">选中分类才会拥有操作权限</h4>
             <el-tree
                 :data="list"
                 show-checkbox
                 default-expand-all
                 node-key="id"
-                ref="tree">
+                ref="tree"
+                @check-change="getCheckedKeys" >
             </el-tree>
         </div>
     </div>
@@ -46,17 +48,26 @@ export default {
             form: {
                 title: '',
                 desc: ''
-            }
+            },
+            checkedKeys: [] // 树结构选中的ID数组
         }
     },
     created(){
         this.getPowerList()
     },
+    watch: {
+        checkedKeys(newVal, oldVal){
+            console.log(newVal.join(), oldVal.join())
+            if (newVal.join() !== oldVal.join()){
+                
+            }
+        }
+    },
     methods: {
         async getPowerList(){
             try {
                 const response = await getPowerList()
-                // console.log(response.data)
+                console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.list
                 }
@@ -65,7 +76,7 @@ export default {
             }
         },
         getCheckedKeys(){
-            console.log(this.$refs.tree.getCheckedKeys())
+            this.checkedKeys = this.$refs.tree.getCheckedKeys()
         },
         submitHandle(){
             this.insertDataInfo(() => {
@@ -110,4 +121,8 @@ export default {
 </script>
 
 <style>
+.power-setting .icon {
+    font-size: 16px;
+    color: #409eff;
+}
 </style>

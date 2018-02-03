@@ -21,7 +21,7 @@
     <div class="gdmaRelat-list-box">
         <div class="appManager-top gdmaRelat-top">
             <ul class="fr">
-                <el-select class="fl" v-model="search.inventoryId" @change="searchHandle" placeholder="请选择库存类型">
+                <el-select class="fl" v-model="search.inventoryId" clearable @change="searchHandle" placeholder="请选择库存类型">
                     <el-option
                         v-for="(item, key) in inventoryList"
                         :key="key"
@@ -29,7 +29,7 @@
                         :value="item.id">
                     </el-option>
                 </el-select>
-                <el-select class="fl" v-model="search.formulaStateId" @change="searchHandle" placeholder="请选择配方状态">
+                <el-select class="fl" v-model="search.formulaStateId" clearable @change="searchHandle" placeholder="请选择配方状态">
                     <el-option
                         v-for="(item, key) in formulaList"
                         :key="key"
@@ -37,7 +37,7 @@
                         :value="item.id">
                     </el-option>
                 </el-select>
-                <el-select class="fl gdstate" v-model="search.stateId" @change="searchHandle" placeholder="启用">
+                <el-select class="fl gdstate" v-model="search.stateId" clearable @change="searchHandle" placeholder="启用">
                     <el-option
                         v-for="(item, key) in GdStateList"
                         :key="key"
@@ -64,8 +64,8 @@
                 <el-table-column prop="bom_status_text" label="配方状态"></el-table-column>
                 <el-table-column label="操作" width="150" fixed="right">
                     <template slot-scope="scope">
-                        <el-button @click.stop="editRelationHandle(scope.row.id)" type="text">
-                            <i class="el-icon-edit"></i> 编辑关联
+                        <el-button @click.stop="editRelationHandle(scope.row.id, scope.row.name)" type="text">
+                            <i class="el-icon-edit"></i> 编辑配方
                         </el-button>
                     </template>
                 </el-table-column>
@@ -76,7 +76,7 @@
         </div>
     </div>
     <ExtractPanel :params="editRelationExtract" width="calc(100% - 200px)">
-        <span slot="title">商品和原材料的关联关系</span>
+        <span slot="title">{{ editRelationExtract.promptTitle }}</span>
         <EditRelationPanel slot="panel" :params="editRelationExtract" @reloadEvent="reloadGetData"></EditRelationPanel>
     </ExtractPanel>
 </div>
@@ -108,6 +108,7 @@ export default {
                 searchVal: ''
             },
             editRelationExtract: {
+                promptTitle: '商品配方',
                 isPlay: false
             }
         }
@@ -134,9 +135,10 @@ export default {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
-        editRelationHandle(_id){
+        editRelationHandle(_id, _name){
             this.editRelationExtract.isPlay = !0
             this.editRelationExtract.itemId = _id
+            this.editRelationExtract.promptTitle = _name + '配方'
         },
         async getInventoryList(){
             try {

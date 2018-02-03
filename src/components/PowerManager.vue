@@ -5,8 +5,8 @@
     </div>
     <div class="appManager-list">
         <el-table :data="list" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="name" label="职务名称" width="200"></el-table-column>
-            <el-table-column prop="staffs_count" label="人数" width="100"></el-table-column>
+            <el-table-column prop="name" label="职务名称" width="200" sortable></el-table-column>
+            <el-table-column prop="staffs_count" label="人数" width="100" sortable></el-table-column>
             <el-table-column prop="staffs" label="人员"></el-table-column>
             <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
@@ -122,13 +122,4 @@ export default {
 </script>
 
 <style>
-.power-setting {
-    padding-top: 0px;
-    line-height: 24px;
-    vertical-align: middle;
-}
-.power-setting .icon {
-    font-size: 16px;
-    color: #409eff;
-}
 </style>

@@ -13,7 +13,7 @@
             </el-dropdown-menu>
         </el-dropdown>
         <ul class="fr">
-            <el-select class="fl" v-model="search.gdtypeId" @change="searchHandle" placeholder="请选择商品分类">
+            <el-select class="fl" v-model="search.gdtypeId" clearable @change="searchHandle" placeholder="请选择商品分类">
                 <el-option
                     v-for="(item, key) in gdtypeList"
                     :key="key"
@@ -199,7 +199,7 @@ export default {
                     message: '请勾选商品记录再进行批量删除!'
                 })
             }
-            this.$confirm(`确认要批量删除选中的${this.multipleSelection.length}商品吗？删除后将不能恢复！`, '提示', {
+            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？删除后将不能恢复！`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -3,7 +3,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>所属分类</label>
         <div class="app-input-block">
-            <el-select v-model="form.stufftypeId" placeholder="请选择原材料分类">
+            <el-select v-model="form.stufftypeId" clearable placeholder="请选择原材料分类">
                 <el-option v-for="(item, key) in stufftypeList" 
                     :key="key" 
                     :label="item.name" 
@@ -15,7 +15,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>原材料名称</label>
         <div class="app-input-block">
-            <el-input name="materialname" v-model="form.name" v-validate="'required|spechar'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称..." ></el-input>
+            <el-input name="materialname" v-model="form.name" v-validate="'required'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称..." ></el-input>
             <span v-if="errors.has('materialname')" class="prompt-title">{{ errors.first('materialname') }}</span>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>库存类型</label>
         <div class="app-input-block">
-            <el-select v-model="form.reptypeId" placeholder="请选择库存类型">
+            <el-select v-model="form.reptypeId" clearable placeholder="请选择库存类型">
                 <el-option v-for="(item, key) in repTypeList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>
@@ -45,13 +45,13 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>单位</label>
         <div class="app-input-block">
-            <el-select v-model="form.unitId" placeholder="请选商品单位">
+            <el-select v-model="form.unitId" clearable placeholder="请选商品单位">
                 <el-option v-for="(item, key) in unitList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label"><i>*</i>采购价</label>
+        <label class="app-form-label"><i>*</i>采购(成本)价</label>
         <div class="app-input-block">
             <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价..." ></el-input>
             <span v-if="errors.has('purchaseprice')" class="prompt-title">{{ errors.first('purchaseprice') }}</span>
@@ -67,7 +67,7 @@
     <div class="app-form-item">
         <label class="app-form-label">原材料排序</label>
         <div class="app-input-block">
-            <el-input v-model="form.sort" clearable placeholder="请输入原材料排序..." ></el-input>
+            <el-input type="number" v-model="form.sort" placeholder="请输入原材料排序..." ></el-input>
         </div>
     </div>
     <div class="app-form-item">

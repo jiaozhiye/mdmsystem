@@ -10,7 +10,7 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="name" label="门店名称" width="300" sortable></el-table-column>
-            <el-table-column prop="address" label="门店地址"></el-table-column>
+            <el-table-column prop="address" label="门店地址" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="门店电话" width="200"></el-table-column>
             <el-table-column label="操作" width="250">
                 <template slot-scope="scope">

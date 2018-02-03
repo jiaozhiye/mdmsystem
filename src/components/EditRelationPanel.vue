@@ -85,13 +85,19 @@ export default {
         return {
             goodsId: this.params.itemId, // 当前商品ID
             list: [],
-            totalPrice: 0, // 配方估算成本
             loading: false,
             multipleSelection: [], // 选中记录的数组
             addFormulaExtract: {
                 formulaIds: [], // 配方(原材料)记录的ID数组
                 isPlay: false
             }
+        }
+    },
+    computed: {
+        totalPrice(){ // 估算成本求和
+            let sum = 0
+            this.list.forEach(item => sum += item.total_price)
+            return sum
         }
     },
     methods: {
@@ -109,8 +115,7 @@ export default {
             }).then(() => {
                 this.removeItemById(_id)
                 // 从 formulaIds 数组中移除当前删除元素的ID
-                this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(_id), 1)
-                this.sumTotalPrice()
+                this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.findIndex(item => item.id == _id), 1)
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
@@ -127,7 +132,7 @@ export default {
                     message: '请勾选原材料记录再进行批量删除!'
                 })
             }
-            this.$confirm(`确认要批量删除选中的${this.multipleSelection.length}原材料吗？删除后将不能恢复！`, '提示', {
+            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？删除后将不能恢复！`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -135,11 +140,10 @@ export default {
                 this.multipleSelection.forEach(item => {
                     this.removeItemById(item.id)
                     // 从 formulaIds 数组中移除批量选中元素的ID
-                    this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.indexOf(item.id), 1)
+                    this.addFormulaExtract.formulaIds.splice(this.addFormulaExtract.formulaIds.findIndex(val => val.id == item.id), 1)
                 })
                 // 清空 multipleSelection
                 this.multipleSelection.splice(0)
-                this.sumTotalPrice()
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
@@ -167,13 +171,6 @@ export default {
             // 计算估算价格
             let val = item.purchase_price * item.gross_num
             item.total_price = parseFloat(val.toFixed(3))
-            // 求和
-            this.sumTotalPrice()
-        },
-        sumTotalPrice(){
-            let sum = 0
-            this.list.forEach(item => sum += item.total_price)
-            this.totalPrice = sum
         },
         addMaterialHandle(){
             this.addFormulaExtract.isPlay = !0
@@ -183,7 +180,7 @@ export default {
             setTimeout(() => {
                 this.list = res
                 // 原材料联动 重设 formulaIds 数组
-                this.addFormulaExtract.formulaIds = res.map(item => item.id)
+                this.addFormulaExtract.formulaIds = res.map(item => ({id: item.id, data: item}))
             }, 0)
         },
         async getGoodsFormulaList(callback){
@@ -196,12 +193,15 @@ export default {
                     response.data.list.map(item => {
                         item.isEdit = false
                         // 初始化 formulaIds 数组，同步原材料默认选中
-                        this.addFormulaExtract.formulaIds.push(item.id)
+                        this.addFormulaExtract.formulaIds.push({
+                            id: item.id,
+                            data: item
+                        })
                     })
                     // console.log(response.data.list)
                     this.list = response.data.list
-                    callback && callback()
                 }
+                callback && callback()
             } catch (error){
                 console.error(error)
             }
@@ -222,7 +222,7 @@ export default {
                 if (response.data.code == 1){
                     this.$message({
                         type: 'success',
-                        message: '商品配方关联成功!'
+                        message: '商品配方设置成功!'
                     })
                     callback && callback()
                 } else {
@@ -248,9 +248,7 @@ export default {
         }
     },
     created(){
-        this.getGoodsFormulaList(() => {
-            this.sumTotalPrice()
-        })
+        this.getGoodsFormulaList()
     },
     components: {
         ExtractPanel,
