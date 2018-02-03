@@ -140,8 +140,8 @@ a:hover {
 .app-form-label {
   float: left;
   display: block;
-  padding: 10px 15px;
-  width: 80px;
+  padding: 10px 15px 10px 0;
+  width: 95px;
   font-weight: 400;
   text-align: right;
   line-height: 20px;

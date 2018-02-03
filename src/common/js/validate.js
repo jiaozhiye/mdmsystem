@@ -29,7 +29,7 @@ const dictionary = {
         goodsprice: '商品定价',
         materialname: '原材料名称',
         purchaseprice: '采购价',
-        balance_price: '默认结算价',
+        balanceprice: '默认结算价',
         yieldrate: '出成率'
       }
    }

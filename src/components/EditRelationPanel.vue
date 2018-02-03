@@ -132,7 +132,7 @@ export default {
                     message: '请勾选原材料记录再进行批量删除!'
                 })
             }
-            this.$confirm(`确认要批量删除选中的${this.multipleSelection.length}原材料吗？删除后将不能恢复！`, '提示', {
+            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？删除后将不能恢复！`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -219,7 +219,7 @@ export default {
                 if (response.data.code == 1){
                     this.$message({
                         type: 'success',
-                        message: '商品配方关联成功!'
+                        message: '商品配方设置成功!'
                     })
                     callback && callback()
                 } else {

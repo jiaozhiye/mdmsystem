@@ -42,10 +42,10 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50" fixed></el-table-column>
             <el-table-column prop="name" label="原材料名称" sortable></el-table-column>
-            <el-table-column prop="goods_unit_text" label="单位(标准)" width="150"></el-table-column>
-            <el-table-column prop="type_2_text" label="原材料中类" width="150" sortable></el-table-column>
-            <el-table-column prop="code" label="原材料编号" width="150"></el-table-column>
-            <el-table-column prop="wm_type_text" label="库存类型" width="150"></el-table-column>
+            <el-table-column prop="goods_unit_text" label="单位(标准)" width="120"></el-table-column>
+            <el-table-column prop="type_2_text" label="原材料中类" width="120" sortable></el-table-column>
+            <el-table-column prop="code" label="原材料编号" width="120"></el-table-column>
+            <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
         </el-table>
         <el-pagination background layout="prev, pager, next, jumper"
             :total="list.total" @current-change="handleCurrentChange">

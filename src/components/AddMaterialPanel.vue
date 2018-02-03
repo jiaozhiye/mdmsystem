@@ -15,7 +15,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>原材料名称</label>
         <div class="app-input-block">
-            <el-input name="materialname" v-model="form.name" v-validate="'required|spechar'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称..." ></el-input>
+            <el-input name="materialname" v-model="form.name" v-validate="'required'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称..." ></el-input>
             <span v-if="errors.has('materialname')" class="prompt-title">{{ errors.first('materialname') }}</span>
         </div>
     </div>
@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label"><i>*</i>采购价</label>
+        <label class="app-form-label"><i>*</i>采购(成本)价</label>
         <div class="app-input-block">
             <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价..." ></el-input>
             <span v-if="errors.has('purchaseprice')" class="prompt-title">{{ errors.first('purchaseprice') }}</span>
@@ -67,7 +67,7 @@
     <div class="app-form-item">
         <label class="app-form-label">原材料排序</label>
         <div class="app-input-block">
-            <el-input v-model="form.sort" clearable placeholder="请输入原材料排序..." ></el-input>
+            <el-input type="number" v-model="form.sort" placeholder="请输入原材料排序..." ></el-input>
         </div>
     </div>
     <div class="app-form-item">
