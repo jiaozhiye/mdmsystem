@@ -69,22 +69,25 @@ export const getPowerInfo = () => instance.get('/mgr/job/list')
 export const delPowerRecord = params => instance.get('/mgr/job/deleteById', {params})
 
 // 保存职务信息
-export const savePowerRecord = params => instance.post('', params)
+export const savePowerRecord = params => instance.post('/mgr/job/add', params)
 
 // 获取职务权限列表
 export const getPowerList = () => instance.get('/mgr/job/showResource')
 
 // 根据ID获取职务信息
-export const getPowerRecord = params => instance.get('', {params})
+export const getPowerRecord = params => instance.get('/mgr/job/showById', {params})
 
 // 更新职务信息
-export const updatePowerRecord = params => instance.post('', params)
+export const updatePowerRecord = params => instance.post('/mgr/job/updateById', params)
 
 // 获取门店信息
 export const getStoreInfo = params => instance.get('/mgr/store/query', {params})
 
+// 停用门店
+export const stopStoreRecord = params => instance.get('/mgr/store/stop', {params})
+
 // 删除门店记录
-export const delStoreRecord = params => instance.get('/mgr/store/stop', {params})
+export const delStoreRecord = params => instance.get('mgr/store/deleteById', {params})
 
 // 保存门店信息
 export const saveStoreRecord = params => instance.post('/mgr/store/add', params)

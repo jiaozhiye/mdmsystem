@@ -53,7 +53,7 @@
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" width="250" sortable></el-table-column>
+                <el-table-column prop="name" label="原材料名称" width="250" fixed sortable></el-table-column>
                 <el-table-column prop="type_2_text" label="原材料中类" width="150"></el-table-column>
                 <el-table-column prop="code" label="原材料编号" width="150" sortable></el-table-column>
                 <el-table-column prop="wm_type_text" label="库存类型" width="150"></el-table-column>
@@ -63,7 +63,7 @@
                 <el-table-column label="状态">
                     <template slot-scope="scope">
                         <el-tag size="medium" :type="scope.row.status == '1' ? '' : 'danger'">
-                            {{ scope.row.status == '1' ? '启用' : '停用' }}
+                            {{ scope.row.status_text }}
                         </el-tag>
                     </template>
                 </el-table-column>
@@ -73,7 +73,8 @@
                             <i class="el-icon-edit"></i> 修改
                         </el-button>
                         <el-button @click.stop="delItemHandle(scope.row)" type="text">
-                            <i class="el-icon-delete"></i> {{ scope.row.status == '1' ? '停用' : '启用' }}
+                            <i :class="{'el-icon-circle-close-outline': scope.row.status == '1', 'el-icon-circle-check-outline': scope.row.status != '1'}"></i>
+                            {{ scope.row.status == '1' ? '停用' : '启用' }}
                         </el-button>
                     </template>
                 </el-table-column>

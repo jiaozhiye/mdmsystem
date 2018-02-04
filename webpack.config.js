@@ -5,11 +5,15 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    main: './src/main.js',
+    vendor: ['jquery', 'lodash', 'vue', 'vuex', 'vue-router', 'axios', 'vee-validate', 'element-ui']
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.min.js'
+    publicPath: '',
+    filename: '[name].min.js'
+    // filename: '[name].[chunkhash].min.js'
   },
   module: {
     rules: [
@@ -69,7 +73,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json']
   },
   devServer: {
-    host: '192.168.1.103',
+    host: '192.168.1.109',
     historyApiFallback: true,
     noInfo: true
   },
@@ -84,7 +88,6 @@ if (process.env.NODE_ENV === 'production'){
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
@@ -96,6 +99,12 @@ if (process.env.NODE_ENV === 'production'){
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor', 'manifest']
+    }),
+    new HtmlWebpackPlugin({
+      template: 'index.html'
     }),
 	  new CopyWebpackPlugin([{
       from: path.join(__dirname, 'src/assets'),

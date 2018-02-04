@@ -16,14 +16,15 @@
     <div class="app-form-item">
         <label class="app-form-label power-setting"><i class="icon el-icon-edit-outline"></i> 权限设置</label>
         <div class="app-input-block">
-            <h4 style="color: #909399">选中分类才会拥有操作权限</h4>
+            <h4 style="color: #909399">提示：勾选分类才会拥有操作权限</h4>
             <el-tree
+                ref="tree"
                 :data="list"
                 show-checkbox
                 default-expand-all
                 node-key="id"
                 :default-checked-keys="checkedKeys"
-                ref="tree">
+                @check-change="getCheckedKeys">
             </el-tree>
         </div>
     </div>
@@ -46,11 +47,11 @@ export default {
         return {
             itemId: this.params.itemId,
             list: [],
-            checkedKeys: [],
             form: {
                 title: '',
                 desc: ''
-            }
+            },
+            checkedKeys: [] // 树结构选中的ID数组
         }
     },
     created(){
@@ -60,29 +61,33 @@ export default {
         async getItemInfo(){
             try {
                 const response = await getPowerRecord({id: this.itemId})
-                this.form.title = response.data.job.name
-                this.form.desc = response.data.job.desc
-                this.list = response.data.menuList
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    this.form.title = response.data.job.name
+                    this.form.desc = response.data.job.desc
+                    this.list = response.data.tree
+                    this.checkedKeys = response.data.menuList
+                }
             } catch (error){
                 console.error(error)
             }
         },
         getCheckedKeys(){
-            console.log(this.$refs.tree.getCheckedKeys())
+            this.checkedKeys = this.$refs.tree.getCheckedKeys()
         },
         submitHandle(){   
-            this.updateDataInfo(() => {
+            this.updatePowerInfo(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        async updateDataInfo(callback){
+        async updatePowerInfo(callback){
             try {
                 const response = await updatePowerRecord({
                     id: this.itemId,
                     name: this.form.title,
                     desc: this.form.desc,
-                    list: this.list
+                    menuIds: this.checkedKeys.join(',')
                 })
                 if (response.data.code == 1){
                     this.$message({

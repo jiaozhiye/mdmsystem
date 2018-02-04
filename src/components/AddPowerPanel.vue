@@ -16,14 +16,14 @@
     <div class="app-form-item">
         <label class="app-form-label power-setting"><i class="icon el-icon-edit-outline"></i> 权限设置</label>
         <div class="app-input-block">
-            <h4 style="color: #909399">选中分类才会拥有操作权限</h4>
+            <h4 style="color: #909399">提示：勾选分类才会拥有操作权限</h4>
             <el-tree
                 :data="list"
                 show-checkbox
                 default-expand-all
                 node-key="id"
                 ref="tree"
-                @check-change="getCheckedKeys" >
+                @check-change="getCheckedKeys">
             </el-tree>
         </div>
     </div>
@@ -55,19 +55,11 @@ export default {
     created(){
         this.getPowerList()
     },
-    watch: {
-        checkedKeys(newVal, oldVal){
-            console.log(newVal.join(), oldVal.join())
-            if (newVal.join() !== oldVal.join()){
-                
-            }
-        }
-    },
     methods: {
         async getPowerList(){
             try {
                 const response = await getPowerList()
-                console.log(response.data)
+                // console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.list
                 }
@@ -79,12 +71,12 @@ export default {
             this.checkedKeys = this.$refs.tree.getCheckedKeys()
         },
         submitHandle(){
-            this.insertDataInfo(() => {
+            this.insertPowerInfo(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        async insertDataInfo(callback){
+        async insertPowerInfo(callback){
             if (this.form.title == ''){
                 return this.$message({
                     message: '请正确填写职务名称再提交！',
@@ -95,7 +87,7 @@ export default {
                 const response = await savePowerRecord({
                     name: this.form.title,
                     desc: this.form.desc,
-                    list: this.list
+                    menuIds: this.checkedKeys.join(',')
                 })
                 if (response.data.code == 1){
                     this.$message({

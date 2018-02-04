@@ -6,7 +6,7 @@
         <span class="fl relation-top-tit">
             <i class="el-icon-question"></i> 配方估算成本：{{ totalPrice }} 元/份
         </span>
-        <el-button class="fr" type="primary" @click.stop="saveHandle"> 保 存 </el-button>
+        <el-button class="fr" type="primary" icon="el-icon-document" @click.stop="saveHandle"> 保 存 </el-button>
     </div>
     <div class="appManager-list fixedTable-list">
         <el-table 
@@ -15,7 +15,7 @@
             v-loading="loading" 
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50" fixed></el-table-column>
-            <el-table-column prop="name" label="原材料名称" width="200" sortable></el-table-column>
+            <el-table-column prop="name" label="原材料名称" width="200" fixed sortable></el-table-column>
             <el-table-column prop="type_2_text" label="原材料中类" width="120"></el-table-column>
             <el-table-column prop="code" label="原材料编号" width="120"></el-table-column>
             <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
@@ -94,10 +94,10 @@ export default {
         }
     },
     computed: {
-        totalPrice(){ // 估算成本求和
+        totalPrice(){ // 配方估算成本求和
             let sum = 0
             this.list.forEach(item => sum += item.total_price)
-            return sum
+            return parseFloat(sum.toFixed(5))
         }
     },
     methods: {
@@ -170,10 +170,11 @@ export default {
         computePrice(item){
             // 计算估算价格
             let val = item.purchase_price * item.gross_num
-            item.total_price = parseFloat(val.toFixed(3))
+            item.total_price = parseFloat(val.toFixed(5))
         },
         addMaterialHandle(){
             this.addFormulaExtract.isPlay = !0
+            this.addFormulaExtract.itemId = this.goodsId
         },
         addMaterialList(res){
             // console.log(res)
