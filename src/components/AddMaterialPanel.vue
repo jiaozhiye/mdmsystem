@@ -53,14 +53,14 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>采购(成本)价</label>
         <div class="app-input-block">
-            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价..." ></el-input>
+            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价..." ></el-input>
             <span v-if="errors.has('purchaseprice')" class="prompt-title">{{ errors.first('purchaseprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>默认结算价</label>
         <div class="app-input-block">
-            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价..." ></el-input>
+            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价..." ></el-input>
             <span v-if="errors.has('balanceprice')" class="prompt-title">{{ errors.first('balanceprice') }}</span>
         </div>
     </div>

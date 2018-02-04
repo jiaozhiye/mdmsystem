@@ -91,19 +91,19 @@ a:hover {
  * scrollbar style
  */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 10px;
+    height: 10px;
 }
 ::-webkit-scrollbar-track-piece {
     background-color: rgba(0, 0, 0, .2);
 }
 ::-webkit-scrollbar-thumb:vertical {
-    height: 6px;
-    background-color: rgba(0, 0, 0, .6);
+    height: 10px;
+    background-color: rgba(0, 0, 0, .4);
 }
 ::-webkit-scrollbar-thumb:horizontal {
-    width: 6px;
-    background-color: rgba(0, 0, 0, .6);
+    width: 10px;
+    background-color: rgba(0, 0, 0, .4);
 }
 
 /**

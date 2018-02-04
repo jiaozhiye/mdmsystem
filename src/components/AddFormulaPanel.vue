@@ -64,6 +64,7 @@ export default {
     },
     data(){
         return {
+            goodsId: this.params.itemId, // 当前商品ID
             list: [],
             curPageIndex: 1, // 当前页码
             loading: false,
@@ -117,6 +118,7 @@ export default {
             this.loading = !0
             try {
                 const response = await getFormulaInfo({
+                    goodsId: this.goodsId,
                     pageNum: curPage,
                     pageSize: 10,
                     materialTypeIds: this.search.stufftypeId,

@@ -28,11 +28,11 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="name" label="员工名称" sortable></el-table-column>
-            <el-table-column prop="gender" label="性别"></el-table-column>
-            <el-table-column prop="dept_name" label="部门" sortable></el-table-column>
-            <el-table-column prop="job_name" label="职务" sortable></el-table-column>
+            <el-table-column prop="gender_text" label="性别"></el-table-column>
             <el-table-column prop="phone" label="手机"></el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column prop="dept_text" label="部门" sortable></el-table-column>
+            <el-table-column prop="job_text" label="职务"></el-table-column>
+            <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
                     <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-edit"></i> 修改

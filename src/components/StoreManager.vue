@@ -11,14 +11,25 @@
             <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="name" label="门店名称" width="300" sortable></el-table-column>
             <el-table-column prop="address" label="门店地址" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="phone" label="门店电话" width="200"></el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column prop="phone" label="门店电话" width="150"></el-table-column>
+            <el-table-column label="状态" width="120">
+                <template slot-scope="scope">
+                    <el-tag size="medium" :type="scope.row.status == '1' ? '' : 'danger'">
+                        {{ scope.row.status_text }}
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="220">
                 <template slot-scope="scope">
                     <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-edit"></i> 修改
                     </el-button>
+                    <el-button @click.stop="stopItemHandle(scope.row)" type="text">
+                        <i :class="{'el-icon-circle-close-outline': scope.row.status == '1', 'el-icon-circle-check-outline': scope.row.status != '1'}"></i>
+                        {{ scope.row.status == '1' ? '停用' : '启用' }}
+                    </el-button>
                     <el-button @click.stop="delItemHandle(scope.row.id)" type="text">
-                        <i class="el-icon-delete"></i> 停用
+                        <i class="el-icon-delete"></i> 删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -43,7 +54,7 @@ import ExtractPanel from './ExtractPanel.vue'
 import AddStorePanel from './AddStorePanel.vue'
 import ModStorePanel from './ModStorePanel.vue'
 
-import {getStoreInfo, delStoreRecord} from 'api'
+import {getStoreInfo, stopStoreRecord, delStoreRecord} from 'api'
 
 export default {
     name: 'StoreManager',
@@ -71,8 +82,37 @@ export default {
             this.modStoreExtract.isPlay = !0
             this.modStoreExtract.itemId = _id
         },
+        stopItemHandle(item){
+            this.$confirm(`确认${item.status == '1' ? '停用' : '启用'}此门店吗?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                try {
+                    const response = await stopStoreRecord({
+                        id: item.id,
+                        status: item.status == '1' ? '0' : '1' // 1 -> 启用    0 -> 停用
+                    })
+                    if (response.data.code == 1){
+                        // this.removeItemById(_id)
+                        this.getStoreList(this.curPageIndex)
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功!'
+                        })
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: response.data.message
+                        })
+                    }
+                } catch (error){
+                    console.error(error)
+                }
+            }).catch(() => {})
+        },
         delItemHandle(_id){
-            this.$confirm('确认停用此门店吗?', '提示', {
+            this.$confirm(`确认删除此门店吗?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
