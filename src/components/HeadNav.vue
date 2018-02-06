@@ -21,6 +21,7 @@ export default {
     data(){
         return {
             curIndex: 0, // 当前一级分类索引
+            defaultDir: 'sys_setting', // 默认跳转的一级分类
             parentDepth: '', // 父级元素的深度
             list: []
         }
@@ -49,6 +50,7 @@ export default {
                 // console.log(response.data.list)
                 if (response.data.code == 1){
                     this.list = response.data.list
+                    this.defaultDir = response.data.defaultLink
                     callback && callback()
                 } else {
                     console.error(response.data.message)
@@ -58,11 +60,12 @@ export default {
             }
         },
         setNavInfo(){
-            let _hash = getUrlHash() == '/' ? '/sys_setting' : getUrlHash()
+            let _hash = getUrlHash() != '/' ? getUrlHash() : this.defaultDir
             // 获取一级分类索引
-            this.curIndex = this.list.findIndex(item => {
-                return item.link === '/' + _hash.split('/')[1]
-            })
+            this.curIndex = this.list.findIndex(item => item.link === '/' + _hash.split('/')[1])
+            if (this.curIndex === -1){
+                return
+            }
             // vuex 设置导航菜单信息
             this.createNavInfo(this.list[this.curIndex].list)
             if (_hash.split('/').length < 3 || _hash.split('/')[2] == ''){
@@ -127,7 +130,11 @@ export default {
     color: #fff;
 }
 
+/* 一级分类图标 */
 .head-nav ul li a i.graph-sys_setting {
     background-position: 0 0;
+}
+.head-nav ul li a i.graph-storer_manager {
+    background-position: -16px 0;
 }
 </style>

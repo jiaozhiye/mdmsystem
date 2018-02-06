@@ -1,3 +1,4 @@
+const Home = () => import('components/Home.vue')
 const DeptManager = () => import('components/DeptManager.vue')
 const EmployManager = () => import('components/EmployManager.vue')
 const PowerManager = () => import('components/PowerManager.vue')
@@ -8,9 +9,12 @@ const UnitManager = () => import('components/UnitManager.vue')
 const GoodsManager = () => import('components/GoodsManager.vue')
 const MaterialManager = () => import('components/MaterialManager.vue')
 const RelationManager = () => import('components/RelationManager.vue')
+const PersonalSetting = () => import('components/PersonalSetting.vue')
+const ImportSaleManager = () => import('components/ImportSaleManager.vue')
 
 const routes = {
     routes: [
+        // 系统管理
         {
             path: '/sys_setting',
             component: DeptManager
@@ -56,10 +60,23 @@ const routes = {
             component: RelationManager
         },
         {
+            path: '/sys_setting/per-setting',
+            component: PersonalSetting
+        },
+        // 店长管理
+        {
+            path: '/storer_manager',
+            component: ImportSaleManager
+        },
+        {
+            path: '/storer_manager/imp_sale',
+            component: ImportSaleManager
+        },
+        {
             path: '*',
             redirect: '/sys_setting'
         }
     ]
 }
 
- export default routes
+export default routes

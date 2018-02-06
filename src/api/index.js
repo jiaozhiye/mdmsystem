@@ -20,6 +20,21 @@ const instance = axios.create({
  * 向后台请求数据的 API 接口
  */
 
+// 登录接口
+export const loginSystem = params => instance.post('/login', params)
+
+// 退出接口
+export const logoutSystem = () => instance.get('/mgr/user/loginout')
+
+// 获取登录用户信息
+export const getUserInfo = () => instance.get('/mgr/user/getUserInfo')
+
+// 个人设置接口(获取个人详细信息)
+export const getUserAllInfo = () => instance.get('/mgr/user/showMyDetail')
+
+// 修改个人信息
+export const updateUserInfo = params => instance.post('/mgr/user/modifyMyPwd', params)
+
 // 获取导航菜单
 export const getMenuInfo = () => instance.get('/mgr/menu')
 
@@ -233,7 +248,8 @@ export const getGoodsFormulaInfo = params => instance.get('/mgr/bomMgr/queryBomB
 // 保存商品配方(原材料)关联
 export const saveGdRelation = params => instance.post('/mgr/bomMgr/save', params)
 
-
+// 获取导入的销售数据信息
+export const getSaleInfo = () => instance.get('')
 
 
 

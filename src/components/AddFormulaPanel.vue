@@ -117,16 +117,19 @@ export default {
             }
             this.loading = !0
             try {
+                // console.log(this.params.formulaIds)
                 const response = await getFormulaInfo({
                     goodsId: this.goodsId,
                     pageNum: curPage,
                     pageSize: 10,
                     materialTypeIds: this.search.stufftypeId,
                     inventoryId: this.search.inventoryId,
-                    keyword: this.search.searchVal
+                    keyword: this.search.searchVal,
+                    checkedIds: this.params.formulaIds.map(item => item.id).join(',')
                 })
                 // console.log(response.data)
                 if (response.data.code == 1){
+                    // 默认数据都是关闭编辑状态
                     response.data.data.list.map(item => item.isEdit = false)
                     this.list = response.data.data.list
                     this.list.total = response.data.data.totalRow

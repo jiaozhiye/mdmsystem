@@ -21,6 +21,9 @@
 import 'common/css/reset.css'
 import 'common/css/style.css'
 
+import {mapActions} from 'vuex'
+import {getUserInfo} from 'api'
+
 import AppHeader from 'components/Header.vue'
 import AppSidebar from 'components/Sidebar.vue'
 
@@ -28,12 +31,38 @@ export default {
   name: 'app',
   data (){
     return {
+      perInfo: {},
       sidebarState: false
     }
   },
+  created(){
+    this.getPerInfo(() => this.createPersonalInfo(this.perInfo))
+  },
   methods: {
+    ...mapActions([
+      'createPersonalInfo'
+    ]),
     sidebarHandle (){
       this.sidebarState = !this.sidebarState
+    },
+    async getPerInfo(callback){
+      try {
+        const response = await getUserInfo()
+        // console.log(response.data)
+        if (response.data.code == 1){
+          this.perInfo.id = response.data.id
+          this.perInfo.name = response.data.name || '管理员'
+          this.perInfo.type = response.data.type // 0 -> 普通员工    1 -> 部门经理    2 -> 管理员
+          callback && callback()
+        } else {
+          this.$message({
+              type: 'error',
+              message: response.data.message
+          })
+        }
+      } catch (err){
+          console.error(err)
+      }
     }
   },
   components: {

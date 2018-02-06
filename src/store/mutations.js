@@ -7,6 +7,9 @@
 import * as types from './types'
 
 const mutations = {
+    [types.PERSONAL](state, payload){
+        state.personalInfo = payload.info
+    },
     [types.NAVINFO](state, payload){
         state.navInfo = payload.info
     },

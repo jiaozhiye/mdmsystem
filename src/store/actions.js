@@ -7,6 +7,12 @@
 import * as types from './types'
 
 const actions = {
+    createPersonalInfo ({commit}, params){
+        commit({
+            type: types.PERSONAL,
+            info: params
+        })
+    },
     createNavInfo ({commit}, params){
         commit({
             type: types.NAVINFO,

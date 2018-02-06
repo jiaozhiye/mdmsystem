@@ -8,13 +8,13 @@
     </div>
     <div class="user-setting fr">
         <DropdownMenu placement="right">
-            <span slot="title">管理员</span>
+            <span slot="title">{{ getPersonalInfo.name }}</span>
             <div slot="list" class="user-setting-list">
                 <ul>
-                    <li @click.stop.native="">
+                    <li @click.stop="jumpToPersonal">
                         个人设置
                     </li>
-                    <li @click.stop.native="">
+                    <li @click.stop="doLogout">
                         安全退出
                     </li>
                 </ul>
@@ -28,10 +28,42 @@
 import HeadNav from './HeadNav.vue'
 import DropdownMenu from './DropdownMenu.vue'
 
+import {mapGetters} from 'vuex'
+
+import {logoutSystem} from  'api'
+
 export default {
     name: 'Header',
     data(){
-        return {}
+        return {
+            userName: '管理员'
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'getPersonalInfo'
+        ])
+    },
+    methods: {
+        jumpToPersonal(){
+            window.location.href = '#/sys_setting/per-setting'
+        },
+        async doLogout(){
+            try {
+                const response = await logoutSystem()
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    window.location.href = '/login.html'
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.message
+                    })
+                }
+            } catch (err){
+                console.error(err)
+            }
+        }
     },
     components: {
         HeadNav,
