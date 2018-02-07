@@ -86,7 +86,11 @@
     </div>
     <ExtractPanel :params="addMaterialExtract">
         <span slot="title">新增原材料</span>
-        <AddMaterialPanel slot="panel" :classid="stuffIdForAdd" :params="addMaterialExtract" @reloadEvent="reloadGetData"></AddMaterialPanel>
+        <AddMaterialPanel slot="panel" 
+            :classid="stuffIdForAdd" 
+            :params="addMaterialExtract" 
+            @reloadEvent="reloadGetData">
+        </AddMaterialPanel>
     </ExtractPanel>
     <ExtractPanel :params="modMaterialExtract">
         <span slot="title">修改原材料信息</span>

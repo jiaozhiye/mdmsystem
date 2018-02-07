@@ -65,7 +65,10 @@
     </div>
     <ExtractPanel :params="addFormulaExtract" width="60%" top="0px">
         <span slot="title">添加配方(原材料)</span>
-        <AddFormulaPanel slot="panel" :params="addFormulaExtract" @reloadEvent="addMaterialList"></AddFormulaPanel>
+        <AddFormulaPanel slot="panel" 
+            :params="addFormulaExtract" 
+            @reloadEvent="addMaterialList">
+        </AddFormulaPanel>
     </ExtractPanel>
 </div>
 </template>

@@ -61,7 +61,13 @@
                 <el-table-column prop="wm_type_text" label="库存类型" width="150"></el-table-column>
                 <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
                 <el-table-column prop="bom_time_text" label="设定日期" width="200" sortable></el-table-column>
-                <el-table-column prop="bom_status_text" label="配方状态"></el-table-column>
+                <el-table-column label="配方状态">
+                    <template slot-scope="scope">
+                        <el-tag size="medium" :type="scope.row.bom_status == '1' ? '' : 'danger'">
+                            {{ scope.row.bom_status_text }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="150" fixed="right">
                     <template slot-scope="scope">
                         <el-button @click.stop="editRelationHandle(scope.row.id, scope.row.name)" type="text">

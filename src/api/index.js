@@ -250,7 +250,7 @@ export const saveGdRelation = params => instance.post('/mgr/bomMgr/save', params
 
 // 获取导入的销售数据信息
 export const getSaleInfo = () => instance.get('')
-
+// 77
 
 
 
