@@ -22,13 +22,13 @@
     <div class="app-form-item">
         <label class="app-form-label">商品编号</label>
         <div class="app-input-block">
-            <el-input v-model="form.code" clearable placeholder="请输入商品编号..." ></el-input>
+            <el-input v-model="form.code" disabled clearable placeholder="请输入商品编号..." ></el-input>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>库存类型</label>
         <div class="app-input-block">
-            <el-select v-model="form.reptypeId" clearable placeholder="请选择库存类型">
+            <el-select v-model="form.reptypeId" disabled clearable placeholder="请选择库存类型">
                 <el-option v-for="(item, key) in repTypeList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>
@@ -36,7 +36,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>单位</label>
         <div class="app-input-block">
-            <el-select v-model="form.unitId" clearable placeholder="请选择商品单位">
+            <el-select v-model="form.unitId" disabled clearable placeholder="请选择商品单位">
                 <el-option v-for="(item, key) in unitList" :key="key" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </div>

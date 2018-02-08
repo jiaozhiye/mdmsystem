@@ -53,13 +53,13 @@
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" width="250" fixed sortable></el-table-column>
-                <el-table-column prop="type_2_text" label="原材料中类" width="150"></el-table-column>
-                <el-table-column prop="code" label="原材料编号" width="150" sortable></el-table-column>
-                <el-table-column prop="wm_type_text" label="库存类型" width="150"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" width="220" fixed sortable></el-table-column>
+                <el-table-column prop="type_2_text" label="原材料中类" width="120"></el-table-column>
+                <el-table-column prop="code" label="原材料编号" width="120" sortable></el-table-column>
+                <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
                 <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
-                <el-table-column prop="purchase_price" label="采购价(成本价)" width="150" sortable></el-table-column>
-                <el-table-column prop="balance_price" label="默认结算价" width="130" sortable></el-table-column>
+                <el-table-column prop="purchase_price" label="采购(成本)价" width="130" sortable></el-table-column>
+                <el-table-column prop="balance_price" label="默认结算价" width="120" sortable></el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope">
                         <el-tag size="medium" :type="scope.row.status == '1' ? '' : 'danger'">
@@ -67,7 +67,7 @@
                         </el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="200" fixed="right">
+                <el-table-column label="操作" width="150" fixed="right">
                     <template slot-scope="scope">
                         <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
                             <i class="el-icon-edit"></i> 修改
@@ -371,6 +371,7 @@ export default {
 
 /* 原材料分类树 */
 .material-tree-box {
+    margin-top: 60px;
     width: 280px;
     padding: 20px;
     max-height: calc(100% - 80px);

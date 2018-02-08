@@ -47,7 +47,7 @@
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button @click.stop="modItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-edit"></i> 修改

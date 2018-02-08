@@ -1,6 +1,6 @@
 <template>
 <div class="appManager-wrapper">
-    <div class="appManager-top">
+    <div class="appManager-top stock-top">
         <el-date-picker
             class="fl" 
             v-model="dateTime" 
@@ -11,6 +11,7 @@
             @change="getDataList" 
             :picker-options="pickerOptions">
         </el-date-picker>
+        <span>{{ promptMsg }}</span>
     </div>
     <div style="margin-top: 20px">
         <el-table :data="list" border style="width: 100%" v-loading="loading">
@@ -35,6 +36,7 @@ export default {
         return {
             list: [],
             thead: {},
+            promptMsg: '', // 提示计算公式
             loading: false,
             dateTime: moment().format('YYYY-MM-DD'),
             pickerOptions: {
@@ -75,6 +77,7 @@ export default {
                 if (response.data.code == 1){
                     this.thead = response.data.thead
                     this.list  = response.data.tbody
+                    this.promptMsg = response.data.formula
                 }
             } catch (error){
                 console.error(error)
@@ -89,4 +92,9 @@ export default {
 </script>
 
 <style>
+.stock-top > span {
+    line-height: 40px;
+    margin-left: 10px;
+    color: #999;
+}
 </style>
