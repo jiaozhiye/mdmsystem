@@ -11,6 +11,7 @@ const MaterialManager = () => import('components/MaterialManager.vue')
 const RelationManager = () => import('components/RelationManager.vue')
 const PersonalSetting = () => import('components/PersonalSetting.vue')
 const ImportSaleManager = () => import('components/ImportSaleManager.vue')
+const StockManager = () => import('components/StockManager.vue')
 
 const routes = {
     routes: [
@@ -60,7 +61,7 @@ const routes = {
             component: RelationManager
         },
         {
-            path: '/sys_setting/per-setting',
+            path: '/sys_setting/per_setting',
             component: PersonalSetting
         },
         // 店长管理
@@ -72,10 +73,19 @@ const routes = {
             path: '/storer_manager/imp_sale',
             component: ImportSaleManager
         },
+        // 安全存量
         {
-            path: '*',
-            redirect: '/sys_setting'
-        }
+            path: '/sstock_manager',
+            component: StockManager
+        },
+        {
+            path: '/sstock_manager/budget_manager',
+            component: StockManager
+        },
+        // {
+        //     path: '*',
+        //     redirect: '/sys_setting'
+        // }
     ]
 }
 

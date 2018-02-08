@@ -60,7 +60,11 @@ export default {
             }
         },
         setNavInfo(){
-            let _hash = getUrlHash() != '/' ? getUrlHash() : this.defaultDir
+            // 处理 hash 值
+            let _hash = getUrlHash() 
+            if (_hash == '/'){
+                window.location.hash = _hash = this.defaultDir
+            }
             // 获取一级分类索引
             this.curIndex = this.list.findIndex(item => item.link === '/' + _hash.split('/')[1])
             if (this.curIndex === -1){
@@ -136,5 +140,8 @@ export default {
 }
 .head-nav ul li a i.graph-storer_manager {
     background-position: -16px 0;
+}
+.head-nav ul li a i.graph-sstock_manager {
+    background-position: -32px 0;
 }
 </style>

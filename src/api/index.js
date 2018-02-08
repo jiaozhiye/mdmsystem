@@ -248,10 +248,13 @@ export const getGoodsFormulaInfo = params => instance.get('/mgr/bomMgr/queryBomB
 // 保存商品配方(原材料)关联
 export const saveGdRelation = params => instance.post('/mgr/bomMgr/save', params)
 
-// 获取导入的销售数据信息
-export const getSaleInfo = () => instance.get('')
-// 77
+// 获取安全存储数据列表
+export const getSecurityStockInfo = params => instance.get('mgr/dailySummary/getSecurityStock', {params})
 
+// 判断是否已导入销售数据
+export const getHasDailySummary = params => instance.get('mgr/dailySummary/hasDailySummary', {params})
 
-
+// 获取导入的销售数据列表
+export const getScaleImportedInfo = params => instance.get('mgr/dailySummary/getDailySummary', {params})
+// 79
 

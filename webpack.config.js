@@ -11,7 +11,7 @@ module.exports = {
     vendor: [ // vender 属性用于提取和打包第三方js库，并把这些库文件打包到一个js文件中
       'jquery', 'lodash', 
       'vue', 'vuex', 'vue-router', 
-      'axios', 'vee-validate', 'element-ui'
+      'axios', 'element-ui', 'vee-validate', 'moment'
     ]
   },
   output: {
@@ -78,7 +78,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json']
   },
   devServer: {
-    host: '192.168.1.103',
+    host: '192.168.1.164',
     historyApiFallback: true,
     noInfo: true
   },
