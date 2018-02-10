@@ -24,14 +24,11 @@
             <el-table-column label="净料数量" width="120">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.isEdit">{{ scope.row.net_num }}</span>
-                    <el-input-number v-model="scope.row.net_num" class="relation-input-number"
-                        controls-position="right" 
-                        v-if="scope.row.isEdit" 
-                        @change="computeJlPrice(scope.row)" 
-                        size="small" 
-                        :min="0" 
-                        :max="1000">
-                    </el-input-number>
+                    <InputNumPanel 
+                        v-model="scope.row.net_num"
+                        v-if="scope.row.isEdit"
+                        @change="computeJlPrice(scope.row)">
+                    </InputNumPanel>
                 </template>
             </el-table-column>
             <el-table-column label="出成率" width="100">
@@ -40,14 +37,11 @@
             <el-table-column label="毛料数量" width="120">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.isEdit">{{ scope.row.gross_num }}</span>
-                    <el-input-number v-model="scope.row.gross_num" class="relation-input-number"
-                        controls-position="right" 
-                        v-if="scope.row.isEdit" 
-                        @change="computeMlPrice(scope.row)" 
-                        size="small" 
-                        :min="0" 
-                        :max="1000">
-                    </el-input-number>
+                    <InputNumPanel 
+                        v-model="scope.row.gross_num"
+                        v-if="scope.row.isEdit"
+                        @change="computeMlPrice(scope.row)">
+                    </InputNumPanel>
                 </template>
             </el-table-column>
             <el-table-column prop="total_price" label="估算金额"></el-table-column>
@@ -76,6 +70,7 @@
 <script>
 import ExtractPanel from './ExtractPanel.vue'
 import AddFormulaPanel from './AddFormulaPanel'
+import InputNumPanel from './InputNumPanel.vue'
 
 import {getGoodsFormulaInfo, saveGdRelation} from 'api'
 
@@ -135,7 +130,7 @@ export default {
                     message: '请勾选原材料记录再进行批量删除!'
                 })
             }
-            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？删除后将不能恢复！`, '提示', {
+            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -157,18 +152,18 @@ export default {
             .addEventListener('click', ev => ev.stopPropagation(), false)
         },
         computeJlPrice(item){ // 净料数量 和 毛料数量 的计算
-            setTimeout(() => {
+            this.$nextTick(() => {
                 let val = item.net_num / item.yield_rate
-                item.gross_num = parseFloat(val.toFixed(3))
+                item.gross_num = parseFloat(val.toFixed(5))
                 this.computePrice(item)
-            }, 0)
+            })
         },
         computeMlPrice(item){ // 净料数量 和 毛料数量 的计算
-            setTimeout(() => {
+            this.$nextTick(() => {
                 let val = item.gross_num * item.yield_rate
-                item.net_num = parseFloat(val.toFixed(3))
+                item.net_num = parseFloat(val.toFixed(5))
                 this.computePrice(item)
-            }, 0)
+            })
         },
         computePrice(item){
             // 计算估算价格
@@ -256,7 +251,8 @@ export default {
     },
     components: {
         ExtractPanel,
-        AddFormulaPanel
+        AddFormulaPanel,
+        InputNumPanel
     }
 }
 </script>
@@ -276,6 +272,6 @@ export default {
     margin-top: -2px;
 }
 .relation-wrapper .relation-input-number {
-    width: 100px;
+    width: 100%;
 }
 </style>

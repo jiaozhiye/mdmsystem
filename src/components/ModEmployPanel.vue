@@ -31,14 +31,14 @@
     <div class="app-form-item">
         <label class="app-form-label">手机号</label>
         <div class="app-input-block">
-            <el-input name="phone" v-model="form.phone" v-validate="'required|phone'" :class="{'formDanger': errors.has('phone')}" clearable placeholder="请输入手机号..." ></el-input>
+            <el-input name="phone" v-model="form.phone" v-validate="'phone'" :class="{'formDanger': errors.has('phone')}" clearable placeholder="请输入手机号..." ></el-input>
             <span v-if="errors.has('phone')" class="prompt-title">{{ errors.first('phone') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">邮箱</label>
         <div class="app-input-block">
-            <el-input name="email" v-model="form.email" v-validate="'required|email'" :class="{'formDanger': errors.has('email')}" clearable placeholder="请输入邮箱..." ></el-input>
+            <el-input name="email" v-model="form.email" v-validate="'email'" :class="{'formDanger': errors.has('email')}" clearable placeholder="请输入邮箱..." ></el-input>
             <span v-if="errors.has('email')" class="prompt-title">{{ errors.first('email') }}</span>
         </div>
     </div>

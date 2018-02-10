@@ -1,5 +1,5 @@
 <template>
-<div class="appManager-wrapper material-wrapper">
+<div class="appManager-wrapper">
     <section class="material-tree-box">
         <el-input
             placeholder="输入原材料编号/名称" 
@@ -272,7 +272,7 @@ export default {
                     message: '请勾选原材料记录再进行批量删除!'
                 })
             }
-            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？删除后将不能恢复！`, '提示', {
+            this.$confirm(`确认要删除选中的${this.multipleSelection.length}条记录吗？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -365,19 +365,14 @@ export default {
 </script>
 
 <style>
-.material-wrapper {
-    height: 100%;
-}
-
 /* 原材料分类树 */
 .material-tree-box {
     margin-top: 60px;
     width: 280px;
     padding: 20px;
-    max-height: calc(100% - 80px);
     position: absolute;
     background-color: #fff;
-    overflow-y: auto;
+    margin-bottom: 20px;
 }
 .material-tree-box .filter-tree {
     margin-top: 10px;

@@ -128,8 +128,6 @@ export default {
   box-sizing: border-box;
   width: 100%;
   padding: 20px;
-  min-height: 500px;
-  overflow-y: auto;
 }
 
 /**

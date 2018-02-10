@@ -37,11 +37,11 @@ export default {
     watch: {
         getNavActive (newVal, oldVal){
             if (getUrlHash().split('/').length < 3){
-                setTimeout(() => {
+                this.$nextTick(() => {
                     this.getDomList()
                     this.bindEvent(this.menuItemList)
                     this.toggleNavStyle(this.menuItemList, 0)
-                }, 0)
+                })
             }
         }
     },

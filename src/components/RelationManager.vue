@@ -1,5 +1,5 @@
 <template>
-<div class="appManager-wrapper gdmaRelat-wrapper">
+<div class="appManager-wrapper">
     <section class="gdmaRelat-tree-box">
         <el-input
             placeholder="输入商品编号/名称" 
@@ -61,7 +61,7 @@
                 <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
                 <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
                 <el-table-column prop="bom_time_text" label="设定日期" width="180" sortable></el-table-column>
-                <el-table-column label="配方状态">
+                <el-table-column label="配方状态" min-width="100">
                     <template slot-scope="scope">
                         <el-tag size="medium" :type="scope.row.bom_status == '1' ? '' : 'danger'">
                             {{ scope.row.bom_status_text }}
@@ -241,19 +241,14 @@ export default {
 </script>
 
 <style>
-.gdmaRelat-wrapper {
-    height: 100%;
-}
-
 /* 商品分类结构树 */
 .gdmaRelat-tree-box {
     margin-top: 60px;
     width: 260px;
     padding: 20px;
-    max-height: calc(100% - 80px);
     position: absolute;
     background-color: #fff;
-    overflow-y: auto;
+    margin-bottom: 20px;
 }
 .gdmaRelat-tree-box .filter-tree {
     margin-top: 10px;

@@ -9,8 +9,8 @@ module.exports = {
     main: './src/main.js',
     login: './src/login.js',
     vendor: [ // vender 属性用于提取和打包第三方js库，并把这些库文件打包到一个js文件中
-      'jquery', 'lodash', 
-      'vue', 'vuex', 'vue-router', 
+      'jquery', 'lodash',
+      'vue', 'vuex', 'vue-router',
       'axios', 'element-ui', 'vee-validate', 'moment'
     ]
   },
@@ -21,8 +21,7 @@ module.exports = {
     // filename: '[name].[chunkhash].min.js' // 生产环境
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
@@ -40,15 +39,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-					{loader: 'style-loader'},
-					{
-						loader: 'css-loader',
-						options: {
-							minimize: true
-						}
-					}
-				]
+        use: [{
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -57,7 +57,7 @@ module.exports = {
           name: '[name].[ext]?[hash]'
         }
       },
-	    {
+      {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         loader: 'file-loader',
         options: {
@@ -78,7 +78,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json']
   },
   devServer: {
-    host: '192.168.1.164',
+    host: '192.168.1.102',
     historyApiFallback: true,
     noInfo: true
   },
@@ -88,7 +88,7 @@ module.exports = {
   devtool: '#eval-source-map'
 }
 
-if (process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
@@ -111,16 +111,17 @@ if (process.env.NODE_ENV === 'production'){
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './index.html',
-      chunks: ['main', 'vendor', 'manifest'], // 指定生成的 html 所引用的 js 文件
-      hash : true
+      // 指定生成的 html 所引用的 js 文件
+      chunks: ['main', 'vendor', 'manifest'],
+      hash: true
     }),
     new HtmlWebpackPlugin({
       filename: 'login.html',
       template: './login.html',
       chunks: ['login', 'vendor', 'manifest'],
-      hash : true
+      hash: true
     }),
-	  new CopyWebpackPlugin([{
+    new CopyWebpackPlugin([{
       from: path.join(__dirname, 'src/assets'),
       to: path.join(__dirname, 'dist')
     }])
