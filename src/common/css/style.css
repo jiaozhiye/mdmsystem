@@ -3,11 +3,18 @@
  */
 body {
     font-family: "Microsoft YaHei", "Arial", "Helvetica", "sans-serif";
-    font-size: 12px;
+    font-size: 14px;
     color: #333;
     line-height: 1.5em;
     position: relative;
     word-break: break-all;
+}
+button, input, optgroup, option, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    outline: 0;
 }
 .w1200 {
     width: 1200px;
@@ -54,6 +61,12 @@ a:hover {
 .fr {
     float: right;
 }
+.tc {
+    text-align: center;
+}
+.tr {
+    text-align: right;
+}
 .clear {
     clear: both;
 }
@@ -66,4 +79,185 @@ a:hover {
 }
 .clearFix {
     zoom: 1;
+}
+.icon {
+    background-image: url(../img/icons.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+ /**
+ * scrollbar style
+ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: rgba(0, 0, 0, .2);
+}
+::-webkit-scrollbar-thumb:vertical {
+    height: 8px;
+    background-color: rgba(0, 0, 0, .4);
+}
+::-webkit-scrollbar-thumb:horizontal {
+    width: 8px;
+    background-color: rgba(0, 0, 0, .4);
+}
+
+/**
+ * app style
+ */
+.appManager-wrapper {}
+.appManager-top {
+    height: 40px;
+}
+
+.appManager-list {
+    margin-top: 20px;
+}
+.appManager-list .el-table__body-wrapper {
+    overflow-x: hidden;
+}
+.appManager-list .el-table__body td {
+    padding: 5px 0;
+}
+.fixedTable-list .el-table__body-wrapper {
+    overflow-x: auto;
+}
+
+/**
+ * form box style
+ */
+ .app-form-panel {
+    padding: 30px 40px 20px 20px;
+}
+.app-form-item {
+  margin-bottom: 15px;
+  clear: both;
+}
+.app-form-label {
+  float: left;
+  display: block;
+  padding: 10px 15px 10px 0;
+  width: 95px;
+  font-weight: 400;
+  text-align: right;
+  line-height: 20px;
+  position: relative;
+}
+.app-form-label > i {
+    color: #ff4545;
+}
+.app-input-block {
+  margin-left: 110px;
+  min-height: 40px;
+  line-height: 40px;
+  position: relative;
+}
+.form-group-apart {
+    font-weight: 700;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.form-group-apart .icon {
+    color: #409eff;
+    margin-right: 5px;
+    font-size: 18px;
+    vertical-align: top;
+}
+.app-input-block .el-tree {
+    background: none;
+}
+.app-input-block .el-radio + .el-radio {
+    margin-left: 12px;
+}
+
+/**
+ * paginatio style
+ */
+#app .el-pagination {
+    text-align: center;
+    padding-top: 20px;
+}
+
+/**
+ * form 校验提醒
+ */
+ #app .formDanger > input {
+    border-color: #fa5555!important;
+}
+#app .prompt-title {
+    color: #fa5555;
+    display: inline-block;
+}
+
+/**
+ * 显示连接线的树结构
+ */
+.tree-show-line {
+    background-color: #fff;
+    border: 1px solid #dcdfe6;
+    min-height: 40px;
+    padding: 5px 0 5px 20px;
+}
+.tree-show-line .tree-norecord {
+    text-align: center;
+    line-height: 40px;
+}
+.tree-show-line .tree-tb-top {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    color: #909399;
+    overflow: hidden;
+}
+.tree-show-line li {
+    position: relative;
+    white-space: nowrap;
+}
+.tree-show-line li:not(:last-child)::before {
+    content: '';
+    width: 1px;
+    border-left: 1px solid #d9d9d9;
+    height: 100%;
+    position: absolute;
+    left: 12px;
+    top: 32px;
+}
+.tree-show-line .child-tree {
+    padding-left: 20px;
+    overflow: hidden;
+}
+.tree-show-line .tree-item {
+    display: flex;
+    height: 24px;
+    line-height: 24px;
+    padding: 8px 0;
+}
+.tree-show-line .tree-item > span:first-child {
+    width: 24px;
+    height: 24px;
+    line-height: 22px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    background-color: #fff;
+    cursor: pointer;
+    margin-right: 4px;
+}
+.tree-show-line .tree-item > span:first-child > .tree-item-icon {
+    font-size: 12px;
+    border: 1px solid #d9d9d9;
+    padding: 1px 0 0 1px;
+}
+.tree-show-line .tree-item > span > a {
+    display: inline-block;
+    padding: 0 5px;
+    color: #409eff;
+}
+.tree-show-line .tree-item > span > a:hover {
+    color: #66b1ff;
 }

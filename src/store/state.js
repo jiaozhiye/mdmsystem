@@ -5,7 +5,9 @@
  * @Last Modified time: 2017/9/19
  */
 const state = {
-
+    personalInfo: {},
+    navInfo: [],
+    defaultActive: {}
 }
 
 export default state
