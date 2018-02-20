@@ -82,6 +82,10 @@ const routes = {
             path: '/sstock_manager/budget_manager',
             component: StockManager
         },
+        {
+            path: '/test',
+            component: Home
+        },
         // {
         //     path: '*',
         //     redirect: '/sys_setting'

@@ -78,7 +78,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json']
   },
   devServer: {
-    host: '192.168.1.102',
+    // host: '192.168.1.102',
     historyApiFallback: true,
     noInfo: true
   },
@@ -88,13 +88,38 @@ module.exports = {
   devtool: '#eval-source-map'
 }
 
+module.exports.plugins = [
+  new webpack.optimize.CommonsChunkPlugin({
+    names: ['vendor', 'manifest']
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'index.html',
+    template: './index.html',
+    // 指定生成的 html 所引用的 js 文件
+    chunks: ['main', 'vendor', 'manifest'],
+    hash: true
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'login.html',
+    template: './login.html',
+    chunks: ['login', 'vendor', 'manifest'],
+    hash: true
+  }),
+  new CopyWebpackPlugin([{
+    from: path.join(__dirname, 'src/assets'),
+    to: path.join(__dirname, 'dist'),
+    flatten: true, // 只拷贝文件不拷贝文件夹
+  }])
+]
+
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new CleanWebpackPlugin(['dist']),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
     }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
@@ -105,25 +130,6 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'manifest']
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: './index.html',
-      // 指定生成的 html 所引用的 js 文件
-      chunks: ['main', 'vendor', 'manifest'],
-      hash: true
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'login.html',
-      template: './login.html',
-      chunks: ['login', 'vendor', 'manifest'],
-      hash: true
-    }),
-    new CopyWebpackPlugin([{
-      from: path.join(__dirname, 'src/assets'),
-      to: path.join(__dirname, 'dist')
-    }])
+    new CleanWebpackPlugin(['dist'])
   ])
 }

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import TreeDrag from 'common/js/drag-item'
+import TreeDrag from 'common/js/drag-element'
 
 export default {
     name: 'DragTreeSort',
