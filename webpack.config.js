@@ -1,8 +1,10 @@
-var path = require('path')
-var webpack = require('webpack')
-var CleanWebpackPlugin = require('clean-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+
+const env = process.env.NODE_ENV
 
 module.exports = {
   entry: {
@@ -17,8 +19,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '',
-    filename: '[name].min.js' // 开发环境
-    // filename: '[name].[chunkhash].min.js' // 生产环境
+    filename: (env === 'development') ? '[name].min.js' : '[name].[chunkhash].min.js' // 开发环境  生产环境
   },
   module: {
     rules: [{
@@ -106,11 +107,11 @@ module.exports.plugins = [
     hash: true
   }),
   new CopyWebpackPlugin([{
-    from: path.join(__dirname, 'src/assets'),
+    from: path.join(__dirname, 'src/assets'), // 拷贝静态资源到 dist 目录
     to: path.join(__dirname, 'dist'),
     flatten: true, // 只拷贝文件不拷贝文件夹
   }])
-]
+];
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'

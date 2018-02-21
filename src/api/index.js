@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import common from 'common/js/common'
 
-console.log(common.env)
+console.info(common.env)
 
 const instance = axios.create({
     baseURL: common.serverUrl,

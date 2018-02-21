@@ -48,7 +48,7 @@ function prefixCss(obj, prefixFeature, value){
 }
 
 function getUrlHash(){
-    return window.location.hash.slice(1)
+    return window.location.hash.slice(1) || ''
 }
 
 export {cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash}

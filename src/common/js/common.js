@@ -5,7 +5,7 @@ export default (function (env){
 	}
 	if (env == 'production'){
 		// 使控制台 console 输出失效
-		window.console.log = function(){}
+		console.log = console.warn = console.error = console.info = function(){}
 		envObj.env = '当前工程环境：production'
 		envObj.serverUrl = '/'
 	} else if (env == 'development'){
@@ -14,4 +14,4 @@ export default (function (env){
 		// envObj.serverUrl = 'http://192.168.1.108:8080/'
 	}
 	return envObj
-})('development')
+})(process.env.NODE_ENV === 'production' ? 'production' : 'development')
