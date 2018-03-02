@@ -18,7 +18,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '',
+    publicPath: '/',
     filename: (env === 'development') ? '[name].min.js' : '[name].[chunkhash].min.js' // 开发环境  生产环境
   },
   module: {
