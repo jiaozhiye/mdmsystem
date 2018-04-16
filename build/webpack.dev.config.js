@@ -22,7 +22,8 @@ const webpackConfigDev = {
     devServer: {
         // host: '192.168.1.102',
         historyApiFallback: true,
-        noInfo: true
+        noInfo: true,
+        hot: true
     },
     performance: {
         hints: false

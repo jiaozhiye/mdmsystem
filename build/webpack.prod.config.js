@@ -19,7 +19,8 @@ const webpackConfigProd = {
         ]
     },
     output: {
-        filename: '[name].[chunkhash].min.js'
+        filename: '[name].[chunkhash:8].js',
+        chunkFilename: '[name].[chunkhash:8].chunk.js'
     },
     module: {
         rules: [{
@@ -40,7 +41,7 @@ const webpackConfigProd = {
     devtool: '#source-map',
     plugins: [
         new ExtractTextPlugin({
-            filename: 'style.[chunkhash].min.css',
+            filename: 'style.[chunkhash:8].min.css',
             allChunks: true
         }),
         new webpack.optimize.CommonsChunkPlugin({
@@ -49,14 +50,12 @@ const webpackConfigProd = {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: resolve('../index.html'),
-            // 指定生成的 html 所引用的 js 文件
-            chunks: ['main', 'vendor', 'manifest'],
+            chunks: ['main', 'vendor', 'manifest'], // 指定生成的 html 所引用的 js 文件
             hash: true
         }),
         new HtmlWebpackPlugin({
             filename: 'login.html',
             template: resolve('../login.html'),
-            // 指定生成的 html 所引用的 js 文件
             chunks: ['login', 'vendor', 'manifest'],
             hash: true
         }),

@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const resolve = function (relatedPath) {
+const resolve = function (relatedPath){
     return path.join(__dirname, relatedPath)
 }
 
@@ -15,7 +15,8 @@ const webpackConfigBase = {
     output: {
         path: resolve('../dist'),
         publicPath: '/',
-        filename: '[name].js'
+        filename: '[name].js',
+        chunkFilename: '[name].chunk.js'
     },
     module: {
         rules: [{
@@ -78,7 +79,7 @@ const webpackConfigBase = {
         new CopyWebpackPlugin([{
             from: resolve('../src/assets'), // 拷贝静态资源到 dist 目录
             to: resolve('../dist'),
-            flatten: true, // 只拷贝文件不拷贝文件夹
+            flatten: true // 只拷贝文件不拷贝文件夹
         }])
     ]
 }
