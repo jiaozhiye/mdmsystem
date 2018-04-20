@@ -12,6 +12,8 @@ const RelationManager = () => import('components/RelationManager.vue')
 const PersonalSetting = () => import('components/PersonalSetting.vue')
 const ImportSaleManager = () => import('components/ImportSaleManager.vue')
 const StockManager = () => import('components/StockManager.vue')
+const DayOrderManager = () => import('components/DayOrderManager.vue')
+const MaterialOrderManager = () => import('components/MaterialOrderManager.vue')
 
 const routes = {
     routes: [
@@ -72,6 +74,14 @@ const routes = {
         {
             path: '/storer_manager/imp_sale',
             component: ImportSaleManager
+        },
+        {
+            path: '/storer_manager/day_order',
+            component: DayOrderManager
+        },
+        {
+            path: '/storer_manager/material_order',
+            component: MaterialOrderManager
         },
         // 安全存量
         {

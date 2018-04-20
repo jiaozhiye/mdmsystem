@@ -17,7 +17,7 @@ const instance = axios.create({
     //     return qs.stringify(data, { arrayFormat: 'repeat' })
     // }],
     headers: {
-        post: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        'Content-Type': 'application/x-www-form-urlencoded'
     }
 })
 
@@ -262,4 +262,25 @@ export const getHasDailySummary = params => instance.get('mgr/dailySummary/hasDa
 // 获取导入的销售数据列表
 export const getScaleImportedInfo = params => instance.get('mgr/dailySummary/getDailySummary', {params})
 // 79
+// 获取商品类别树
+export const getGoodsTree = () => instance.get('/mgr/goodsAndGoodsTypeTree')
+
+// 保存商品分类
+export const saveGoodsClassify = params => instance.post('/mgr/storeOrderManager/goodsToMaterial', params)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

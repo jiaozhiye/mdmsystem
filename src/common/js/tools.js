@@ -51,4 +51,13 @@ function getUrlHash(){
     return window.location.hash.slice(1) || ''
 }
 
-export {cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash}
+function recursionTree(arr, callback){
+    if (Array.isArray(arr)){
+        for (let i = 0; i < arr.length; i++){
+            callback && callback(arr[i])
+            recursionTree(arr[i].children, callback)
+        }
+    }
+}
+
+export {cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash, recursionTree}
