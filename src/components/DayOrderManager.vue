@@ -25,16 +25,6 @@
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
-                    v-model="form.arriveDate"
-                    type="date"
-                    placeholder="到货日期"
-                    format="yyyy 年 MM 月 dd 日"
-                    value-format="yyyy-MM-dd"
-                    :picker-options="pickerOptions">
-                </el-date-picker>
-                <el-date-picker
-                    class="fl"
-                    style="width: 200px; margin-right: 10px;"
                     v-model="form.wantDate"
                     type="date"
                     placeholder="要货日期"
@@ -42,7 +32,17 @@
                     value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions">
                 </el-date-picker>
-                <el-button class="fl" type="primary" @click.stop="nextStepHandle">下一步</el-button>
+                <el-date-picker
+                    class="fl"
+                    style="width: 200px; margin-right: 10px;"
+                    v-model="form.arriveDate"
+                    type="date"
+                    placeholder="到货日期"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd"
+                    :picker-options="pickerOptions">
+                </el-date-picker>
+                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="nextStepHandle">下一步</el-button>
             </ul>
         </div>
         <div class="appManager-list fixedTable-list">
@@ -54,10 +54,9 @@
                 <el-table-column type="selection" width="50" fixed></el-table-column>
                 <el-table-column prop="name" label="商品名称" sortable></el-table-column>
                 <el-table-column prop="code" label="商品编码" width="100"></el-table-column>
-                <el-table-column prop="attribute_2" label="商品规格" width="100"></el-table-column>
+                <el-table-column prop="attribute_2_text" label="商品规格" width="100"></el-table-column>
                 <el-table-column prop="unit_text" label="单位" width="100"></el-table-column>
-                <el-table-column prop="stock_number" label="库存数量" width="100"></el-table-column>
-                <el-table-column label="数量" width="120">
+                <el-table-column label="数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
@@ -79,6 +78,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import EditNumber from './EditNumber.vue'
 
 import { recursionTree } from 'common/js/tools'
@@ -89,17 +89,18 @@ export default {
     data(){
         return {
             form: {
-                arriveDate: '',
-                wantDate: ''
+                wantDate: '',
+                arriveDate: ''
             },
             list: [], // 商品分类树数组
             tableList: [], // 同步 商品分类树数组
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [], // 选中记录的数组
+            btnLoading: false,
             pickerOptions: {
                 disabledDate (time){
-                    return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+                    // return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
                 }
             }
         }
@@ -115,11 +116,14 @@ export default {
         }
     },
     methods: {
+        initDateFn(){
+            this.form.wantDate = moment().format('YYYY-MM-DD')
+            this.form.arriveDate = moment().add(3, 'day').format('YYYY-MM-DD')
+        },
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
                 if (this.checkedKeys.findIndex(val => val === item.id) !== -1){
-                    item.isShow = !item.isShow
                     _arr.push(item)
                 }
             })
@@ -154,6 +158,9 @@ export default {
         removeItemHandle(ids){
             if (!Array.isArray(ids)){
                 ids = this.multipleSelection.map(item => item.id)
+                if (ids.length == 0){
+                    return this.$message.warning('请勾选商品名称！')
+                }
             }
             // 处理 checkedKeys 数组
             for (let i = 0; i < this.checkedKeys.length; i++){
@@ -166,12 +173,14 @@ export default {
         },
         async nextStepHandle(){
             try {
+                this.btnLoading = !0
                 const response = await saveGoodsClassify({
                     ...this.form,
                     list: this.tableList.map(item => ({id: item.id, number: item.number}))
                 })
-                if (response.data.id){
-                    
+                if (response.data.code == 1 && typeof response.data.id != 'undefined'){
+                    this.$router.push({ path: `/storer_manager/material_order/${response.data.id}` })
+                    setTimeout(() => {this.btnLoading = !1}, 500)
                 } else {
                     this.$message.error(response.data.message)
                 }
@@ -195,6 +204,7 @@ export default {
         }
     },
     created(){
+        this.initDateFn()
         this.getGoodsTree()
     },
     mounted(){

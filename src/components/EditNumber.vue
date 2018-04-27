@@ -98,7 +98,7 @@ export default {
 <style>
 .input-number-wrapper {
     display: inline-block;
-    max-width: 100px;
+    max-width: 120px;
 }
 .input-number-wrapper .el-input-number {
     width: 100%;

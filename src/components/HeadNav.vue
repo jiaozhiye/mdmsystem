@@ -139,9 +139,15 @@ export default {
     background-position: 0 0;
 }
 .head-nav ul li a i.graph-storer_manager {
-    background-position: -16px 0;
+    background-position: -144px 0;
 }
 .head-nav ul li a i.graph-sstock_manager {
-    background-position: -32px 0;
+    background-position: -336px 0;
+}
+.head-nav ul li a i.graph-logistics_manager {
+    background-position: -80px 0;
+}
+.head-nav ul li a i.graph-stock_manager_1 {
+    background-position: -176px 0;
 }
 </style>

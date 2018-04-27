@@ -25,9 +25,10 @@
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
-                    v-model="form.arriveDate"
+                    v-model="form.wantDate"
                     type="date"
-                    placeholder="到货日期"
+                    disabled
+                    placeholder="要货日期"
                     format="yyyy 年 MM 月 dd 日"
                     value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions">
@@ -35,14 +36,15 @@
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
-                    v-model="form.wantDate"
+                    v-model="form.arriveDate"
                     type="date"
-                    placeholder="要货日期"
+                    disabled
+                    placeholder="到货日期"
                     format="yyyy 年 MM 月 dd 日"
                     value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions">
                 </el-date-picker>
-                <el-button class="fl" type="primary" @click.stop="nextStepHandle">下一步</el-button>
+                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="saveOrderHandle">保存</el-button>
             </ul>
         </div>
         <div class="appManager-list fixedTable-list">
@@ -50,14 +52,19 @@
                 class="material-table"
                 :data="tableList" 
                 border 
+                v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="商品名称" sortable></el-table-column>
-                <el-table-column prop="code" label="商品编码" width="100"></el-table-column>
-                <el-table-column prop="attribute_2" label="商品规格" width="100"></el-table-column>
-                <el-table-column prop="unit_text" label="单位" width="100"></el-table-column>
-                <el-table-column prop="stock_number" label="库存数量" width="100"></el-table-column>
-                <el-table-column label="数量" width="120">
+                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
+                <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
+                <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
+                <el-table-column prop="nextOneNum" label="明日预计数量" width="110"></el-table-column>
+                <el-table-column prop="nextOneGetNum" label="明日到货数量" width="110"></el-table-column>
+                <el-table-column prop="nextTwoNum" label="后天预计数量" width="110"></el-table-column>
+                <el-table-column prop="nextTwoGetNum" label="后天到货数量" width="110"></el-table-column>
+                <el-table-column prop="actual_order" label="预计订货数量" width="110"></el-table-column>
+                <el-table-column prop="stock" label="库存数量" width="80"></el-table-column>
+                <el-table-column label="需要订货数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
@@ -82,18 +89,20 @@
 import EditNumber from './EditNumber.vue'
 
 import { recursionTree } from 'common/js/tools'
-import { getGoodsTree, saveGoodsClassify } from 'api'
+import { getMaterialsTree, getEditedMaterial, saveEditedMaterial } from 'api'
 
 export default {
     name: 'MaterialOrderManager',
     data(){
         return {
             form: {
-                arriveDate: '',
-                wantDate: ''
+                wantDate: '',
+                arriveDate: ''
             },
             list: [], // 商品分类树数组
             tableList: [], // 同步 商品分类树数组
+            loading: false,
+            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [], // 选中记录的数组
@@ -119,7 +128,6 @@ export default {
             let _arr = []
             recursionTree(this.list, (item) => {
                 if (this.checkedKeys.findIndex(val => val === item.id) !== -1){
-                    item.isShow = !item.isShow
                     _arr.push(item)
                 }
             })
@@ -139,16 +147,55 @@ export default {
         },
         async getMaterialsTree(callback){
             try {
-                const response = await getGoodsTree()
-                console.log(response.data)
+                const response = await getMaterialsTree({ id: this.$route.params.id })
+                // console.log(response.data)
                 if (response.data.code == 1){
-                    recursionTree(response.data.tree, (item) => {
-                        item.number = 0
-                    })
+                    // 原材料树新增 number 字段，默认值是 0
+                    recursionTree(response.data.tree, item => item.number = 0)
                     this.list = response.data.tree
                     callback && callback()
                 }
             } catch (error){
+                console.error(error)
+            }
+        },
+        async getEditedMaterial(){
+            this.loading = !0
+            try {
+                const response = await getEditedMaterial({
+                    id: this.$route.params.id
+                })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    this.tableList = response.data.materialList
+                    this.form.wantDate = response.data.wantDate
+                    this.form.arriveDate = response.data.arriveDate
+
+                    // 把编辑过的原材料同步到左侧树
+                    recursionTree(this.list, (item) => {
+                        let obj = this.tableList.find(val => val.id === item.id)
+                        if (typeof obj != 'undefined'){
+                            // item.stroe_order_material_id = obj.number
+                            // item.number = obj.number
+                            // item.actual_order = obj.actual_order
+                            // item.nextOneGetNum = obj.nextOneGetNum
+                            // item.nextOneNum = obj.nextOneNum
+                            // item.nextTwoGetNum = obj.nextTwoGetNum
+                            // item.nextTwoNum = obj.nextTwoNum
+                            // item.stock = obj.stock
+                            for (let attr in obj){
+                                item[attr] = obj[attr]
+                            }
+                        }
+                        obj = null
+                    })
+
+                    this.checkedKeys = this.tableList.map(item => item.id)
+                    this.$refs.tree.setCheckedKeys(this.checkedKeys)
+                }
+                this.loading = !1
+            } catch (error){
+                this.loading = !1
                 console.error(error)
             }
         },
@@ -158,6 +205,9 @@ export default {
         removeItemHandle(ids){
             if (!Array.isArray(ids)){
                 ids = this.multipleSelection.map(item => item.id)
+                if (ids.length == 0){
+                    return this.$message.warning('请勾选原材料名称！')
+                }
             }
             // 处理 checkedKeys 数组
             for (let i = 0; i < this.checkedKeys.length; i++){
@@ -168,17 +218,22 @@ export default {
             this.$refs.tree.setCheckedKeys(this.checkedKeys)
             this.asyncTableList()
         },
-        async nextStepHandle(){
+        async saveOrderHandle(){
             try {
-                const response = await saveGoodsClassify({
-                    ...this.form,
-                    list: this.tableList.map(item => ({id: item.id, number: item.number}))
+                this.btnLoading = !0
+                const response = await saveEditedMaterial({
+                    list: this.tableList.map(item => ({
+                        id: item.id,
+                        stroe_order_material_id: item.stroe_order_material_id,
+                        number: item.number
+                    }))
                 })
-                if (response.data.id){
-                    
+                if (response.data.code == 1){
+                    this.$message.success(response.data.message)
                 } else {
                     this.$message.error(response.data.message)
                 }
+                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }
@@ -201,7 +256,7 @@ export default {
     created(){
         // 先获取原材料树
         this.getMaterialsTree(() => { // 再获取已编辑商品原材料
-
+            this.getEditedMaterial()
         })
     },
     mounted(){

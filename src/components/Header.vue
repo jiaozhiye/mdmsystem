@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         jumpToPersonal(){
-            window.location.href = '#/sys_setting/per_setting'
+            this.$router.push('/sys_setting/per_setting')
         },
         async doLogout(){
             try {

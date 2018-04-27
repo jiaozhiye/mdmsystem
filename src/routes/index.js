@@ -14,6 +14,9 @@ const ImportSaleManager = () => import('components/ImportSaleManager.vue')
 const StockManager = () => import('components/StockManager.vue')
 const DayOrderManager = () => import('components/DayOrderManager.vue')
 const MaterialOrderManager = () => import('components/MaterialOrderManager.vue')
+const LogisticsManager = () => import('components/LogisticsManager.vue')
+const DepotManager = () => import('components/DepotManager.vue')
+const OutDepotManager = () => import('components/OutDepotManager.vue')
 
 const routes = {
     routes: [
@@ -80,7 +83,7 @@ const routes = {
             component: DayOrderManager
         },
         {
-            path: '/storer_manager/material_order',
+            path: '/storer_manager/material_order/:id',
             component: MaterialOrderManager
         },
         // 安全存量
@@ -92,9 +95,27 @@ const routes = {
             path: '/sstock_manager/budget_manager',
             component: StockManager
         },
+        // 物流管理
         {
-            path: '/test',
-            component: Home
+            path: '/logistics_manager',
+            component: LogisticsManager
+        },
+        {
+            path: '/logistics_manager/logistics_store_order',
+            component: LogisticsManager
+        },
+        {
+            path: '/logistics_manager/asd',
+            component: OutDepotManager
+        },
+        // 库存管理
+        {
+            path: '/stock_manager_1',
+            component: DepotManager
+        },
+        {
+            path: '/stock_manager_1/Warehouse_manager_3',
+            component: DepotManager
         },
         // {
         //     path: '*',
