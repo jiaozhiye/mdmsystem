@@ -30,7 +30,8 @@ const dictionary = {
         materialname: '原材料名称',
         purchaseprice: '采购价',
         balanceprice: '默认结算价',
-        yieldrate: '出成率'
+        yieldrate: '出成率',
+        depotname: '仓库名称'
       }
    }
 }

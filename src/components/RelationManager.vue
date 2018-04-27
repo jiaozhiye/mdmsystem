@@ -101,7 +101,7 @@ export default {
             data: [], // 商品分类树数组
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
-            list: [{}], // 商品列表数组
+            list: [], // 商品列表数组
             curPageIndex: 1, // 当前页码
             loading: false,
             inventoryList: [], // 库存类型数组

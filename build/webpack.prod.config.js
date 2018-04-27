@@ -24,13 +24,6 @@ const webpackConfigProd = {
     },
     module: {
         rules: [{
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            options: {
-                extractCSS: true
-            }
-        },
-        {
             test: /\.css$/,
             use: ExtractTextPlugin.extract({
                 fallback: 'style-loader',

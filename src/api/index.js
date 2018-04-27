@@ -17,7 +17,7 @@ const instance = axios.create({
     //     return qs.stringify(data, { arrayFormat: 'repeat' })
     // }],
     headers: {
-        post: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        'Content-Type': 'application/x-www-form-urlencoded'
     }
 })
 
@@ -262,4 +262,76 @@ export const getHasDailySummary = params => instance.get('mgr/dailySummary/hasDa
 // 获取导入的销售数据列表
 export const getScaleImportedInfo = params => instance.get('mgr/dailySummary/getDailySummary', {params})
 // 79
+// 获取商品类别树
+export const getGoodsTree = () => instance.get('/mgr/goodsAndGoodsTypeTree')
+
+// 保存商品分类
+export const saveGoodsClassify = params => instance.post('/mgr/storeOrderManager/createOrder', params)
+
+// 获取原材料树
+export const getMaterialsTree = params => instance.get('mgr/materialAndMaterialTypeTreeCtrl', {params})
+
+// 获取编辑的商品原材料列表
+export const getEditedMaterial = params => instance.get('mgr/storeOrderManager/goodsToMaterial', {params})
+
+// 保存编辑的商品原材料数据
+export const saveEditedMaterial = params => instance.post('mgr/storeOrderManager/addStoreOrderMaterial', params)
+
+// 获取订单列表
+export const getOrderInfo = params => instance.get('/mgr/logistics/storeOrder/queryOrders', {params})
+
+// 获取订单类型列表
+export const getOrderTypeList = () => instance.get('/mgr/dict/showList?dict=store_order_type')
+
+// 获取门店列表
+export const getStoreList = () => instance.get('/mgr/common/store/showList')
+
+// 获取订单状态列表
+export const getOrderStateList = () => instance.get('/mgr/dict/showList2?dict=store_order_status')
+
+// 新增仓库记录
+export const saveDepotRecord = params => instance.post('/mgr/warehouse/warehouseManager/add', params)
+
+// 获取仓库信息列表
+export const getDepotInfo = params => instance.get('/mgr/warehouse/warehouseManager/list', {params})
+
+// 修改仓库状态
+export const stopDepotRecord = params => instance.get('/mgr/warehouse/warehouseManager/enabel', {params})
+
+// 删除仓库记录
+export const delDepotRecord = params => instance.get('/mgr/warehouse/warehouseManager/deleteById', {params})
+
+// 根据ID获取仓库记录
+export const getDepotRecord = params => instance.get('/mgr/warehouse/warehouseManager/showById', {params})
+
+// 更新仓库记录
+export const updateDepotRecord = params => instance.post('/mgr/warehouse/warehouseManager/updateById', params)
+
+// 获取订单详情
+export const getOrderDetail = params => instance.get('/mgr/logistics/storeOrder/showOrderDetailsById', {params})
+
+// 关闭订单
+export const closeOrder = params => instance.get('/mgr/logistics/storeOrder/closeOrder', {params})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

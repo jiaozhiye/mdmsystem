@@ -1,5 +1,5 @@
 /**
- * public
+ * public style
  */
 body {
     font-family: "Microsoft YaHei", "Arial", "Helvetica", "sans-serif";
@@ -130,31 +130,31 @@ a:hover {
 /**
  * form box style
  */
- .app-form-panel {
+.app-form-panel {
     padding: 30px 40px 20px 20px;
 }
 .app-form-item {
-  margin-bottom: 15px;
-  clear: both;
+    margin-bottom: 15px;
+    clear: both;
 }
 .app-form-label {
-  float: left;
-  display: block;
-  padding: 10px 15px 10px 0;
-  width: 95px;
-  font-weight: 400;
-  text-align: right;
-  line-height: 20px;
-  position: relative;
+    float: left;
+    display: block;
+    padding: 10px 15px 10px 0;
+    width: 95px;
+    font-weight: 400;
+    text-align: right;
+    line-height: 20px;
+    position: relative;
 }
 .app-form-label > i {
     color: #ff4545;
 }
 .app-input-block {
-  margin-left: 110px;
-  min-height: 40px;
-  line-height: 40px;
-  position: relative;
+    margin-left: 110px;
+    min-height: 40px;
+    line-height: 40px;
+    position: relative;
 }
 .form-group-apart {
     font-weight: 700;
@@ -187,7 +187,7 @@ a:hover {
 /**
  * form 校验提醒
  */
- #app .formDanger > input {
+#app .formDanger > input {
     border-color: #fa5555!important;
 }
 #app .prompt-title {
@@ -260,4 +260,17 @@ a:hover {
 }
 .tree-show-line .tree-item > span > a:hover {
     color: #66b1ff;
+}
+
+/**
+ * reset date-editor style
+ */
+#app .app-date-editor {
+    width: 260px;
+}
+#app .app-date-editor .el-range-input {
+    width: 38%;
+}
+#app .app-date-editor .el-range__close-icon {
+    width: 15px;
 }
