@@ -20,7 +20,7 @@ const webpackConfigDev = {
         }]
     },
     devServer: {
-        // host: '192.168.1.107',
+        host: '192.168.1.102',
         historyApiFallback: true,
         noInfo: true,
         hot: true

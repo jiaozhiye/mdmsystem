@@ -3,6 +3,7 @@
     <div class="appManager-top">
         <el-date-picker
             class="fl"
+            style="width: 200px"
             v-model="search.outDate"
             type="date"
             value-format="yyyy-MM-dd"
@@ -13,8 +14,9 @@
             class="fl" 
             style="width: 140px; margin-left: 10px;"
             v-model="search.depot" 
-            @change="searchHandle" 
-            placeholder="选择仓库">
+            placeholder="选择仓库"
+            clearable
+            @change="searchHandle">
             <el-option
                 v-for="(item, key) in depotList"
                 :key="key"
@@ -51,14 +53,14 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="出库单号" sortable></el-table-column>
             <el-table-column prop="store_text" label="门店"></el-table-column>
-            <el-table-column prop="want_date" label="出库日期" sortable></el-table-column>
-            <el-table-column prop="arrive_date" label="仓库" sortable></el-table-column>
+            <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
+            <el-table-column prop="warehourse_text" label="仓库"></el-table-column>
             <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
                     <el-tag size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 详情
@@ -70,7 +72,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <ExtractPanel :params="showOutOrderExtract">
+    <ExtractPanel :params="showOutOrderExtract" width="60%">
         <span slot="title">出库单详情</span>
         <OutOrderPanel slot="panel" :params="showOutOrderExtract"></OutOrderPanel>
     </ExtractPanel>
@@ -150,9 +152,7 @@ export default {
                 })
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.list = response.data.data.list
-                } else {
-                    this.list.total = 0
+                    this.list = response.data.list
                 }
                 callback && callback()
             } catch (error){

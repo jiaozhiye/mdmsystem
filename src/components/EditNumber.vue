@@ -9,6 +9,7 @@
             :max="maxVal"
             :step="stepVal"
             :controls-position="ctrlPos"
+            :disabled="disabled"
             @input.native="handleInput($event, $event.target.value)"
             @change="handleChange"
             @click.native.stop="">
@@ -31,6 +32,10 @@ export default {
         ctrlPos: {
             type: String,
             default: ''
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         },
         minVal: {
             type: Number,

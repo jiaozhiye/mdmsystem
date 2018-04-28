@@ -105,7 +105,7 @@ const routes = {
             component: LogisticsManager
         },
         {
-            path: '/logistics_manager/asd',
+            path: '/logistics_manager/logistics_mgr_out_order_3',
             component: OutDepotManager
         },
         // 库存管理
