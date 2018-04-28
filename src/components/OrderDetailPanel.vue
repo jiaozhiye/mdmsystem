@@ -57,7 +57,7 @@ export default {
                 this.order.arrivalDate = response.data.order.arrive_date
                 this.order.store = response.data.order.store_text
                 this.order.list = response.data.orderDetailsList
-                if (response.data.order.status == 5){
+                if (response.data.order.status == '100'){
                     this.buttonState = !0
                 }
             } catch (error){

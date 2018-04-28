@@ -63,15 +63,14 @@
             clearable>
         </el-input>
     </div>
-    <div class="appManager-top" style="margin-top: 20px">
+    <!-- <div class="appManager-top" style="margin-top: 20px">
         <ul class="fr">
             <el-button type="primary">接收</el-button>
             <el-button type="primary">生成出库订单</el-button>
         </ul>
-    </div>
+    </div> -->
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
-            <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="order_number" label="订单号" sortable></el-table-column>
             <el-table-column prop="store_text" label="门店"></el-table-column>
             <el-table-column prop="want_date" label="订货日期" sortable></el-table-column>
@@ -83,10 +82,16 @@
                 </template>
             </el-table-column>
             <el-table-column prop="create_time_short" label="提交日期"></el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="250">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 查看
+                    </el-button>
+                    <el-button @click.stop="receiveOrderHandle(scope.row)" type="text">
+                        <i class="el-icon-edit-outline"></i> 接收
+                    </el-button>
+                    <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text">
+                        <i class="el-icon-document"></i> 生成出库单
                     </el-button>
                 </template>
             </el-table-column>
@@ -108,7 +113,7 @@ import moment from 'moment'
 import ExtractPanel from './ExtractPanel.vue'
 import OrderDetailPanel from './OrderDetailPanel.vue'
 
-import { getOrderInfo, getOrderTypeList, getStoreList, getOrderStateList } from 'api'
+import { getOrderInfo, getOrderTypeList, getStoreList, getOrderStateList, receiveOrder, createOutOrder } from 'api'
 
 export default {
     name: 'LogisticsManager',
@@ -123,7 +128,7 @@ export default {
                 arrivalDate: [],
                 orderType: '',
                 store: '',
-                state: '1',
+                state: '10',
                 orderCode: ''
             },
             loading: false,
@@ -210,6 +215,33 @@ export default {
         },
         searchHandle(){
             this.getOrderList(1)
+        },
+        async receiveOrderHandle(item){
+            try {
+                const response = await receiveOrder({ id: item.id })
+                if (response.data.code == 1){
+                    // 修改状态
+                    item.status = '200'
+                    item.status_text = '已接收'
+                    this.$message.success(response.data.message)
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
+        async createOutOrderHandle(_id){
+            try {
+                const response = await createOutOrder({ id: _id })
+                if (response.data.code == 1){
+                    this.$message.success(response.data.message)
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
         }
     },
     created(){

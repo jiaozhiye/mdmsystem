@@ -313,6 +313,43 @@ export const getOrderDetail = params => instance.get('/mgr/logistics/storeOrder/
 // 关闭订单
 export const closeOrder = params => instance.get('/mgr/logistics/storeOrder/closeOrder', {params})
 
+// 接收订单
+export const receiveOrder = params => instance.get('/mgr/logistics/storeOrder/accept', {params})
+
+// 生成出库订单
+export const createOutOrder = params => instance.get('/mgr/logistics/storeOrder/buildOutOrder', {params})
+
+// 选择仓库
+export const getDepotList = () => instance.get('/mgr/common/selectDataBuilder/showWarehourseList')
+
+// 获取出库单列表
+export const getOutOrderInfo = params => instance.get('/mgr/logistics/outWarehouseOrder/queryList', {params})
+
+// 获取出库单详情
+export const getOutOrderDetail = params => instance.get('/mgr/logistics/outWarehouseOrder/showDetailsById', {params})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
