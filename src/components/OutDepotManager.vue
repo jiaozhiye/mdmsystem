@@ -72,7 +72,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <ExtractPanel :params="showOutOrderExtract" width="60%">
+    <ExtractPanel :params="showOutOrderExtract" width="calc(100% - 200px)">
         <span slot="title">出库单详情</span>
         <OutOrderPanel slot="panel" :params="showOutOrderExtract"></OutOrderPanel>
     </ExtractPanel>

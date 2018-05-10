@@ -1,8 +1,8 @@
 <template>
 <div class="appManager-wrapper">
-    <section class="goods-tree-box">
+    <section class="material-tree-box">
         <el-input
-            placeholder="输入商品编号/名称" 
+            placeholder="输入原材料编号/名称" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -18,50 +18,50 @@
             :filter-node-method="filterNode">
         </el-tree>
     </section>
-    <div class="dayOrder-list-box">
+    <div class="order-list-box">
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
             <ul class="fr">
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
-                    v-model="form.wantDate"
+                    v-model="returnGoodsDate"
                     type="date"
-                    placeholder="要货日期"
+                    placeholder="退货日期"
                     format="yyyy 年 MM 月 dd 日"
                     value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions">
                 </el-date-picker>
-                <el-date-picker
-                    class="fl"
-                    style="width: 200px; margin-right: 10px;"
-                    v-model="form.arriveDate"
-                    type="date"
-                    placeholder="到货日期"
-                    format="yyyy 年 MM 月 dd 日"
-                    value-format="yyyy-MM-dd"
-                    :picker-options="pickerOptions">
-                </el-date-picker>
-                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="nextStepHandle">下一步</el-button>
+                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="saveOrderHandle">保存</el-button>
             </ul>
         </div>
         <div class="appManager-list fixedTable-list">
             <el-table
-                class="goods-table"
+                class="material-table"
                 :data="tableList" 
                 border 
+                v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="商品名称" sortable></el-table-column>
-                <el-table-column prop="code" label="商品编码" width="100"></el-table-column>
-                <el-table-column prop="attribute_2_text" label="商品规格" width="100"></el-table-column>
-                <el-table-column prop="unit_text" label="单位" width="100"></el-table-column>
-                <el-table-column label="数量" width="140">
+                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
+                <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
+                <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
+                <el-table-column label="退货数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
                             :stepVal="1">
                         </EditNumber>
+                    </template>
+                </el-table-column>
+                <el-table-column label="退货理由" width="240">
+                    <template slot-scope="scope">
+                        <el-input
+                            type="textarea"
+                            :rows="2"
+                            placeholder="退货理由..."
+                            v-model="scope.row.remark">
+                        </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
@@ -78,29 +78,26 @@
 </template>
 
 <script>
-import moment from 'moment'
 import EditNumber from './EditNumber.vue'
 
 import { recursionTree } from 'common/js/tools'
-import { getGoodsTree, saveGoodsClassify } from 'api'
+import { getMaterialsTree, getEditedMaterial, saveEditedMaterial } from 'api'
 
 export default {
-    name: 'DayOrderManager',
+    name: 'ReturnOrderManager',
     data(){
         return {
-            form: {
-                wantDate: '',
-                arriveDate: ''
-            },
+            returnGoodsDate: '',
             list: [], // 商品分类树数组
             tableList: [], // 同步 商品分类树数组
+            loading: false,
+            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [], // 选中记录的数组
-            btnLoading: false,
             pickerOptions: {
                 disabledDate (time){
-                    // return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+                    return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
                 }
             }
         }
@@ -111,10 +108,6 @@ export default {
         }
     },
     methods: {
-        initDateFn(){
-            this.form.wantDate = moment().format('YYYY-MM-DD')
-            this.form.arriveDate = moment().add(3, 'day').format('YYYY-MM-DD')
-        },
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
@@ -140,14 +133,48 @@ export default {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
-        async getGoodsTree(){
+        async getMaterialsTree(callback){
             try {
-                const response = await getGoodsTree()
+                const response = await getMaterialsTree({ id: 'd5f65be6ca4d4bcab203cb4f470fbd62' })
                 // console.log(response.data)
                 if (response.data.code == 1){
+                    // 原材料树新增 number 字段，默认值是 0
+                    recursionTree(response.data.tree, item => {
+                        item.number = 0
+                        item.remark = ''
+                    })
                     this.list = response.data.tree
+                    callback && callback()
                 }
             } catch (error){
+                console.error(error)
+            }
+        },
+        async getEditedMaterial(){
+            this.loading = !0
+            try {
+                const response = await getEditedMaterial({
+                    id: this.$route.params.id
+                })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    this.tableList = response.data.materialList
+                    // 把编辑过的原材料同步到左侧树
+                    recursionTree(this.list, (item) => {
+                        let obj = this.tableList.find(val => val.id === item.id)
+                        if (typeof obj != 'undefined'){
+                            for (let attr in obj){
+                                item[attr] = obj[attr]
+                            }
+                        }
+                        obj = null
+                    })
+                    this.checkedKeys = this.tableList.map(item => item.id)
+                    this.setCheckedKeys()
+                }
+                this.loading = !1
+            } catch (error){
+                this.loading = !1
                 console.error(error)
             }
         },
@@ -158,7 +185,7 @@ export default {
             if (!Array.isArray(ids)){
                 ids = this.multipleSelection.map(item => item.id)
                 if (ids.length == 0){
-                    return this.$message.warning('请勾选商品名称！')
+                    return this.$message.warning('请勾选原材料名称！')
                 }
             }
             // 处理 checkedKeys 数组
@@ -169,19 +196,22 @@ export default {
             }
             this.setCheckedKeys()
         },
-        async nextStepHandle(){
+        async saveOrderHandle(){
             try {
                 this.btnLoading = !0
-                const response = await saveGoodsClassify({
-                    ...this.form,
-                    list: this.tableList.map(item => ({id: item.id, number: item.number}))
+                const response = await saveEditedMaterial({
+                    list: this.tableList.map(item => ({
+                        id: item.id,
+                        stroe_order_material_id: item.stroe_order_material_id,
+                        number: item.number
+                    }))
                 })
-                if (response.data.code == 1 && typeof response.data.id != 'undefined'){
-                    this.$router.push({ path: `/storer_manager/material_order/${response.data.id}` })
-                    setTimeout(() => {this.btnLoading = !1}, 500)
+                if (response.data.code == 1){
+                    this.$message.success(response.data.message)
                 } else {
                     this.$message.error(response.data.message)
                 }
+                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }
@@ -189,7 +219,7 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.goods-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(document.querySelectorAll('.material-table > .el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -202,14 +232,16 @@ export default {
         }
     },
     created(){
-        this.initDateFn()
-        this.getGoodsTree()
+        // 先获取原材料树
+        this.getMaterialsTree(() => { // 再获取已编辑商品原材料
+            this.getEditedMaterial()
+        })
     },
     mounted(){
-        document.querySelector('.goods-table').addEventListener('keyup', this.keyUpHandle, false)
+        document.querySelector('.material-table').addEventListener('keyup', this.keyUpHandle, false)
     },
     destroyed(){
-        document.querySelector('.goods-table').removeEventListener('keyup', this.keyUpHandle)
+        document.querySelector('.material-table').removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber
@@ -218,7 +250,7 @@ export default {
 </script>
 
 <style>
-.dayOrder-list-box {
-    margin-left: 320px;
+.order-list-box {
+    margin-left: 360px;
 }
 </style>

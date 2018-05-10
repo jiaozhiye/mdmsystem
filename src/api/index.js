@@ -261,7 +261,7 @@ export const getHasDailySummary = params => instance.get('mgr/dailySummary/hasDa
 
 // 获取导入的销售数据列表
 export const getScaleImportedInfo = params => instance.get('mgr/dailySummary/getDailySummary', {params})
-// 79
+
 // 获取商品类别树
 export const getGoodsTree = () => instance.get('/mgr/goodsAndGoodsTypeTree')
 
@@ -328,15 +328,20 @@ export const getOutOrderInfo = params => instance.get('/mgr/logistics/outWarehou
 // 获取出库单详情
 export const getOutOrderDetail = params => instance.get('/mgr/logistics/outWarehouseOrder/showDetailsById', {params})
 
+// 关闭(保存)出库单
+export const closeOutOrder = params => instance.post('/mgr/logistics/outWarehouseOrder/save', params)
+// 102
+// 获取出库单原材料树结构
+export const getMaterialTreeForOutDepot = () => instance.get('/mgr/warehouse/warehouseStockMaterialTree')
 
+// 获取盘点原材料树
+export const getMaterialInventoryTree = params => instance('mgr/storeStock/getMaterialAll', {params})
 
+// 保存盘点原材料信息
+export const saveInventoryMaterial = params => instance.post('mgr/storeStock/editStock', params)
 
-
-
-
-
-
-
+// 出库 + 保存出库单
+export const outDepotSaveOrder = params => instance.post('/mgr/logistics/outWarehouseOrder/out', params)
 
 
 
