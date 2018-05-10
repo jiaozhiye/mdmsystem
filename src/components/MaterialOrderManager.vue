@@ -1,6 +1,6 @@
 <template>
 <div class="appManager-wrapper">
-    <section class="order-tree-box">
+    <section class="material-tree-box">
         <el-input
             placeholder="输入原材料编号/名称" 
             prefix-icon="el-icon-search" 
@@ -99,8 +99,8 @@ export default {
                 wantDate: '',
                 arriveDate: ''
             },
-            list: [], // 商品分类树数组
-            tableList: [], // 同步 商品分类树数组
+            list: [], // 原材料分类树数组
+            tableList: [], // 同步 原材料分类树数组
             loading: false,
             btnLoading: false,
             filterText: '', // 树结构过滤条件文本
@@ -116,11 +116,6 @@ export default {
     watch: {
         filterText(val){
             this.$refs.tree.filter(val)
-        },
-        checkedKeys(newVal, oldVal){
-            if (newVal.join() !== oldVal.join()){
-                this.asyncTableList()
-            }
         }
     },
     methods: {
@@ -135,11 +130,15 @@ export default {
         },
         checkChangeHandle(){
             this.getCheckedKeys()
+            this.asyncTableList()
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
             this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
             // console.log(this.checkedKeys)
+        },
+        setCheckedKeys(){
+            this.$refs.tree.setCheckedKeys(this.checkedKeys)
         },
         filterNode(value, data){
             if (!value) return true
@@ -175,14 +174,6 @@ export default {
                     recursionTree(this.list, (item) => {
                         let obj = this.tableList.find(val => val.id === item.id)
                         if (typeof obj != 'undefined'){
-                            // item.stroe_order_material_id = obj.number
-                            // item.number = obj.number
-                            // item.actual_order = obj.actual_order
-                            // item.nextOneGetNum = obj.nextOneGetNum
-                            // item.nextOneNum = obj.nextOneNum
-                            // item.nextTwoGetNum = obj.nextTwoGetNum
-                            // item.nextTwoNum = obj.nextTwoNum
-                            // item.stock = obj.stock
                             for (let attr in obj){
                                 item[attr] = obj[attr]
                             }
@@ -191,13 +182,12 @@ export default {
                     })
 
                     this.checkedKeys = this.tableList.map(item => item.id)
-                    this.$refs.tree.setCheckedKeys(this.checkedKeys)
+                    this.setCheckedKeys()
                 }
-                this.loading = !1
             } catch (error){
-                this.loading = !1
                 console.error(error)
             }
+            this.loading = !1
         },
         handleSelectionChange(val){
             this.multipleSelection = val
@@ -215,8 +205,7 @@ export default {
                     this.checkedKeys.splice(i--, 1)
                 }
             }
-            this.$refs.tree.setCheckedKeys(this.checkedKeys)
-            this.asyncTableList()
+            this.setCheckedKeys()
         },
         async saveOrderHandle(){
             try {
@@ -272,19 +261,7 @@ export default {
 </script>
 
 <style>
-/* 原材料分类树 */
-.order-tree-box {
-    width: 280px;
-    padding: 20px;
-    position: absolute;
-    background-color: #fff;
-    margin-bottom: 20px;
-}
-.order-tree-box .filter-tree {
-    margin-top: 10px;
-}
-
 .order-list-box {
-    margin-left: 340px;
+    margin-left: 360px;
 }
 </style>

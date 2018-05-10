@@ -1,6 +1,6 @@
 <template>
 <div class="appManager-wrapper">
-    <section class="gdmaRelat-tree-box">
+    <section class="goods-tree-box">
         <el-input
             placeholder="输入商品编号/名称" 
             prefix-icon="el-icon-search" 
@@ -55,13 +55,13 @@
                 :data="list" 
                 border 
                 v-loading="loading">
-                <el-table-column prop="name" label="商品名称" width="220" sortable fixed></el-table-column>
+                <el-table-column prop="name" label="商品名称" min-width="200" sortable fixed></el-table-column>
                 <el-table-column prop="type_2_text" label="商品中类" width="120"></el-table-column>
                 <el-table-column prop="code" label="商品编号" width="120" sortable></el-table-column>
                 <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
                 <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
                 <el-table-column prop="bom_time_text" label="设定日期" width="180" sortable></el-table-column>
-                <el-table-column label="配方状态" min-width="100">
+                <el-table-column label="配方状态" width="120">
                     <template slot-scope="scope">
                         <el-tag size="medium" :type="scope.row.bom_status == '1' ? '' : 'danger'">
                             {{ scope.row.bom_status_text }}
@@ -241,20 +241,6 @@ export default {
 </script>
 
 <style>
-/* 商品分类结构树 */
-.gdmaRelat-tree-box {
-    margin-top: 60px;
-    width: 260px;
-    padding: 20px;
-    position: absolute;
-    background-color: #fff;
-    margin-bottom: 20px;
-}
-.gdmaRelat-tree-box .filter-tree {
-    margin-top: 10px;
-}
-
-
 .gdmaRelat-list-box {
     margin-left: 320px;
 }

@@ -274,3 +274,29 @@ a:hover {
 #app .app-date-editor .el-range__close-icon {
     width: 15px;
 }
+
+/**
+ * 原材料分类树样式
+ */
+.material-tree-box {
+    width: 300px;
+    padding: 20px;
+    float: left;
+    background-color: #fff;
+}
+.material-tree-box > .filter-tree {
+    margin-top: 10px;
+}
+
+/**
+ * 商品分类树样式
+ */
+.goods-tree-box {
+    width: 260px;
+    padding: 20px;
+    float: left;
+    background-color: #fff;
+}
+.goods-tree-box .filter-tree {
+    margin-top: 10px;
+}

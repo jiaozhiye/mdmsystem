@@ -17,6 +17,8 @@ const MaterialOrderManager = () => import('components/MaterialOrderManager.vue')
 const LogisticsManager = () => import('components/LogisticsManager.vue')
 const DepotManager = () => import('components/DepotManager.vue')
 const OutDepotManager = () => import('components/OutDepotManager.vue')
+const ReturnOrderManager = () => import('components/ReturnOrderManager.vue')
+const InventoryManager = () => import('components/InventoryManager.vue')
 
 const routes = {
     routes: [
@@ -85,6 +87,14 @@ const routes = {
         {
             path: '/storer_manager/material_order/:id',
             component: MaterialOrderManager
+        },
+        {
+            path: '/storer_manager/refund_order',
+            component: ReturnOrderManager
+        },
+        {
+            path: '/storer_manager/store_task_inventory',
+            component: InventoryManager
         },
         // 安全存量
         {
