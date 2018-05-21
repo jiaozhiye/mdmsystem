@@ -173,7 +173,9 @@ export default {
                     if (!item.isEdit) item.disabled = true
                 })
                 // console.log(response.data)
-                this.treeList = response.data.list
+                if (response.data.code == 1){
+                    this.treeList = response.data.list
+                }
                 callback && callback()
             } catch (error){
                 console.error(error)
@@ -185,17 +187,19 @@ export default {
                 this.loading = !0
                 const response = await getOutOrderDetail({ id: this.params.id })
                 // console.log(response.data)
-                this.list = response.data.list
-                // 把编辑过的原材料同步到左侧树
-                // recursionTree(this.treeList, item => {
-                //     this.list.forEach(val => {
-                //         let obj = val.warehouseStockInfo.find(ele => ele.id === item.id)
-                //         if (typeof obj !== 'undefined'){
-                //             for (let attr in obj) item[attr] = obj[attr]
-                //         }
-                //         obj = null
-                //     })
-                // })
+                if (response.data.code == 1){
+                    this.list = response.data.list
+                    // 把编辑过的原材料同步到左侧树
+                    // recursionTree(this.treeList, item => {
+                    //     this.list.forEach(val => {
+                    //         let obj = val.warehouseStockInfo.find(ele => ele.id === item.id)
+                    //         if (typeof obj !== 'undefined'){
+                    //             for (let attr in obj) item[attr] = obj[attr]
+                    //         }
+                    //         obj = null
+                    //     })
+                    // })
+                }
                 callback && callback()
             } catch (error){
                 console.error(error)

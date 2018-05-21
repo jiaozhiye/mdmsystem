@@ -14,7 +14,7 @@
         </el-date-picker>
         <el-select 
             class="fl" 
-            style="width: 120px; margin-left: 10px;"
+            style="width: 150px; margin-left: 10px;"
             v-model="search.orderType" 
             clearable 
             @change="searchHandle" 
@@ -28,7 +28,7 @@
         </el-select>
         <el-select 
             class="fl" 
-            style="width: 120px; margin-left: 10px;"
+            style="width: 150px; margin-left: 10px;"
             v-model="search.state" 
             @change="searchHandle" 
             placeholder="选择状态">
@@ -39,23 +39,9 @@
                 :value="item.value">
             </el-option>
         </el-select>
-        <el-select 
-            class="fl" 
-            style="width: 180px; margin-left: 10px;"
-            v-model="search.store" 
-            clearable 
-            @change="searchHandle" 
-            placeholder="选择门店">
-            <el-option
-                v-for="(item, key) in storeList"
-                :key="key"
-                :label="item.name"
-                :value="item.id">
-            </el-option>
-        </el-select>
         <el-input 
             class="fr" 
-            style="width: 180px;"
+            style="width: 220px;"
             placeholder="请输入订单号" 
             prefix-icon="el-icon-search"
             v-model="search.orderCode" 
@@ -87,12 +73,6 @@
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 查看
                     </el-button>
-                    <el-button @click.stop="receiveOrderHandle(scope.row)" type="text">
-                        <i class="el-icon-edit-outline"></i> 接收
-                    </el-button>
-                    <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text">
-                        <i class="el-icon-document"></i> 生成出库单
-                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -113,21 +93,19 @@ import moment from 'moment'
 import ExtractPanel from './ExtractPanel.vue'
 import OrderDetailPanel from './OrderDetailPanel.vue'
 
-import { getOrderInfo, getOrderTypeList, getStoreList, getOrderStateList, receiveOrder, createOutOrder } from 'api'
+import { getOrderInfo, getOrderTypeList, getOrderStateList } from 'api'
 
 export default {
-    name: 'LogisticsManager',
+    name: 'StoreOrderManager',
     data(){
         return {
             list: [],
             orderTypeList: [], // 订单类型列表
-            storeList: [], // 门店列表
             stateList: [], // 状态列表
             curPageIndex: 1, // 当前页码
             search: {
                 arrivalDate: [],
                 orderType: '',
-                store: '',
                 state: '10',
                 orderCode: ''
             },
@@ -159,18 +137,6 @@ export default {
                 console.error(error)
             }
         },
-        async getStoreList(){
-            try {
-                const response = await getStoreList()
-                if (response.data.code == 1){
-                    this.storeList = response.data.list
-                } else {
-                    this.$message.error(response.data.message)
-                }
-            } catch (error){
-                console.error(error)
-            }
-        },
         async getStateList(){
             try {
                 const response = await getOrderStateList()
@@ -192,7 +158,6 @@ export default {
                     pageSize: 10,
                     arrivalDate: this.search.arrivalDate,
                     orderType: this.search.orderType,
-                    store: this.search.store,
                     state: this.search.state,
                     orderCode: this.search.orderCode
                 })
@@ -215,43 +180,11 @@ export default {
         },
         searchHandle(){
             this.getOrderList(1)
-        },
-        async receiveOrderHandle(item){
-            try {
-                const response = await receiveOrder({ id: item.id })
-                if (response.data.code == 1){
-                    // 修改状态
-                    item.status = '200'
-                    item.status_text = '已接收'
-                    // this.$message.success(response.data.message)
-                    setTimeout(() => {
-                        this.getOrderList(this.curPageIndex)
-                    }, 500)
-                } else {
-                    this.$message.error(response.data.message)
-                }
-            } catch (error){
-                console.error(error)
-            }
-        },
-        async createOutOrderHandle(_id){
-            try {
-                const response = await createOutOrder({ id: _id })
-                if (response.data.code == 1){
-                    this.$message.success(response.data.message)
-                    this.getOrderList(this.curPageIndex)
-                } else {
-                    this.$message.error(response.data.message)
-                }
-            } catch (error){
-                console.error(error)
-            }
         }
     },
     created(){
         this.initArrivalDate()
         this.getOrderTypeList()
-        this.getStoreList()
         this.getStateList()
         this.getOrderList(this.curPageIndex)
     },

@@ -8,7 +8,8 @@
                     :key="key" 
                     :label="item.name" 
                     :value="item.id"
-                    :disabled="item.disabled"></el-option>
+                    :disabled="item.disabled">
+                </el-option>
             </el-select>
         </div>
     </div>

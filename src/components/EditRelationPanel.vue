@@ -6,7 +6,7 @@
         <span class="fl relation-top-tit">
             <i class="el-icon-question"></i> 配方估算成本：{{ totalPrice }} 元/份
         </span>
-        <el-button class="fr" type="primary" icon="el-icon-document" @click.stop="saveHandle"> 保 存 </el-button>
+        <el-button class="fr" type="primary" :loading="btnLoading" @click.stop="saveHandle"> 保 存 </el-button>
     </div>
     <div class="appManager-list fixedTable-list">
         <el-table 
@@ -24,11 +24,12 @@
             <el-table-column label="净料数量" width="120">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.isEdit">{{ scope.row.net_num }}</span>
-                    <InputNumPanel 
-                        v-model="scope.row.net_num"
+                    <EditNumber
                         v-if="scope.row.isEdit"
+                        v-model.number="scope.row.net_num"
+                        :stepVal="1"
                         @change="computeJlPrice(scope.row)">
-                    </InputNumPanel>
+                    </EditNumber>
                 </template>
             </el-table-column>
             <el-table-column label="出成率" width="100">
@@ -37,11 +38,12 @@
             <el-table-column label="毛料数量" width="120">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.isEdit">{{ scope.row.gross_num }}</span>
-                    <InputNumPanel 
-                        v-model="scope.row.gross_num"
+                    <EditNumber
                         v-if="scope.row.isEdit"
+                        v-model.number="scope.row.gross_num"
+                        :stepVal="1"
                         @change="computeMlPrice(scope.row)">
-                    </InputNumPanel>
+                    </EditNumber>
                 </template>
             </el-table-column>
             <el-table-column prop="total_price" label="估算金额"></el-table-column>
@@ -70,7 +72,7 @@
 <script>
 import ExtractPanel from './ExtractPanel.vue'
 import AddFormulaPanel from './AddFormulaPanel'
-import InputNumPanel from './InputNumPanel.vue'
+import EditNumber from './EditNumber.vue'
 
 import {getGoodsFormulaInfo, saveGdRelation} from 'api'
 
@@ -84,6 +86,7 @@ export default {
             goodsId: this.params.itemId, // 当前商品ID
             list: [],
             loading: false,
+            btnLoading: false,
             multipleSelection: [], // 选中记录的数组
             addFormulaExtract: {
                 formulaIds: [], // 配方(原材料)记录的ID数组
@@ -213,6 +216,7 @@ export default {
         },
         async insertRelationInfo(callback){
             try {
+                this.btnLoading = !0
                 const response = await saveGdRelation({
                     id: this.goodsId,
                     list: this.list,
@@ -224,6 +228,7 @@ export default {
                         message: '商品配方设置成功!'
                     })
                     callback && callback()
+                    this.btnLoading = !1
                 } else {
                     this.$message({
                         type: 'error',
@@ -252,7 +257,7 @@ export default {
     components: {
         ExtractPanel,
         AddFormulaPanel,
-        InputNumPanel
+        EditNumber
     }
 }
 </script>

@@ -134,8 +134,6 @@ export default {
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.list
-                } else {
-                    this.list.total = 0
                 }
                 callback && callback()
             } catch (error){

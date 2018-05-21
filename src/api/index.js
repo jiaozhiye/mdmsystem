@@ -330,7 +330,7 @@ export const getOutOrderDetail = params => instance.get('/mgr/logistics/outWareh
 
 // 关闭(保存)出库单
 export const closeOutOrder = params => instance.post('/mgr/logistics/outWarehouseOrder/save', params)
-// 102
+
 // 获取出库单原材料树结构
 export const getMaterialTreeForOutDepot = () => instance.get('/mgr/warehouse/warehouseStockMaterialTree')
 
@@ -343,7 +343,59 @@ export const saveInventoryMaterial = params => instance.post('mgr/storeStock/edi
 // 出库 + 保存出库单
 export const outDepotSaveOrder = params => instance.post('/mgr/logistics/outWarehouseOrder/out', params)
 
+// 获取门店出库单
+export const getReceiveOrder = () => instance.get('/mgr/store/storeOrderReceiver/query')
 
+// 获取接收订单详情
+export const getReceiveOrderDetail = params => instance.get('/mgr/store/storeOrderReceiver/showDetailById', {params})
+
+// 保存接收订单信息
+export const saveReceiveOrder = params => instance.post('/mgr/store/storeOrderReceiver/accept', params)
+
+// 获取退货单状态
+export const getRetOrdStateList = () => instance.get('mgr/dict/showList3?dict=500')
+
+// 获取退货单列表
+export const getReturnOrderInfo = params => instance.get('/mgr/store/returnGoods/queryOrderListByStore', {params})
+
+// 获取退货单原材料树结构
+export const getReturnOrderTree = () => instance.get('/mgr/store/returnGoods/getMaterialTree')
+
+// 保存退货单
+export const saveReturnOrder = params => instance.post('/mgr/store/returnGoods/createOrder', params)
+
+// 获取退货单详细信息
+export const getReturnOrderDetail = params => instance.get('/mgr/store/returnGoods/showDetailByOrderIdAndStore', {params})
+
+// 更新退货单
+export const updateReturnOrder = params => instance.post('/mgr/store/returnGoods/createOrder', params)
+// 115
+// 获取物流退货单列表
+export const getLogisticsRetOrdInfo = params => instance.get('/mgr/store/returnGoods/queryOrderListByLogistics', {params})
+
+// 获取物流退货单详情
+export const getLogisticsRetOrdDetail = params => instance.get('/mgr/store/returnGoods/showDetailByOrderIdAndLogistics', {params})
+
+// 接收物流退货单
+export const receiveLogisticsRetOrd = params => instance.post('/mgr/store/returnGoods/doReturn', params)
+
+// 完成物流退货单
+export const completeLogisticsRetOrd = params => instance.post('/mgr/store/returnGoods/finishOrder', params)
+
+// 获取仓库列表
+export const getDepotInfoSelect = () => instance.get('/mgr/common/selectDataBuilder/showWarehourseList')
+
+// 获取库存余额列表
+export const getStockBalanceList = params => instance.get('/mgr/warehouse/warehouseStock/queryBalanceList', {params})
+
+// 获取仓库下原材料
+export const getDepotMaterialInfo = params => instance.get('mgr/warehouse/warehouseMovement/queryBalanceList', {params})
+
+// 保存库原材料
+export const saveDepotMaterial = params => instance.post('', params)
+
+// 获取原材料分类
+export const getMaterialClassify = () => instance.get('/mgr/common/selectDataBuilder/showMaterialType')
 
 
 

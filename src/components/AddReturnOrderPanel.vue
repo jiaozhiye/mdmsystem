@@ -1,8 +1,8 @@
 <template>
-<div class="appManager-wrapper">
+<div class="appManager-wrapper" style="padding: 20px;">
     <section class="material-tree-box">
         <el-input
-            placeholder="输入原材料编号/名称/拼音头" 
+            placeholder="输入原材料编号/名称" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -11,8 +11,8 @@
             ref="tree" 
             show-checkbox 
             :data="list" 
+            node-key="id"
             v-loading="treeLoading" 
-            node-key="id" 
             default-expand-all 
             :expand-on-click-node="false" 
             @check-change="checkChangeHandle" 
@@ -23,38 +23,35 @@
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
             <ul class="fr">
-                <strong class="promptText fl">盘点日期：</strong>
-                <el-date-picker
-                    class="fl"
-                    style="margin-right: 10px;"
-                    v-model="inveDate"
-                    type="date"
-                    placeholder="盘点日期"
-                    format="yyyy 年 MM 月 dd 日"
-                    value-format="yyyy-MM-dd">
-                </el-date-picker>
-                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="saveInventoryHandle">保存</el-button>
+                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="submitHandle">保存</el-button>
             </ul>
         </div>
-        <div class="appManager-list">
+        <div class="appManager-list fixedTable-list">
             <el-table
-                class="inventory-table"
-                :data="pagination.list" 
+                class="material-table"
+                :data="tableList" 
                 border 
-                v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
                 <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
-                <el-table-column prop="attribute_2" label="规格" width="100"></el-table-column>
-                <el-table-column prop="stock" label="历史库存" width="80"></el-table-column>
-                <el-table-column label="库存数量" width="140">
+                <el-table-column label="退货数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
                             :stepVal="1">
                         </EditNumber>
+                    </template>
+                </el-table-column>
+                <el-table-column label="退货理由" width="240">
+                    <template slot-scope="scope">
+                        <el-input
+                            type="textarea"
+                            :rows="2"
+                            placeholder="退货理由..."
+                            v-model="scope.row.remark">
+                        </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
@@ -65,40 +62,27 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination 
-                background 
-                layout="prev, pager, next, jumper"
-                :total="pagination.total" 
-                :page-size="pagination.size" 
-                @current-change="handleCurrentChange">
-            </el-pagination>
         </div>
     </div>
 </div>
 </template>
 
 <script>
-import moment from 'moment'
 import EditNumber from './EditNumber.vue'
 
 import { recursionTree } from 'common/js/tools'
-import { getMaterialInventoryTree, getEditedMaterial, saveInventoryMaterial } from 'api'
+import { getReturnOrderTree, saveReturnOrder } from 'api'
 
 export default {
-    name: 'InventoryManager',
+    name: 'AddReturnOrderPanel',
+    props: {
+        params: Object
+    },
     data(){
         return {
-            inveDate: moment().format('YYYY-MM-DD'), // 盘点日期
-            list: [], // 原材料分类树数组
-            tableList: [], // 原材料数组
-            pagination: {
-                list: [], // table 分页数组
-                number: 1, // 当前页码
-                size: 20,  // 显示数量
-                total: 0   // 总记录数
-            },
+            list: [], // 商品分类树数组
+            tableList: [], // 同步 商品分类树数组
             treeLoading: false,
-            loading: false,
             btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
@@ -120,11 +104,9 @@ export default {
             })
             this.tableList = _arr
         },
-        checkChangeHandle(data, check){
-            if (!data.isEdit) return
+        checkChangeHandle(){
             this.getCheckedKeys()
             this.asyncTableList()
-            this.excuPagination()
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
@@ -136,24 +118,22 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.search_text.indexOf(value) !== -1
+            return data.label.indexOf(value) !== -1
         },
-        excuPagination(){
-            this.pagination.total = this.tableList.length
-            let begin = (this.pagination.number - 1) * this.pagination.size
-            let end   = begin + this.pagination.size
-            this.pagination.list = this.tableList.slice(begin, end)
-        },
-        handleCurrentChange(index){
-            this.pagination.number = index
-            this.excuPagination()
-        },
-        async getMaterialsTree(callback){
+        async getReturnOrderTree(callback){
             try {
                 this.treeLoading = !0
-                const response = await getMaterialInventoryTree({ data: this.inveDate })
+                const response = await getReturnOrderTree()
                 // console.log(response.data)
                 if (response.data.code == 1){
+                    // 原材料树新增 number 字段，默认值是 0
+                    recursionTree(response.data.tree, item => {
+                        // if (this.params.type !== ''){ // 说明是隐单
+                        //     item.disabled = !0
+                        // }
+                        item.number = 1
+                        item.remark = ''
+                    })
                     this.list = response.data.tree
                     callback && callback()
                 }
@@ -161,19 +141,6 @@ export default {
                 console.error(error)
             }
             this.treeLoading = !1
-        },
-        async getEditedMaterial(){
-            this.loading = !0
-            try {
-                const response = await getEditedMaterial()
-                // console.log(response.data)
-                if (response.data.code == 1){
-                    this.tableList = response.data.list
-                }
-            } catch (error){
-                console.error(error)
-            }
-            this.loading = !1
         },
         handleSelectionChange(val){
             this.multipleSelection = val
@@ -193,13 +160,13 @@ export default {
             }
             this.setCheckedKeys()
         },
-        async saveInventoryHandle(){
+        async saveOrderHandle(callback){
             try {
                 this.btnLoading = !0
-                const response = await saveInventoryMaterial({
-                    date: this.inveDate,
+                const response = await saveReturnOrder({
                     list: this.tableList.map(item => ({
                         id: item.id,
+                        remark: item.remark,
                         number: item.number
                     }))
                 })
@@ -209,14 +176,24 @@ export default {
                     this.$message.error(response.data.message)
                 }
                 this.btnLoading = !1
+                callback && callback()
             } catch (err){
                 console.error(err)
             }
         },
+        submitHandle(){
+            this.saveOrderHandle(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
+            })
+        },
+        closePanelHandle(){
+            this.params.isPlay = false
+        },
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.inventory-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(document.querySelectorAll('.material-table > .el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -230,13 +207,13 @@ export default {
     },
     created(){
         // 先获取原材料树
-        this.getMaterialsTree()
+        this.getReturnOrderTree()
     },
     mounted(){
-        document.querySelector('.inventory-table').addEventListener('keyup', this.keyUpHandle, false)
+        document.querySelector('.material-table').addEventListener('keyup', this.keyUpHandle, false)
     },
     destroyed(){
-        document.querySelector('.inventory-table').removeEventListener('keyup', this.keyUpHandle)
+        document.querySelector('.material-table').removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber

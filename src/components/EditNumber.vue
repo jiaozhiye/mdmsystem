@@ -2,13 +2,13 @@
 <el-tooltip :content="promptMsg" placement="top">
     <div class="input-number-wrapper">
         <el-input-number 
-            ref="inputNumber"
             size="mini"
             :value="value"
             :min="minVal"
             :max="maxVal"
             :step="stepVal"
             :controls-position="ctrlPos"
+            :disabled="disabled"
             @input.native="handleInput($event, $event.target.value)"
             @change="handleChange"
             @click.native.stop="">
@@ -47,6 +47,10 @@ export default {
         stepVal: {
             type: Number,
             default: 1
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     data (){
@@ -82,7 +86,6 @@ export default {
             const reg = /^(0|[1-9][0-9]*)(\.[0-9]*)?$/
             if ((!isNaN(val) && reg.test(val)) || val === ''){
                 this.dataVal = Number(val)
-                
                 // 触发传入组件 change 自定义事件，带出数值
                 this.$emit('change', this.dataVal)
                 // 触发传入组件 input 自定义事件，带出数值

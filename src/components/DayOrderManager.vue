@@ -22,6 +22,7 @@
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
             <ul class="fr">
+                <strong class="promptText fl">要货日期：</strong>
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
@@ -32,6 +33,7 @@
                     value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions">
                 </el-date-picker>
+                <strong class="promptText fl">到货日期：</strong>
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
@@ -100,7 +102,7 @@ export default {
             btnLoading: false,
             pickerOptions: {
                 disabledDate (time){
-                    // return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+                    return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
                 }
             }
         }
@@ -171,10 +173,14 @@ export default {
         },
         async nextStepHandle(){
             try {
+                const _list = this.tableList.map(item => ({id: item.id, number: item.number}))
+                if (_list.length == 0){
+                    return this.$message.warning('请先编辑商品后再提交！')
+                }
                 this.btnLoading = !0
                 const response = await saveGoodsClassify({
                     ...this.form,
-                    list: this.tableList.map(item => ({id: item.id, number: item.number}))
+                    list: _list
                 })
                 if (response.data.code == 1 && typeof response.data.id != 'undefined'){
                     this.$router.push({ path: `/storer_manager/material_order/${response.data.id}` })

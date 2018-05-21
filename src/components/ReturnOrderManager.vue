@@ -1,256 +1,175 @@
 <template>
 <div class="appManager-wrapper">
-    <section class="material-tree-box">
-        <el-input
-            placeholder="输入原材料编号/名称" 
-            prefix-icon="el-icon-search" 
-            v-model="filterText">
-        </el-input>
-        <el-tree
-            class="filter-tree" 
-            ref="tree" 
-            show-checkbox 
-            :data="list" 
-            node-key="id" 
-            default-expand-all 
-            :expand-on-click-node="false" 
-            @check-change="checkChangeHandle" 
-            :filter-node-method="filterNode">
-        </el-tree>
-    </section>
-    <div class="order-list-box">
-        <div class="appManager-top">
-            <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
-            <ul class="fr">
-                <el-date-picker
-                    class="fl"
-                    style="width: 200px; margin-right: 10px;"
-                    v-model="returnGoodsDate"
-                    type="date"
-                    placeholder="退货日期"
-                    format="yyyy 年 MM 月 dd 日"
-                    value-format="yyyy-MM-dd"
-                    :picker-options="pickerOptions">
-                </el-date-picker>
-                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="saveOrderHandle">保存</el-button>
-            </ul>
-        </div>
-        <div class="appManager-list fixedTable-list">
-            <el-table
-                class="material-table"
-                :data="tableList" 
-                border 
-                v-loading="loading"
-                @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
-                <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
-                <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
-                <el-table-column label="退货数量" width="140">
-                    <template slot-scope="scope">
-                        <EditNumber
-                            v-model.number="scope.row.number"
-                            :stepVal="1">
-                        </EditNumber>
-                    </template>
-                </el-table-column>
-                <el-table-column label="退货理由" width="240">
-                    <template slot-scope="scope">
-                        <el-input
-                            type="textarea"
-                            :rows="2"
-                            placeholder="退货理由..."
-                            v-model="scope.row.remark">
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作" width="100" fixed="right">
-                    <template slot-scope="scope">
-                        <el-button @click.stop="removeItemHandle([scope.row.id])" type="text">
-                            <i class="el-icon-delete"></i> 移除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
+    <div class="appManager-top">
+        <el-dropdown class="fl">
+            <el-button type="primary">
+                新建操作 <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="createRetOrdHandle()">退货单</el-dropdown-item>
+                <el-dropdown-item @click.native="createRetOrdHandle('hidden')">引单退货单</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        <ul class="fr">
+            <el-select 
+                class="fl" 
+                style="margin-right: 10px;"
+                v-model="search.state" 
+                @change="searchHandle" 
+                placeholder="退货单状态"
+                clearable>
+                <el-option
+                    v-for="(item, key) in stateList"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+            <el-input 
+                class="fl" 
+                style="width: 220px;"
+                placeholder="请输入退货单号" 
+                prefix-icon="el-icon-search"
+                v-model="search.orderCode" 
+                @keyup.enter.native="searchHandle" 
+                clearable>
+            </el-input>
+        </ul>
     </div>
+    <div class="appManager-list">
+        <el-table :data="list" border v-loading="loading">
+            <el-table-column prop="order_number" label="退货单号"></el-table-column>
+            <el-table-column prop="return_time" label="退货日期" sortable></el-table-column>
+            <el-table-column prop="store_name" label="门店名称"></el-table-column>
+            <el-table-column label="订单状态" width="200">
+                <template slot-scope="scope">
+                    <el-tag size="medium">{{ scope.row.dname }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150">
+                <template slot-scope="scope">
+                    <el-button @click.stop="showItemHandle(scope.row.id, scope.row.isEdit)" type="text">
+                        <i class="el-icon-view"></i> 详情
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination background layout="prev, pager, next, jumper"
+            :total="list.total" @current-change="handleCurrentChange">
+        </el-pagination>
+    </div>
+    <ExtractPanel :params="showRetOrdExtract" width="calc(100% - 200px)">
+        <span slot="title">{{ showRetOrdExtract.type }}退货单详情</span>
+        <ModReturnOrderPanel slot="panel" :params="showRetOrdExtract"></ModReturnOrderPanel>
+    </ExtractPanel>
+    <ExtractPanel :params="addRetOrdExtract" width="calc(100% - 200px)">
+        <span slot="title">新增{{ addRetOrdExtract.type }}退货单</span>
+        <AddReturnOrderPanel slot="panel" :params="addRetOrdExtract"></AddReturnOrderPanel>
+    </ExtractPanel>
 </div>
 </template>
 
 <script>
-import EditNumber from './EditNumber.vue'
+import ExtractPanel from './ExtractPanel.vue'
+import ModReturnOrderPanel from './ModReturnOrderPanel.vue'
+import AddReturnOrderPanel from './AddReturnOrderPanel.vue'
 
-import { recursionTree } from 'common/js/tools'
-import { getMaterialsTree, getEditedMaterial, saveEditedMaterial } from 'api'
+import { getReturnOrderInfo, getRetOrdStateList } from 'api'
 
 export default {
     name: 'ReturnOrderManager',
     data(){
         return {
-            returnGoodsDate: '',
-            list: [], // 商品分类树数组
-            tableList: [], // 同步 商品分类树数组
+            list: [],
+            stateList: [], // 状态列表
+            curPageIndex: 1, // 当前页码
+            search: {
+                state: '',
+                orderCode: ''
+            },
             loading: false,
-            btnLoading: false,
-            filterText: '', // 树结构过滤条件文本
-            checkedKeys: [], // 树结构选中的ID数组
-            multipleSelection: [], // 选中记录的数组
-            pickerOptions: {
-                disabledDate (time){
-                    return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
-                }
+            showRetOrdExtract: {
+                type: '', // 退货单类型   引单
+                isPlay: false
+            },
+            addRetOrdExtract: {
+                type: '', // 退货单类型   引单
+                isPlay: false
             }
-        }
-    },
-    watch: {
-        filterText(val){
-            this.$refs.tree.filter(val)
         }
     },
     methods: {
-        asyncTableList(){
-            let _arr = []
-            recursionTree(this.list, (item) => {
-                if (this.checkedKeys.findIndex(val => val === item.id) !== -1){
-                    _arr.push(item)
-                }
-            })
-            this.tableList = _arr
+        createRetOrdHandle(isHidden){
+            this.addRetOrdExtract.isPlay = !0
+            if (isHidden === 'hidden'){
+                this.addRetOrdExtract.type = '引单'
+            } else {
+                this.addRetOrdExtract.type = ''
+            }
         },
-        checkChangeHandle(){
-            this.getCheckedKeys()
-            this.asyncTableList()
+        showItemHandle(_id, _isEdit){
+            this.showRetOrdExtract.isPlay = !0
+            this.showRetOrdExtract.id = _id
+            if (_isEdit){
+                this.showRetOrdExtract.type = ''
+            } else {
+                this.showRetOrdExtract.type = '引单'
+            }
         },
-        getCheckedKeys(){
-            // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
-            // console.log(this.checkedKeys)
-        },
-        setCheckedKeys(){
-            this.$refs.tree.setCheckedKeys(this.checkedKeys)
-        },
-        filterNode(value, data){
-            if (!value) return true
-            return data.label.indexOf(value) !== -1
-        },
-        async getMaterialsTree(callback){
+        async getStateList(){
             try {
-                const response = await getMaterialsTree({ id: 'd5f65be6ca4d4bcab203cb4f470fbd62' })
-                // console.log(response.data)
+                const response = await getRetOrdStateList()
                 if (response.data.code == 1){
-                    // 原材料树新增 number 字段，默认值是 0
-                    recursionTree(response.data.tree, item => {
-                        item.number = 0
-                        item.remark = ''
-                    })
-                    this.list = response.data.tree
-                    callback && callback()
-                }
-            } catch (error){
-                console.error(error)
-            }
-        },
-        async getEditedMaterial(){
-            this.loading = !0
-            try {
-                const response = await getEditedMaterial({
-                    id: this.$route.params.id
-                })
-                // console.log(response.data)
-                if (response.data.code == 1){
-                    this.tableList = response.data.materialList
-                    // 把编辑过的原材料同步到左侧树
-                    recursionTree(this.list, (item) => {
-                        let obj = this.tableList.find(val => val.id === item.id)
-                        if (typeof obj != 'undefined'){
-                            for (let attr in obj){
-                                item[attr] = obj[attr]
-                            }
-                        }
-                        obj = null
-                    })
-                    this.checkedKeys = this.tableList.map(item => item.id)
-                    this.setCheckedKeys()
-                }
-                this.loading = !1
-            } catch (error){
-                this.loading = !1
-                console.error(error)
-            }
-        },
-        handleSelectionChange(val){
-            this.multipleSelection = val
-        },
-        removeItemHandle(ids){
-            if (!Array.isArray(ids)){
-                ids = this.multipleSelection.map(item => item.id)
-                if (ids.length == 0){
-                    return this.$message.warning('请勾选原材料名称！')
-                }
-            }
-            // 处理 checkedKeys 数组
-            for (let i = 0; i < this.checkedKeys.length; i++){
-                if (ids.findIndex(val => val === this.checkedKeys[i]) !== -1){
-                    this.checkedKeys.splice(i--, 1)
-                }
-            }
-            this.setCheckedKeys()
-        },
-        async saveOrderHandle(){
-            try {
-                this.btnLoading = !0
-                const response = await saveEditedMaterial({
-                    list: this.tableList.map(item => ({
-                        id: item.id,
-                        stroe_order_material_id: item.stroe_order_material_id,
-                        number: item.number
-                    }))
-                })
-                if (response.data.code == 1){
-                    this.$message.success(response.data.message)
+                    this.stateList = response.data.list
                 } else {
                     this.$message.error(response.data.message)
                 }
-                this.btnLoading = !1
-            } catch (err){
-                console.error(err)
+            } catch (error){
+                console.error(error)
             }
         },
-        keyUpHandle(event){
-            event.stopPropagation()
-            if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.material-table > .el-table__body-wrapper .el-input__inner'))
-                let index = inputNumberArr.findIndex(item => item === event.target)
-                if (index === -1){
-                    return
+        async getReturnOrderList(curPage, callback){
+            curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
+            try {
+                this.loading = !0
+                const response = await getReturnOrderInfo({
+                    pageNum: curPage,
+                    pageSize: 10,
+                    status: this.search.state,
+                    orderCode: this.search.orderCode
+                })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    this.list = response.data.orderList.list
+                    this.list.total = response.data.orderList.totalRow
+                } else {
+                    this.list.total = 0
                 }
-                index = (++index) % inputNumberArr.length
-                // console.log(index)
-                inputNumberArr[index].focus()
+                callback && callback()
+            } catch (error){
+                console.error(error)
             }
-            return false
+            this.loading = !1
+        },
+        handleCurrentChange(index){
+            this.curPageIndex = index
+            this.getReturnOrderList(index)
+        },
+        searchHandle(){
+            this.getReturnOrderList(1)
         }
     },
     created(){
-        // 先获取原材料树
-        this.getMaterialsTree(() => { // 再获取已编辑商品原材料
-            this.getEditedMaterial()
-        })
-    },
-    mounted(){
-        document.querySelector('.material-table').addEventListener('keyup', this.keyUpHandle, false)
-    },
-    destroyed(){
-        document.querySelector('.material-table').removeEventListener('keyup', this.keyUpHandle)
+        this.getStateList()
+        this.getReturnOrderList(this.curPageIndex)
     },
     components: {
-        EditNumber
+        ExtractPanel,
+        AddReturnOrderPanel,
+        ModReturnOrderPanel
     }
 }
 </script>
 
 <style>
-.order-list-box {
-    margin-left: 360px;
-}
 </style>

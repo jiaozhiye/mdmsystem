@@ -11,6 +11,7 @@
             ref="tree" 
             show-checkbox 
             :data="list" 
+            v-loading="treeLoading" 
             node-key="id" 
             default-expand-all 
             :expand-on-click-node="false" 
@@ -22,6 +23,7 @@
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
             <ul class="fr">
+                <strong class="promptText fl">要货日期：</strong>
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
@@ -33,6 +35,7 @@
                     value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions">
                 </el-date-picker>
+                <strong class="promptText fl">到货日期：</strong>
                 <el-date-picker
                     class="fl"
                     style="width: 200px; margin-right: 10px;"
@@ -102,6 +105,7 @@ export default {
             list: [], // 原材料分类树数组
             tableList: [], // 同步 原材料分类树数组
             loading: false,
+            treeLoading: false,
             btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
@@ -146,17 +150,19 @@ export default {
         },
         async getMaterialsTree(callback){
             try {
+                this.treeLoading = !0
                 const response = await getMaterialsTree({ id: this.$route.params.id })
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    // 原材料树新增 number 字段，默认值是 0
-                    recursionTree(response.data.tree, item => item.number = 0)
+                    // 原材料树新增 number 字段，默认值是 1
+                    recursionTree(response.data.tree, item => item.number = 1)
                     this.list = response.data.tree
                     callback && callback()
                 }
             } catch (error){
                 console.error(error)
             }
+            this.treeLoading = !1
         },
         async getEditedMaterial(){
             this.loading = !0
@@ -219,6 +225,8 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
+                    // 跳转
+                    this.$router.push('/storer_manager/store_order_list')
                 } else {
                     this.$message.error(response.data.message)
                 }

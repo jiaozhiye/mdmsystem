@@ -90,7 +90,9 @@ export default {
             try {
                 const response = await getPowerInfo()
                 // console.log(response.data)
-                this.list = response.data.list
+                if (response.data.code == 1){
+                    this.list = response.data.list
+                }
             } catch (error){
                 console.error(error)
             }

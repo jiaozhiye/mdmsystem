@@ -8,6 +8,8 @@ body {
     line-height: 1.5em;
     position: relative;
     word-break: break-all;
+    -webkit-user-select: none;
+    user-select: none;
 }
 button, input, optgroup, option, select, textarea {
     font-family: inherit;
@@ -112,6 +114,10 @@ a:hover {
 .appManager-wrapper {}
 .appManager-top {
     height: 40px;
+}
+.appManager-top .promptText {
+    color: #666;
+    line-height: 40px;
 }
 
 .appManager-list {
@@ -279,24 +285,28 @@ a:hover {
  * 原材料分类树样式
  */
 .material-tree-box {
-    width: 300px;
-    padding: 20px;
+    width: 320px;
+    padding: 10px;
     float: left;
     background-color: #fff;
 }
 .material-tree-box > .filter-tree {
     margin-top: 10px;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
 }
 
 /**
  * 商品分类树样式
  */
 .goods-tree-box {
-    width: 260px;
-    padding: 20px;
+    width: 280px;
+    padding: 10px;
     float: left;
     background-color: #fff;
 }
 .goods-tree-box .filter-tree {
     margin-top: 10px;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
 }

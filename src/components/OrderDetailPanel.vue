@@ -12,7 +12,7 @@
             <el-table :data="order.list" border v-loading="loading">
                 <el-table-column prop="code" label="原料编号" sortable></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="attribute_2" label="规格"></el-table-column>
+                <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column prop="want_num" label="数量"></el-table-column>
                 <el-table-column prop="send_num" label="已出数量"></el-table-column>
@@ -52,11 +52,13 @@ export default {
                 this.loading = !0
                 const response = await getOrderDetail({ id: this.params.id })
                 // console.log(response.data)
-                this.order.code = response.data.order.order_number
-                this.order.date = response.data.order.create_time_short
-                this.order.arrivalDate = response.data.order.arrive_date
-                this.order.store = response.data.order.store_text
-                this.order.list = response.data.orderDetailsList
+                if (response.data.code == 1){
+                    this.order.code = response.data.order.order_number
+                    this.order.date = response.data.order.create_time_short
+                    this.order.arrivalDate = response.data.order.arrive_date
+                    this.order.store = response.data.order.store_text
+                    this.order.list = response.data.orderDetailsList
+                }
                 if (response.data.order.status == '100'){
                     this.buttonState = !0
                 }

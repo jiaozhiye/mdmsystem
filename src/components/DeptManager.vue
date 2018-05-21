@@ -89,14 +89,14 @@ export default {
             }).catch(() => {})
         },
         async getDeptList(){
-            const _this = this
             this.loading = !0
             try {
                 const response = await getDeptInfo()
                 // console.log(response.data)
-                this.list = response.data
+                if (response.data.code == 1){
+                    this.list = response.data
+                }
             } catch (err){
-                this.loading = !1
                 console.error(err)
             }
             this.loading = !1

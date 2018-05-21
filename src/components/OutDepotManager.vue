@@ -1,9 +1,9 @@
 <template>
 <div class="appManager-wrapper">
     <div class="appManager-top">
+        <strong class="promptText fl">出库日期：</strong>
         <el-date-picker
             class="fl"
-            style="width: 200px"
             v-model="search.outDate"
             type="date"
             value-format="yyyy-MM-dd"
@@ -35,8 +35,7 @@
                 v-for="(item, key) in storeList"
                 :key="key"
                 :label="item.name"
-                :value="item.id"
-                :disabled="item.disabled">
+                :value="item.id">
             </el-option>
         </el-select>
         <el-input 

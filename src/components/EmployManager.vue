@@ -150,8 +150,10 @@ export default {
                     job: this.search.jobId
                 })
                 // console.log(response.data)
-                this.list = response.data.list
-                this.list.total = response.data.totalRow
+                if (response.data.code == 1){
+                    this.list = response.data.list
+                    this.list.total = response.data.totalRow
+                }
                 callback && callback()
             } catch (error){
                 console.error(error)
