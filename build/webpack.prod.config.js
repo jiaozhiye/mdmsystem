@@ -13,9 +13,8 @@ const resolve = function (relatedPath){
 const webpackConfigProd = {
     entry: {
         vendor: [ // vender 属性用于提取和打包第三方js库，并把这些库文件打包到一个js文件中
-            'jquery', 'lodash',
-            'vue', 'vuex', 'vue-router',
-            'axios', 'element-ui', 'vee-validate', 'moment'
+            'jquery', 'lodash', 'moment', 'nprogress',
+            'vue', 'vuex', 'vue-router', 'axios', 'element-ui', 'vee-validate'
         ]
     },
     output: {

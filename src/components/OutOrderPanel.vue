@@ -21,10 +21,10 @@
     </section>
     <div class="out-order-box">
         <div class="appManager-top tr">
-            <el-button @click.stop="outDepotSave">出库</el-button>
+            <el-button @click.stop="outDepotSaveHandle">出库</el-button>
             <el-button>打印</el-button>
             <el-button>打印历史</el-button>
-            <el-button type="primary" @click.stop="saveOutOrder">保存</el-button>
+            <el-button type="primary" @click.stop="saveOutOrderHandle">保存</el-button>
         </div>
         <div style="margin: 20px 0;">
             <el-table class="out-order-table" :data="list" border v-loading="loading">
@@ -77,6 +77,8 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
+import { mapActions } from 'vuex'
+
 import { recursionTree } from 'common/js/tools'
 
 import { getMaterialTreeForOutDepot, getOutOrderDetail, closeOutOrder, outDepotSaveOrder } from 'api'
@@ -90,6 +92,7 @@ export default {
         return {
             treeList: [], // 原材料树 数组
             list: [], // table 数据
+            referData: [], // 用于对比的数据
             treeLoading: false,
             loading: false,
             filterText: '', // 树结构过滤条件文本
@@ -99,9 +102,20 @@ export default {
     watch: {
         filterText(val){
             this.$refs.tree.filter(val)
+        },
+        list: {
+            handler(newVal, oldVal){
+                if (!_.isEqual(newVal, this.referData)){ // 数据改变了
+                    this.setLeaveRemind(!0)
+                } else {
+                    this.setLeaveRemind(!1)
+                }
+            },
+            deep: true
         }
     },
     methods: {
+        ...mapActions(['setLeaveRemind']),
         asyncTableList(data, bool){
             if (!bool){ // 执行删除 table 记录
                 this.deleteTableRecord(data.id)
@@ -199,6 +213,8 @@ export default {
                     //         obj = null
                     //     })
                     // })
+                    // 设置对比数据
+                    this.referData = _.cloneDeep(this.list)
                 }
                 callback && callback()
             } catch (error){
@@ -206,11 +222,13 @@ export default {
             }
             this.loading = !1
         },
-        async outDepotSave(){
+        async outDepotSave(callback){
             try {
                 const response = await outDepotSaveOrder({ id: this.params.id, list: this.list })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
+                    this.setLeaveRemind(!1)
+                    callback && callback()
                 } else {
                     this.$message.error(response.data.message)
                 }
@@ -218,11 +236,13 @@ export default {
                 console.error(error)
             }
         },
-        async saveOutOrder(){
+        async saveOutOrder(callback){
             try {
                 const response = await closeOutOrder({ id: this.params.id, list: this.list })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
+                    this.setLeaveRemind(!1)
+                    callback && callback()
                 } else {
                     this.$message.error(response.data.message)
                 }
@@ -230,7 +250,20 @@ export default {
                 console.error(error)
             }
         },
+        outDepotSaveHandle(){
+            this.outDepotSave(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
+            })
+        },
+        saveOutOrderHandle(){
+            this.saveOutOrder(() => {
+                this.$emit('reloadEvent', 'reload')
+                this.closePanelHandle()
+            })
+        },
         closePanelHandle(){
+            this.setLeaveRemind(!1)
             this.params.isPlay = false
         },
         inputNumberHandle(item){

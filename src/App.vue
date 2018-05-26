@@ -8,7 +8,7 @@
       <AppSidebar></AppSidebar>
       <div class="icon sidebar-ctrl-btn" :class="{off: sidebarState}" @click.stop="sidebarHandle"></div>
     </el-aside>
-    <el-main :class="{on: sidebarState}">
+    <el-main :class="{on: sidebarState}" id="main">
       <transition name="router">
         <router-view class="view-wrapper"></router-view>
       </transition>

@@ -369,7 +369,7 @@ export const getReturnOrderDetail = params => instance.get('/mgr/store/returnGoo
 
 // 更新退货单
 export const updateReturnOrder = params => instance.post('/mgr/store/returnGoods/createOrder', params)
-// 115
+
 // 获取物流退货单列表
 export const getLogisticsRetOrdInfo = params => instance.get('/mgr/store/returnGoods/queryOrderListByLogistics', {params})
 
@@ -397,31 +397,44 @@ export const saveDepotMaterial = params => instance.post('', params)
 // 获取原材料分类
 export const getMaterialClassify = () => instance.get('/mgr/common/selectDataBuilder/showMaterialType')
 
+// 创建废弃原材料订单
+export const createScrapMaterialOrder = params => instance.post('mgr/store/storeScrapManager/createOrder', params)
 
+// 获取废弃单原材料树
+export const getScrapMaterialsTree = params => instance.get('mgr/store/storeScrapManager/getTree', {params})
 
+// 获取编辑过的废弃单原料列表
+export const getEditedScrapMaterial = params => instance.get('mgr/store/storeScrapManager/showDetailList', {params})
 
+// 保存废弃单原料数据
+export const saveEditedScrapMaterial = params =>instance.post('mgr/store/storeScrapManager/addStoreScrapMaterial', params)
 
+// 获取废弃单状态
+export const getScrapOrderStateList = () => instance.get('mgr/dict/showList3?dict=600')
 
+// 获取废弃单订单列表
+export const getScrapOrderInfo = params => instance.get('mgr/store/storeScrapManager/queryListByStore', {params})
 
+// 改变废弃单状态
+export const changeScrapOrderState = params => instance.get('mgr/store/storeScrapManager/cancelOrder', {params})
 
+// 保存移库单
+export const saveMoveDepotInfo = params => instance.post('/mgr/warehouse/warehouseMovement/save', params)
 
+// 提交移库单
+export const submitMoveDepotInfo = params => instance.post('/mgr/warehouse/warehouseMovement/submit', params)
 
+// 获取移库单列表
+export const getMoveDepotInfo = params => instance.get('/mgr/warehouse/warehouseMovement/queryList', {params})
 
+// 获取移库单物品列表
+export const getMoveDepotList = params => instance.get('/mgr/warehouse/warehouseMovement/showDetailById', {params})
+// 135
+// 获取对账单信息列表
+export const getReconciliationInfo = params => instance.get('/mgr/logistics/reconciliation', {params})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 获取对账下的仓库列表
+export const getStoreListForAccount = () => instance.get('/mgr/common/store/showList2')
 
 
 

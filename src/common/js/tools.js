@@ -60,4 +60,4 @@ function recursionTree(arr, callback){
     }
 }
 
-export {cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash, recursionTree}
+export { cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash, recursionTree }

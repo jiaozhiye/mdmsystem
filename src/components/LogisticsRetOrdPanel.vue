@@ -31,8 +31,7 @@
                         <el-select 
                             v-model="scope.row.batch_code_text" 
                             placeholder="选择批号"
-                            size="small"
-                            :disabled="scope.row.batch_code_text != ''">
+                            size="small">
                             <el-option
                                 v-for="(item, key) in scope.row.batch_code"
                                 :key="key"
@@ -52,6 +51,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import { getLogisticsRetOrdDetail, receiveLogisticsRetOrd, completeLogisticsRetOrd } from 'api'
 
 export default {
@@ -62,6 +63,7 @@ export default {
     data(){
         return {
             list: [], // 数组
+            referData: [], // 用于对比的数据
             loading: false,
             btnLoading: false,
             btnState: { // 按钮状态
@@ -70,7 +72,20 @@ export default {
             }
         }
     },
+    watch: {
+        list: {
+            handler(newVal, oldVal){
+                if (!_.isEqual(newVal, this.referData)){ // 数据改变了
+                    this.setLeaveRemind(!0)
+                } else {
+                    this.setLeaveRemind(!1)
+                }
+            },
+            deep: true
+        }
+    },
     methods: {
+        ...mapActions(['setLeaveRemind']),
         setTableCurrent(row){
             this.$refs.returnOrderTable.setCurrentRow(row)
         },
@@ -97,6 +112,8 @@ export default {
                     this.list = response.data.materialOrderList
                     this.btnState.receive  = !response.data.isRecive
                     this.btnState.complete = !response.data.isFinish
+                    // 
+                    this.referData = _.cloneDeep(this.list)
                 }
             } catch (error){
                 console.error(error)
@@ -120,6 +137,7 @@ export default {
                     this.$message.success(response.data.message)
                     callback && callback()
                     this.btnLoading = !1
+                    this.setLeaveRemind(!1)
                 } else {
                     this.$message.error(response.data.message)
                 }
@@ -142,8 +160,9 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
-                    callback && callback()
                     this.btnLoading = !1
+                    this.setLeaveRemind(!1)
+                    callback && callback()
                 } else {
                     this.$message.error(response.data.message)
                 }
@@ -151,19 +170,20 @@ export default {
                 console.error(error)
             }
         },
-        receiveHandle(){  
+        receiveHandle(){
             this.receiveReturnOrder(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        completeHandle(){  
+        completeHandle(){
             this.completeReturnOrder(() => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
         closePanelHandle(){
+            this.setLeaveRemind(!1)
             this.params.isPlay = false
         }
     },

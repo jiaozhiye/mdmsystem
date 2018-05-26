@@ -15,7 +15,7 @@
                 <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column prop="want_num" label="数量"></el-table-column>
-                <el-table-column prop="send_num" label="已出数量"></el-table-column>
+                <el-table-column prop="real_send_num" label="已出数量"></el-table-column>
             </el-table>
         </div>
         <div class="app-form-item tr">

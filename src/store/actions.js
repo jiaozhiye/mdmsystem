@@ -24,6 +24,12 @@ const actions = {
             type: types.NAVACTIVE,
             info: params
         })
+    },
+    setLeaveRemind ({commit}, params){
+        commit({
+            type: types.LEAVE_REMIND,
+            info: params
+        })
     }
 }
 

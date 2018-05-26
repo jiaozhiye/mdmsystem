@@ -1,21 +1,19 @@
 <template>
     <div class="out-order-panel">
         <div style="padding-bottom: 20px">
-            <el-table class="receive-order-panel" :data="list" border v-loading="loading">
-                <el-table-column prop="code" label="编号" sortable></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
+            <el-table class="scrap-order-panel" :data="list" border v-loading="loading">
+                <el-table-column prop="name" label="原材料名称"></el-table-column>
+                <el-table-column prop="code" label="原材料编码"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>
-                <el-table-column prop="order_material_num" label="采购数"></el-table-column>
-                <el-table-column label="应入库数" width="140">
+                <el-table-column prop="stock" label="库存数量"></el-table-column>
+                <el-table-column label="废弃数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber
-                            v-model.number="scope.row.receive_num"
+                            v-model.number="scope.row.number"
                             :stepVal="1">
                         </EditNumber>
                     </template>
                 </el-table-column>
-                <el-table-column prop="stock_num" label="当前库存"></el-table-column>
             </el-table>
         </div>
         <div class="app-form-item tr">
@@ -26,13 +24,14 @@
 </template>
 
 <script>
+import EditNumber from './EditNumber.vue'
+
 import { mapActions } from 'vuex'
 
-import EditNumber from './EditNumber.vue'
-import { getReceiveOrderDetail, saveReceiveOrder } from 'api'
+import { getEditedScrapMaterial, saveEditedScrapMaterial } from 'api'
 
 export default {
-    name: 'ReceiveOrderPanel',
+    name: 'ShowScrapOrderPanel',
     props: {
         params: Object
     },
@@ -60,7 +59,7 @@ export default {
         async getReceiveOrderInfo(){
             try {
                 this.loading = !0
-                const response = await getReceiveOrderDetail({ id: this.params.id })
+                const response = await getEditedScrapMaterial({ id: this.params.id })
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.list
@@ -74,12 +73,12 @@ export default {
         },
         async saveReceiveOrder(callback){
             try {
-                const response = await saveReceiveOrder({
+                const response = await saveEditedScrapMaterial({
                     id: this.params.id,
                     list: this.list.map(item => ({
                         id: item.id,
-                        receive_num: item.receive_num,
-                        material_id: item.material_id
+                        store_scrap_material_id: item.store_scrap_material_id,
+                        number: item.number
                     }))
                 })
                 if (response.data.code == 1){
@@ -105,7 +104,7 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.receive-order-panel > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(document.querySelectorAll('.scrap-order-panel > .el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -121,10 +120,10 @@ export default {
         this.getReceiveOrderInfo()
     },
     mounted(){
-        document.querySelector('.receive-order-panel').addEventListener('keyup', this.keyUpHandle, false)
+        document.querySelector('.scrap-order-panel').addEventListener('keyup', this.keyUpHandle, false)
     },
     destroyed(){
-        document.querySelector('.receive-order-panel').removeEventListener('keyup', this.keyUpHandle)
+        document.querySelector('.scrap-order-panel').removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber

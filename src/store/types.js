@@ -7,3 +7,4 @@
 export const PERSONAL = 'PERSONAL'
 export const NAVINFO = 'NAVINFO'
 export const NAVACTIVE = 'NAVACTIVE'
+export const LEAVE_REMIND = 'LEAVE_REMIND'

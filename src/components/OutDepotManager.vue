@@ -73,7 +73,7 @@
     </div>
     <ExtractPanel :params="showOutOrderExtract" width="calc(100% - 200px)">
         <span slot="title">出库单详情</span>
-        <OutOrderPanel slot="panel" :params="showOutOrderExtract"></OutOrderPanel>
+        <OutOrderPanel slot="panel" :params="showOutOrderExtract" @reloadEvent="reloadGetData"></OutOrderPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -161,6 +161,11 @@ export default {
         },
         searchHandle(){
             this.getOutOrderList()
+        },
+        reloadGetData(res){
+            if (res == 'reload'){
+                this.getOutOrderList()
+            }
         }
     },
     created(){

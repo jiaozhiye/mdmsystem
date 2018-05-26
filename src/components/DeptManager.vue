@@ -94,7 +94,7 @@ export default {
                 const response = await getDeptInfo()
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.list = response.data
+                    this.list = response.data.list
                 }
             } catch (err){
                 console.error(err)

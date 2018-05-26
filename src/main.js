@@ -7,15 +7,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
-import VueRouter from 'vue-router'
-import routes from './routes'
+import router from './routes'
+import './routes/route-guards'
 import _ from 'lodash'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'common/js/validate'
-
-Vue.use(VueRouter)
-const router = new VueRouter(routes)
 
 Vue.use(ElementUI)
 

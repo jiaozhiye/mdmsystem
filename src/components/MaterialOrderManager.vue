@@ -91,6 +91,8 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
+import { mapActions } from 'vuex'
+
 import { recursionTree } from 'common/js/tools'
 import { getMaterialsTree, getEditedMaterial, saveEditedMaterial } from 'api'
 
@@ -104,6 +106,7 @@ export default {
             },
             list: [], // 原材料分类树数组
             tableList: [], // 同步 原材料分类树数组
+            referData: [], // 用于对比的数据
             loading: false,
             treeLoading: false,
             btnLoading: false,
@@ -120,9 +123,20 @@ export default {
     watch: {
         filterText(val){
             this.$refs.tree.filter(val)
+        },
+        tableList: {
+            handler(newVal, oldVal){
+                if (!_.isEqual(newVal, this.referData)){ // 数据改变了
+                    this.setLeaveRemind(!0)
+                } else {
+                    this.setLeaveRemind(!1)
+                }
+            },
+            deep: true
         }
     },
     methods: {
+        ...mapActions(['setLeaveRemind']),
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
@@ -187,6 +201,9 @@ export default {
                         obj = null
                     })
 
+                    // 设置对比数据
+                    this.referData = _.cloneDeep(this.tableList)
+
                     this.checkedKeys = this.tableList.map(item => item.id)
                     this.setCheckedKeys()
                 }
@@ -225,6 +242,7 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
+                    this.setLeaveRemind(!1)
                     // 跳转
                     this.$router.push('/storer_manager/store_order_list')
                 } else {

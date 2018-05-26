@@ -81,8 +81,10 @@
 import moment from 'moment'
 import EditNumber from './EditNumber.vue'
 
+import { mapActions } from 'vuex'
+
 import { recursionTree } from 'common/js/tools'
-import { getMaterialInventoryTree, getEditedMaterial, saveInventoryMaterial } from 'api'
+import { getMaterialInventoryTree, saveInventoryMaterial } from 'api'
 
 export default {
     name: 'InventoryManager',
@@ -106,11 +108,20 @@ export default {
         }
     },
     watch: {
+        ...mapActions(['setLeaveRemind']),
         filterText(val){
             this.$refs.tree.filter(val)
+        },
+        tableList(newVal, oldval){
+            if (newVal.length){ // 数据有变化
+                this.setLeaveRemind(!0)
+            } else {
+                this.setLeaveRemind(!1)
+            }
         }
     },
     methods: {
+        ...mapActions(['setLeaveRemind']),
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
@@ -162,19 +173,6 @@ export default {
             }
             this.treeLoading = !1
         },
-        async getEditedMaterial(){
-            this.loading = !0
-            try {
-                const response = await getEditedMaterial()
-                // console.log(response.data)
-                if (response.data.code == 1){
-                    this.tableList = response.data.list
-                }
-            } catch (error){
-                console.error(error)
-            }
-            this.loading = !1
-        },
         handleSelectionChange(val){
             this.multipleSelection = val
         },
@@ -205,6 +203,7 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
+                    this.setLeaveRemind(!1)
                 } else {
                     this.$message.error(response.data.message)
                 }

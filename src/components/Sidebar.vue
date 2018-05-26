@@ -62,7 +62,7 @@ export default {
             for (let i = 0; i < arr.length; i++){
                 arr[i].index = i
                 arr[i].onclick = function(ev){
-                    ev.stopPropagation()
+                    // ev.stopPropagation()
                     _this.toggleNavStyle(arr, this.index)
                 }
             }

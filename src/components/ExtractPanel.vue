@@ -3,7 +3,7 @@
     <div class="extract-wrapper" 
         :style="{width: width, top: top, height: computHeight}" 
         v-if="params.isPlay" 
-        @click.stop="stopPropagationHandle">
+        @click.stop>
         <div class="extract-top">
             <h5 class="title">
                 <slot name="title">提示信息</slot>
@@ -47,8 +47,11 @@ export default {
         handleClick(){
             this.params.isPlay = false
         },
-        stopPropagationHandle(){
-            event.stopPropagation()
+        eventHandle(ev){
+            ev.stopPropagation()
+            if (this.params.isPlay){
+                this.params.isPlay = false
+            }
         }
     },
     computed: {
@@ -60,12 +63,10 @@ export default {
         }
     },
     mounted(){
-        document.addEventListener('click', (ev) => {
-            ev.stopPropagation()
-            if (this.params.isPlay){
-                this.params.isPlay = false
-            }
-        }, false)
+        document.getElementById('main').addEventListener('click', this.eventHandle, false)
+    },
+    destroyed(){
+        document.getElementById('main').removeEventListener('click', this.eventHandle)
     }
 }
 </script>

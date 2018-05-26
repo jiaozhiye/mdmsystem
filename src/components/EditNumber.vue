@@ -32,10 +32,6 @@ export default {
             type: String,
             default: ''
         },
-        tooltip: {
-            type: Boolean,
-            default: true
-        },
         minVal: {
             type: Number,
             default: 0
@@ -84,19 +80,25 @@ export default {
         },
         handleInput(event, val){
             const reg = /^(0|[1-9][0-9]*)(\.[0-9]*)?$/
-            if ((!isNaN(val) && reg.test(val)) || val === ''){
+            // console.log( (!isNaN(val) && reg.test(val)) || val === '' )
+            if ((!isNaN(val) && reg.test(val)) || val === ''){ // 格式合法
+                if (val > this.maxVal){
+                    val = Number(this.maxVal)
+                    this.$nextTick(() => event.target.value = val)
+                }
                 this.dataVal = Number(val)
                 // 触发传入组件 change 自定义事件，带出数值
                 this.$emit('change', this.dataVal)
                 // 触发传入组件 input 自定义事件，带出数值
-                this.$emit('input', this.dataVal)
-            } else {
+                this.$emit('input',  this.dataVal)
+            } else { // 格式非法
                 this.$nextTick(() => event.target.value = this.dataVal)
             }
         },
         handleChange(val){
-            this.$emit('change', val)
-            this.$emit('input', val)
+            this.dataVal = Number(val)
+            this.$emit('change', this.dataVal)
+            this.$emit('input',  this.dataVal)
         }
     }
 }

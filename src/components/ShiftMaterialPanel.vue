@@ -23,17 +23,18 @@
                 @keyup.enter.native="searchHandle" 
                 clearable>
             </el-input>
-            <el-button class="fr" type="primary" @click.stop="submitHandle">保存</el-button>
+            <el-button class="fr" type="primary" @click.stop="submitHandle">添加</el-button>
         </div>
         <div style="padding: 20px 0">
             <el-table :data="list" border v-loading="loading" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50"></el-table-column>
-                <el-table-column prop="stock_num" label="所属分类"></el-table-column>
-                <el-table-column prop="code" label="编号" sortable></el-table-column>
+                <el-table-column prop="type_2_text" label="分类"></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="code" label="物料编码"></el-table-column>
                 <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>
-                <el-table-column prop="send_num" label="价格"></el-table-column>
+                <el-table-column prop="batch_code" label="批号"></el-table-column>
+                <el-table-column prop="warehouse_stock_num" label="当前库存"></el-table-column>
             </el-table>
         </div>
         <div class="app-form-item tr">
@@ -78,6 +79,7 @@ export default {
             try {
                 this.loading = !0
                 const response = await getDepotMaterialInfo({
+                    ids: this.params.ids,
                     outWarehouseId: this.params.out_id,
                     type2: this.search.classify,
                     keyword: this.search.name
@@ -85,6 +87,8 @@ export default {
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.list
+                } else {
+                    this.$message.error(response.data.message)
                 }
             } catch (error){
                 console.error(error)
@@ -97,7 +101,7 @@ export default {
         searchHandle(){
             this.getMaterialList()
         },
-        submitHandle(){  
+        submitHandle(){
             this.$emit('reloadEvent', this.multipleSelection)
             this.closePanelHandle()
         },

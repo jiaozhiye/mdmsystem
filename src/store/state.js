@@ -7,7 +7,8 @@
 const state = {
     personalInfo: {},
     navInfo: [],
-    defaultActive: {}
+    defaultActive: {},
+    isLeaveRemind: false // true -> 开启提醒     false -> 关闭提醒
 }
 
 export default state

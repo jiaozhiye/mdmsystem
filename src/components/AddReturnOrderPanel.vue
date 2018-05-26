@@ -70,6 +70,8 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
+import { mapActions } from 'vuex'
+
 import { recursionTree } from 'common/js/tools'
 import { getReturnOrderTree, saveReturnOrder } from 'api'
 
@@ -92,9 +94,17 @@ export default {
     watch: {
         filterText(val){
             this.$refs.tree.filter(val)
+        },
+        tableList(newVal, oldval){
+            if (newVal.length){ // 数据有变化
+                this.setLeaveRemind(!0)
+            } else {
+                this.setLeaveRemind(!1)
+            }
         }
     },
     methods: {
+        ...mapActions(['setLeaveRemind']),
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
@@ -172,11 +182,12 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
+                    this.setLeaveRemind(!1)
+                    callback && callback()
                 } else {
                     this.$message.error(response.data.message)
                 }
                 this.btnLoading = !1
-                callback && callback()
             } catch (err){
                 console.error(err)
             }
@@ -188,6 +199,7 @@ export default {
             })
         },
         closePanelHandle(){
+            this.setLeaveRemind(!1)
             this.params.isPlay = false
         },
         keyUpHandle(event){

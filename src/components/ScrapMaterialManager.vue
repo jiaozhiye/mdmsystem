@@ -1,5 +1,5 @@
 <template>
-<div class="appManager-wrapper" style="padding: 20px;">
+<div class="appManager-wrapper">
     <section class="material-tree-box">
         <el-input
             placeholder="输入原材料编号/名称" 
@@ -11,8 +11,8 @@
             ref="tree" 
             show-checkbox 
             :data="list" 
+            v-loading="treeLoading" 
             node-key="id" 
-            v-loading="treeLoading"
             default-expand-all 
             :expand-on-click-node="false" 
             @check-change="checkChangeHandle" 
@@ -23,7 +23,7 @@
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
             <ul class="fr">
-                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="submitHandle">保存</el-button>
+                <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="saveOrderHandle">保存</el-button>
             </ul>
         </div>
         <div class="appManager-list fixedTable-list">
@@ -33,28 +33,17 @@
                 border 
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
-                <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
-                <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
-                <el-table-column label="退货数量" width="140">
+                <el-table-column type="selection" width="50"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" min-width="250"></el-table-column>
+                <el-table-column prop="code" label="原材料编码"></el-table-column>
+                <el-table-column prop="unit_text" label="单位"></el-table-column>
+                <el-table-column prop="stock" label="库存数量"></el-table-column>
+                <el-table-column label="废弃数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
-                            :stepVal="1"
-                            :disabled="scope.row.disabled">
+                            :stepVal="1">
                         </EditNumber>
-                    </template>
-                </el-table-column>
-                <el-table-column label="退货理由" width="240">
-                    <template slot-scope="scope">
-                        <el-input
-                            type="textarea"
-                            v-model="scope.row.remark"
-                            :rows="2"
-                            placeholder="退货理由..."
-                            :disabled="scope.row.disabled">
-                        </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
@@ -76,20 +65,16 @@ import EditNumber from './EditNumber.vue'
 import { mapActions } from 'vuex'
 
 import { recursionTree } from 'common/js/tools'
-import { getReturnOrderTree, getReturnOrderDetail, updateReturnOrder } from 'api'
+import { getScrapMaterialsTree, getEditedScrapMaterial, saveEditedScrapMaterial } from 'api'
 
 export default {
-    name: 'ModReturnOrderPanel',
-    props: {
-        params: Object
-    },
+    name: 'ScrapMaterialManager',
     data(){
         return {
-            list: [], // 商品分类树数组
-            tableList: [], // 同步 商品分类树数组
-            referData: [], // 用于对比的数据
-            treeLoading: false,
+            list: [], // 原材料分类树数组
+            tableList: [], // 同步 原材料分类树数组
             loading: false,
+            treeLoading: false,
             btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
@@ -102,7 +87,7 @@ export default {
         },
         tableList: {
             handler(newVal, oldVal){
-                if (newVal.length !== this.referData.length){ // 数据改变了
+                if (!_.isEqual(newVal, this.referData)){ // 数据改变了
                     this.setLeaveRemind(!0)
                 } else {
                     this.setLeaveRemind(!1)
@@ -136,22 +121,16 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.label.indexOf(value) !== -1
+            return data.search_text.indexOf(value) !== -1
         },
-        async getReturnOrderTree(callback){
+        async getMaterialsTree(callback){
             try {
                 this.treeLoading = !0
-                const response = await getReturnOrderTree()
+                const response = await getScrapMaterialsTree({ id: this.$route.params.id })
                 // console.log(response.data)
                 if (response.data.code == 1){
                     // 原材料树新增 number 字段，默认值是 1
-                    recursionTree(response.data.tree, item => {
-                        if (this.params.type !== ''){ // 说明是引单
-                            item.disabled = !0
-                        }
-                        item.number = 1
-                        item.remark = ''
-                    })
+                    recursionTree(response.data.tree, item => item.number = 1)
                     this.list = response.data.tree
                     callback && callback()
                 }
@@ -160,18 +139,16 @@ export default {
             }
             this.treeLoading = !1
         },
-        async getReturnOrderList(){
+        async getEditedMaterial(){
             this.loading = !0
             try {
-                const response = await getReturnOrderDetail({
-                    orderId: this.params.id
+                const response = await getEditedScrapMaterial({
+                    id: this.$route.params.id
                 })
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.tableList = response.data.materialOrderList
-                    if (this.params.type !== ''){ // 说明是引单
-                        this.tableList.forEach(item => item.disabled = !0)
-                    }
+                    this.tableList = response.data.list
+
                     // 把编辑过的原材料同步到左侧树
                     recursionTree(this.list, (item) => {
                         let obj = this.tableList.find(val => val.id === item.id)
@@ -182,25 +159,22 @@ export default {
                         }
                         obj = null
                     })
-                    this.checkedKeys = this.tableList.map(item => item.id)
-                    this.setCheckedKeys()
-                    
+
                     // 设置对比数据
                     this.referData = _.cloneDeep(this.tableList)
+
+                    this.checkedKeys = this.tableList.map(item => item.id)
+                    this.setCheckedKeys()
                 }
-                this.loading = !1
             } catch (error){
-                this.loading = !1
                 console.error(error)
             }
+            this.loading = !1
         },
         handleSelectionChange(val){
             this.multipleSelection = val
         },
         removeItemHandle(ids){
-            if (this.params.type !== ''){ // 说明是引单
-                return this.$message.warning('引单退货单不能修改！')
-            }
             if (!Array.isArray(ids)){
                 ids = this.multipleSelection.map(item => item.id)
                 if (ids.length == 0){
@@ -215,21 +189,21 @@ export default {
             }
             this.setCheckedKeys()
         },
-        async updateOrderHandle(callback){
+        async saveOrderHandle(){
             try {
                 this.btnLoading = !0
-                const response = await updateReturnOrder({
-                    orderId: this.params.id,
+                const response = await saveEditedScrapMaterial({
                     list: this.tableList.map(item => ({
                         id: item.id,
-                        remark: item.remark,
+                        store_scrap_material_id: item.store_scrap_material_id,
                         number: item.number
                     }))
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
                     this.setLeaveRemind(!1)
-                    callback && callback()
+                    // 跳转
+                    this.$router.push('/storer_manager/scrap_order_list')
                 } else {
                     this.$message.error(response.data.message)
                 }
@@ -237,16 +211,6 @@ export default {
             } catch (err){
                 console.error(err)
             }
-        },
-        submitHandle(){
-            this.updateOrderHandle(() => {
-                this.$emit('reloadEvent', 'reload')
-                this.closePanelHandle()
-            })
-        },
-        closePanelHandle(){
-            this.setLeaveRemind(!1)
-            this.params.isPlay = false
         },
         keyUpHandle(event){
             event.stopPropagation()
@@ -265,8 +229,8 @@ export default {
     },
     created(){
         // 先获取原材料树
-        this.getReturnOrderTree(() => { // 再获取已编辑商品原材料
-            this.getReturnOrderList()
+        this.getMaterialsTree(() => { // 再获取已编辑商品原材料
+            this.getEditedMaterial()
         })
     },
     mounted(){

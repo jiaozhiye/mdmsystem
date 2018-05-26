@@ -74,6 +74,8 @@ import ExtractPanel from './ExtractPanel.vue'
 import AddFormulaPanel from './AddFormulaPanel'
 import EditNumber from './EditNumber.vue'
 
+import { mapActions } from 'vuex'
+
 import {getGoodsFormulaInfo, saveGdRelation} from 'api'
 
 export default {
@@ -85,6 +87,7 @@ export default {
         return {
             goodsId: this.params.itemId, // 当前商品ID
             list: [],
+            referData: [], // 用于对比的数据
             loading: false,
             btnLoading: false,
             multipleSelection: [], // 选中记录的数组
@@ -101,7 +104,20 @@ export default {
             return parseFloat(sum.toFixed(5))
         }
     },
+    watch: {
+        list: {
+            handler(newVal, oldVal){
+                if (!_.isEqual(newVal, this.referData)){ // 数据改变了
+                    this.setLeaveRemind(!0)
+                } else {
+                    this.setLeaveRemind(!1)
+                }
+            },
+            deep: true
+        }
+    },
     methods: {
+        ...mapActions(['setLeaveRemind']),
         handleSelectionChange(val){
             this.multipleSelection = val
         },
@@ -122,9 +138,6 @@ export default {
                     message: '操作成功!'
                 })
             }).catch(() => {})
-            // 绑定事件
-            document.getElementsByClassName('el-message-box__wrapper')[0]
-            .addEventListener('click', ev => ev.stopPropagation(), false)
         },
         batchDeleteHandle(){
             if (this.multipleSelection.length == 0){
@@ -150,9 +163,6 @@ export default {
                     message: '操作成功!'
                 })
             }).catch(() => {})
-            // 绑定事件
-            document.getElementsByClassName('el-message-box__wrapper')[0]
-            .addEventListener('click', ev => ev.stopPropagation(), false)
         },
         computeJlPrice(item){ // 净料数量 和 毛料数量 的计算
             this.$nextTick(() => {
@@ -202,6 +212,8 @@ export default {
                     })
                     // console.log(response.data.list)
                     this.list = response.data.list
+                    // 
+                    this.referData = _.cloneDeep(this.list)
                 }
                 callback && callback()
             } catch (error){
@@ -227,8 +239,9 @@ export default {
                         type: 'success',
                         message: '商品配方设置成功!'
                     })
-                    callback && callback()
                     this.btnLoading = !1
+                    this.setLeaveRemind(!1)
+                    callback && callback()
                 } else {
                     this.$message({
                         type: 'error',
@@ -248,6 +261,7 @@ export default {
             }
         },
         closePanelHandle(){
+            this.setLeaveRemind(!1)
             this.params.isPlay = false
         }
     },

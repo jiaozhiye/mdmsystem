@@ -15,6 +15,9 @@ const mutations = {
     },
     [types.NAVACTIVE](state, payload){
         state.defaultActive = payload.info
+    },
+    [types.LEAVE_REMIND](state, payload){
+        state.isLeaveRemind = payload.info
     }
 }
 
