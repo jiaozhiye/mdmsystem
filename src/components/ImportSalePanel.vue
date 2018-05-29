@@ -38,7 +38,7 @@
 <script>
 import {getHasDailySummary} from 'api'
 
-import common from 'common/js/common'
+import common from 'assets/js/common'
 import moment from 'moment'
 
 export default {

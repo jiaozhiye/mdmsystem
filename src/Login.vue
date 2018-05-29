@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import 'common/css/reset.css'
-import 'common/css/style.css'
+import 'assets/css/reset.css'
+import 'assets/css/style.css'
 
 import {loginSystem} from 'api'
 
@@ -85,7 +85,7 @@ body {
 .hd-logo {
     margin: 50px 0 20px;
     height: 100px;
-    background: url('./common/img/logo.png') 50% 0 no-repeat;
+    background: url('./assets/img/logo.png') 50% 0 no-repeat;
     background-size: auto 100%;
 }
 .hd-welcome {

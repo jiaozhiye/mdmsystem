@@ -72,7 +72,7 @@ import EditNumber from './EditNumber.vue'
 
 import { mapActions } from 'vuex'
 
-import { recursionTree } from 'common/js/tools'
+import { recursionTree } from 'assets/js/tools'
 import { getReturnOrderTree, saveReturnOrder } from 'api'
 
 export default {

@@ -38,7 +38,7 @@ export default {
         },
         maxVal: {
             type: Number,
-            default: 9999
+            default: 999999
         },
         stepVal: {
             type: Number,

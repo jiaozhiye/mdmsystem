@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import common from 'common/js/common'
+import common from 'assets/js/common'
 
 console.info(common.env)
 
@@ -436,7 +436,8 @@ export const getReconciliationInfo = params => instance.get('/mgr/logistics/reco
 // 获取对账下的仓库列表
 export const getStoreListForAccount = () => instance.get('/mgr/common/store/showList2')
 
-
+// 获取门店库存信息
+export const getstoreStockInfo = () => instance.get('/mgr/store/storeStockManager/showBalance')
 
 
 

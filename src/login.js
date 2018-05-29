@@ -8,7 +8,7 @@ import Vue from 'vue'
 import AppLogin from './Login.vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import 'common/js/validate'
+import 'assets/js/validate'
 
 Vue.use(ElementUI)
 

@@ -1,4 +1,4 @@
-# mdm management system
+# 长春面对面管理系统
 
 > A Vue.js project by jzy
 
@@ -6,7 +6,7 @@
 
 ``` bash
 # install dependencies
-npm install
+yarn install
 
 # serve with hot reload at localhost:8080
 npm run dev

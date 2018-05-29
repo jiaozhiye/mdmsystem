@@ -13,7 +13,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import {getUrlHash} from 'common/js/tools'
+import {getUrlHash} from 'assets/js/tools'
 import {getMenuInfo} from 'api'
 
 export default {
@@ -132,6 +132,13 @@ export default {
     margin-left: 6px;
     font-size: 16px;
     color: #fff;
+}
+
+.icon {
+    background-image: url(../assets/img/icons.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* 一级分类图标 */

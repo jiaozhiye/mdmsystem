@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import 'common/css/reset.css'
-import 'common/css/style.css'
+import 'assets/css/reset.css'
+import 'assets/css/style.css'
 
 import {mapActions} from 'vuex'
 import {getUserInfo} from 'api'

@@ -79,7 +79,7 @@ import EditNumber from './EditNumber.vue'
 
 import { mapActions } from 'vuex'
 
-import { recursionTree } from 'common/js/tools'
+import { recursionTree } from 'assets/js/tools'
 
 import { getMaterialTreeForOutDepot, getOutOrderDetail, closeOutOrder, outDepotSaveOrder } from 'api'
 

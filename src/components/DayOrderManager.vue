@@ -85,7 +85,7 @@ import EditNumber from './EditNumber.vue'
 
 import { mapActions } from 'vuex'
 
-import { recursionTree } from 'common/js/tools'
+import { recursionTree } from 'assets/js/tools'
 import { getGoodsTree, saveGoodsClassify } from 'api'
 
 export default {
@@ -184,9 +184,9 @@ export default {
         async nextStepHandle(){
             try {
                 const _list = this.tableList.map(item => ({id: item.id, number: item.number}))
-                if (_list.length == 0){
-                    return this.$message.warning('请先编辑商品后再提交！')
-                }
+                // if (_list.length == 0){
+                //     return this.$message.warning('请先编辑商品后再提交！')
+                // }
                 this.btnLoading = !0
                 const response = await saveGoodsClassify({
                     ...this.form,

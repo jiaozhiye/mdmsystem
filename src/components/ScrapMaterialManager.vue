@@ -64,7 +64,7 @@ import EditNumber from './EditNumber.vue'
 
 import { mapActions } from 'vuex'
 
-import { recursionTree } from 'common/js/tools'
+import { recursionTree } from 'assets/js/tools'
 import { getScrapMaterialsTree, getEditedScrapMaterial, saveEditedScrapMaterial } from 'api'
 
 export default {

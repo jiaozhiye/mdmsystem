@@ -19,7 +19,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import {getUrlHash} from 'common/js/tools'
+import {getUrlHash} from 'assets/js/tools'
 
 export default {
     name: 'Sidebar',

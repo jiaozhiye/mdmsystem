@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 
 // 动态加载路由组件
 const Home = () => import('components/Home.vue')
@@ -33,6 +34,7 @@ const ScrapOrderManager = () => import('components/ScrapOrderManager.vue')
 const ScrapMaterialManager = () => import('components/ScrapMaterialManager.vue')
 const ScrapOrderListManager = () => import('components/ScrapOrderListManager.vue')
 const StoreAccountManager = () => import('components/StoreAccountManager.vue')
+const StoreStockManager = () => import('components/StoreStockManager.vue')
 
 // 路由列表
 const routes = {
@@ -134,6 +136,11 @@ const routes = {
             name: 'InventoryManager', // 库存管理 -> 盘点
             component: InventoryManager
         },
+        {
+            path: '/storer_manager/store_stock_balance',
+            name: 'StoreStockManager', // 库存管理 -> 门店库存
+            component: StoreStockManager
+        },
         { 
             path: '/storer_manager/scrap_order',
             name: 'ScrapOrderManager', // 废弃管理 -> 废弃单
@@ -224,7 +231,5 @@ const routes = {
         // }
     ]
 }
-
-Vue.use(VueRouter)
 
 export default new VueRouter(routes)
