@@ -21,7 +21,7 @@
                     :value="item.id">
                 </el-option>
             </el-select>
-            <el-input class="fl" placeholder="请输入商品编号/名称" prefix-icon="el-icon-search"
+            <el-input class="fl" placeholder="请输入商品编号/名称/拼音" prefix-icon="el-icon-search"
                 v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
             </el-input>
         </ul>

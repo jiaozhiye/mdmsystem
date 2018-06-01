@@ -84,7 +84,6 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
-                    this.setLeaveRemind(!1)
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)

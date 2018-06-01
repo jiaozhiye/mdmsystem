@@ -127,6 +127,10 @@ a:hover {
     overflow-x: auto;
 }
 
+.el-origin-table .el-table__body td {
+    padding: 12px 0;
+}
+
 /**
  * form box style
  */

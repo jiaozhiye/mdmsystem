@@ -82,7 +82,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="create_time_short" label="提交日期"></el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" width="310">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 查看
@@ -92,6 +92,9 @@
                     </el-button>
                     <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text">
                         <i class="el-icon-document"></i> 生成出库单
+                    </el-button>
+                    <el-button @click.stop="printHandle(scope.row.id)" type="text">
+                        <i class="el-icon-printer"></i> 打印
                     </el-button>
                 </template>
             </el-table-column>
@@ -109,11 +112,12 @@
 
 <script>
 import moment from 'moment'
+import { setSearchParams } from 'assets/js/tools'
 
 import ExtractPanel from './ExtractPanel.vue'
 import OrderDetailPanel from './OrderDetailPanel.vue'
 
-import { getOrderInfo, getOrderTypeList, getStoreList, getOrderStateList, receiveOrder, createOutOrder } from 'api'
+import { getOrderInfo, getOrderTypeList, getStoreList, getOrderStateList, receiveOrder, createOutOrder, printGoodsOrder } from 'api'
 
 export default {
     name: 'LogisticsManager',
@@ -146,6 +150,19 @@ export default {
         showItemHandle(_id){
             this.showOrderExtract.isPlay = !0
             this.showOrderExtract.id = _id
+        },
+        async printHandle(_id){
+            try {
+                const response = await printGoodsOrder({ id: _id })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    window.open(`/static/print.html${setSearchParams(response.data.data)}`, '_blank')
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
         },
         async getOrderTypeList(){
             try {

@@ -30,7 +30,6 @@
             <el-table class="out-order-table" :data="list" border v-loading="loading">
                 <el-table-column prop="code" label="物料编号" min-width="120" sortable fixed></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column prop="want_num" label="订货数量"></el-table-column>
                 <el-table-column prop="security_stock" label="安存数量"></el-table-column>
@@ -39,21 +38,41 @@
                         <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.batch_code }}</div>
                     </template>
                 </el-table-column>
-                <el-table-column label="出货数量" width="140" label-class-name="split-column-th" class-name="split-column">
+                <el-table-column label="一级规格" label-class-name="split-column-th" class-name="split-column">
                     <template slot-scope="scope">
-                        <EditNumber
-                            v-for="(item, key) in scope.row.warehouseStockInfo"
-                            :key="key"
-                            v-model.number="item.send_number"
-                            :stepVal="1"
-                            :maxVal="item.warehouseStockNumber"
-                            @change="inputNumberHandle(item)">
-                        </EditNumber>
+                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.attribute_1_text }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="二级规格" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.attribute_2_text }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column label="库存数量" label-class-name="split-column-th" class-name="split-column">
                     <template slot-scope="scope">
                         <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.warehouseStockNumber }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="出货数量" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.send_number }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="发货数量" width="140" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <EditNumber
+                            v-for="(item, key) in scope.row.warehouseStockInfo"
+                            :key="key"
+                            v-model.number="item.number"
+                            :stepVal="1"
+                            :maxVal="item.warehouseStockNumber"
+                            @change="computeFunc(item)">
+                        </EditNumber>
+                    </template>
+                </el-table-column>
+                <el-table-column label="发货单位" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.send_unit_text }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" label-class-name="split-column-th" class-name="split-column" fixed="right">
@@ -75,11 +94,9 @@
 </template>
 
 <script>
-import EditNumber from './EditNumber.vue'
-
-import { mapActions } from 'vuex'
-
 import { recursionTree } from 'assets/js/tools'
+import EditNumber from './EditNumber.vue'
+import { mapActions } from 'vuex'
 
 import { getMaterialTreeForOutDepot, getOutOrderDetail, closeOutOrder, outDepotSaveOrder } from 'api'
 
@@ -170,6 +187,12 @@ export default {
             if (!value) return true
             return data.search_text.indexOf(value) !== -1
         },
+        computeFunc(item){
+            // console.log(item)
+            this.$nextTick(() => {
+                item.send_number = Number(item.number) * Number(attribute_1_number) * Number(attribute_2_number)
+            })
+        },
         removeItemHandle(materialId, batchCode){ // 原材料ID  批号
             // 处理 checkedKeys 数组
             this.checkedKeys.splice(this.checkedKeys.findIndex(item => item === `${materialId}-${batchCode}`), 1)
@@ -227,7 +250,6 @@ export default {
                 const response = await outDepotSaveOrder({ id: this.params.id, list: this.list })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
-                    this.setLeaveRemind(!1)
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)
@@ -241,7 +263,6 @@ export default {
                 const response = await closeOutOrder({ id: this.params.id, list: this.list })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
-                    this.setLeaveRemind(!1)
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)
@@ -265,13 +286,6 @@ export default {
         closePanelHandle(){
             this.setLeaveRemind(!1)
             this.params.isPlay = false
-        },
-        inputNumberHandle(item){
-            this.$nextTick(() => {
-                if (item.send_number >= item.warehouseStockNumber){
-                    this.$message.warning('发货数量不能大于库存数量！')
-                }
-            })
         },
         deleteTableRecord(_id){
             for (let i = 0; i < this.list.length; i++){

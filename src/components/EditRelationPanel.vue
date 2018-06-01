@@ -240,7 +240,6 @@ export default {
                         message: '商品配方设置成功!'
                     })
                     this.btnLoading = !1
-                    this.setLeaveRemind(!1)
                     callback && callback()
                 } else {
                     this.$message({

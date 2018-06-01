@@ -35,6 +35,7 @@ const ScrapMaterialManager = () => import('components/ScrapMaterialManager.vue')
 const ScrapOrderListManager = () => import('components/ScrapOrderListManager.vue')
 const StoreAccountManager = () => import('components/StoreAccountManager.vue')
 const StoreStockManager = () => import('components/StoreStockManager.vue')
+const PrintHistoryManager = () => import('components/PrintHistoryManager.vue')
 
 // 路由列表
 const routes = {
@@ -154,7 +155,8 @@ const routes = {
         { 
             path: '/storer_manager/scrap_order_list',
             name: 'ScrapOrderListManager', // 废弃管理 -> 废弃单列表
-            component: ScrapOrderListManager
+            component: ScrapOrderListManager,
+            props: { menuType: 'store' }
         },
         // 安全存量
         {
@@ -192,6 +194,17 @@ const routes = {
             path: '/logistics_manager/logistics_return_order',
             name: 'LogisticsRetOrdManager', // 退货单 -> 物流退货单
             component: LogisticsRetOrdManager
+        },
+        {
+            path: '/logistics_manager/logistica_scrap_order',
+            name: 'ScrapOrderListManager', // 废弃管理 -> 废弃单列表
+            component: ScrapOrderListManager,
+            props: { menuType: 'logistic' }
+        },
+        {
+            path: '/logistics_manager/print_history',
+            name: 'PrintHistoryManager', // 打印管理 -> 打印历史
+            component: PrintHistoryManager
         },
         // 库存管理
         {

@@ -143,13 +143,14 @@ export default {
                     })),
                     reason: ''
                 }
+                let response = null
                 if (dir == 'save'){ // 保存
-                    var response = await saveMoveDepotInfo(_data)
+                    response = await saveMoveDepotInfo(_data)
                 } else { // 提交
-                    var response = await submitMoveDepotInfo(_data)
+                    response = await submitMoveDepotInfo(_data)
                 }
                 // console.log(response.data)
-                if (response.data.code == 1){
+                if (response && response.data.code == 1){
                     this.$message.success(response.data.message)
                     this.$emit('reloadEvent', 'reload')
                     this.closePanelHandle()

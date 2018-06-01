@@ -13,6 +13,21 @@
             @change="searchHandle">
         </el-date-picker>
         <el-select 
+            v-if=" menuType === 'logistic' "
+            class="fl" 
+            style="width: 180px; margin-left: 10px;"
+            v-model="search.store" 
+            clearable 
+            @change="searchHandle" 
+            placeholder="选择门店">
+            <el-option
+                v-for="(item, key) in storeList"
+                :key="key"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+        </el-select>
+        <el-select 
             class="fl" 
             style="width: 150px; margin-left: 10px;"
             v-model="search.state" 
@@ -35,12 +50,6 @@
             clearable>
         </el-input>
     </div>
-    <!-- <div class="appManager-top" style="margin-top: 20px">
-        <ul class="fr">
-            <el-button type="primary">接收</el-button>
-            <el-button type="primary">生成出库订单</el-button>
-        </ul>
-    </div> -->
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="废弃单号" sortable></el-table-column>
@@ -56,7 +65,7 @@
                         <i class="el-icon-view"></i> 查看
                     </el-button>
                     <el-button :disabled="!scope.row.isEdit" @click.stop="stopItemHandle(scope.row)" type="text">
-                        <i class="el-icon-delete"></i> 取消
+                        <i class="el-icon-delete"></i> 关闭
                     </el-button>
                 </template>
             </el-table-column>
@@ -76,17 +85,19 @@
 import ExtractPanel from './ExtractPanel.vue'
 import ShowScrapOrderPanel from './ShowScrapOrderPanel.vue'
 
-import { getScrapOrderInfo, getScrapOrderStateList, changeScrapOrderState } from 'api'
+import { getScrapOrderInfo, getScrapOrderStateList, changeScrapOrderState, getLogisticScrapOrderInfo, changeLogisticScrapOrderState, getStoreList } from 'api'
 
 export default {
     name: 'ScrapOrderListManager',
     data(){
         return {
             list: [],
+            storeList: [], // 门店列表
             stateList: [], // 状态列表
             curPageIndex: 1, // 当前页码
             search: {
                 returnDate: [],
+                store: '',
                 state: '',
                 orderCode: ''
             },
@@ -96,11 +107,30 @@ export default {
             }
         }
     },
+    props: {
+        menuType: {
+            type: String,
+            default: ''
+        }
+    },
     methods: {
         showItemHandle(_id, _isEdit){
             this.showOrderExtract.isPlay = !0
             this.showOrderExtract.id = _id
+            this.showOrderExtract.menuType = this.menuType
             this.showOrderExtract.isEdit = _isEdit
+        },
+        async getStoreList(){
+            try {
+                const response = await getStoreList()
+                if (response.data.code == 1){
+                    this.storeList = response.data.list
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
         },
         async getStateList(){
             try {
@@ -118,15 +148,22 @@ export default {
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
             try {
                 this.loading = !0
-                const response = await getScrapOrderInfo({
+                const _data = {
                     pageNum: curPage,
                     pageSize: 10,
                     returnDate: this.search.returnDate,
+                    storeId: this.search.store,
                     state: this.search.state,
                     orderCode: this.search.orderCode
-                })
+                }
+                let response = null
+                if (this.menuType === 'store'){
+                    response = await getScrapOrderInfo(_data)
+                } else if (this.menuType === 'logistic'){
+                    response = await getLogisticScrapOrderInfo(_data)
+                }
                 // console.log(response.data)
-                if (response.data.code == 1){
+                if (response && response.data.code == 1){
                     this.list = response.data.data.list
                     this.list.total = response.data.data.totalRow
                 } else {
@@ -145,8 +182,13 @@ export default {
                 type: 'warning'
             }).then(async () => {
                 try {
-                    const response = await changeScrapOrderState({ id: item.id })
-                    if (response.data.code == 1){
+                    let response = null
+                    if (this.menuType === 'store'){
+                        response = await changeScrapOrderState({ id: item.id })
+                    } else if (this.menuType === 'logistic'){
+                        response = await changeLogisticScrapOrderState({ id: item.id })
+                    }
+                    if (response && response.data.code == 1){
                         this.getOrderList(this.curPageIndex)
                         this.$message.success(response.data.message)
                     } else {
@@ -166,6 +208,7 @@ export default {
         }
     },
     created(){
+        this.getStoreList()
         this.getStateList()
         this.getOrderList(this.curPageIndex)
     },

@@ -439,6 +439,49 @@ export const getStoreListForAccount = () => instance.get('/mgr/common/store/show
 // 获取门店库存信息
 export const getstoreStockInfo = () => instance.get('/mgr/store/storeStockManager/showBalance')
 
+// 关闭物流退货单
+export const cancleReturnOrder = params => instance.get('mgr/store/returnGoods/cancleOrder', {params})
+
+// 获取物流废弃单列表
+export const getLogisticScrapOrderInfo = params => instance.get('/mgr/logistics/storeScrap/queryListByLogistics', {params})
+
+// 取消物流废弃单 - 关闭物流废弃单
+export const changeLogisticScrapOrderState = params => instance.get('/mgr/logistics/storeScrap/closeOrder', {params})
+
+// 获取物流废弃单原材料详情
+export const getLogisticScrapMaterial = params => instance.get('/mgr/logistics/storeScrap/showDetailList', {params})
+
+// 接收物流废弃单
+export const receiveEditedScrapMaterial = params => instance.get('/mgr/logistics/storeScrap/accept', {params})
+
+// 打印出库单
+export const printOutOrder = params => instance.get('mgr/print/print/printOutgoingGoodsOrder', {params})
+
+// 打印商品送货单
+export const printGoodsOrder = params => instance.get('mgr/print/print/printSendGoodsOrder', {params})
+
+// 获取打印订单类型
+export const printOrderType = () => instance.get('mgr/dict/showList3?dict=700')
+
+// 获取打印单历史列表
+export const getPrintOrderInfo = params => instance.get('mgr/print/print/getPrintDetail', {params})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

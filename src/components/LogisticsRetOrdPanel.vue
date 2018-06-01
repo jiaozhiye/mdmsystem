@@ -2,12 +2,12 @@
     <div class="order-detail-wrapper">
         <div class="order-detail-top tr">
             <el-button 
-                @click.stop="receiveHandle" 
+                @click.stop="returnOrderHandle('receive')" 
                 :disabled="btnState.receive" 
                 :loading="btnLoading">接收</el-button>
             <el-button 
                 type="primary" 
-                @click.stop="completeHandle" 
+                @click.stop="returnOrderHandle('complete')" 
                 :disabled="btnState.complete" 
                 :loading="btnLoading">完成</el-button>
         </div>
@@ -46,6 +46,11 @@
         </div>
         <div class="app-form-item tr">
             <el-button @click.stop="closePanelHandle">退出</el-button>
+            <el-button
+                type="primary" 
+                @click.stop="closeOrderHandle('l')" 
+                :disabled="btnState.close" 
+                :loading="btnLoading">关闭订单</el-button>
         </div>
     </div>
 </template>
@@ -53,7 +58,7 @@
 <script>
 import { mapActions } from 'vuex'
 
-import { getLogisticsRetOrdDetail, receiveLogisticsRetOrd, completeLogisticsRetOrd } from 'api'
+import { getLogisticsRetOrdDetail, receiveLogisticsRetOrd, completeLogisticsRetOrd, cancleReturnOrder } from 'api'
 
 export default {
     name: 'LogisticsRetOrdPanel',
@@ -68,7 +73,8 @@ export default {
             btnLoading: false,
             btnState: { // 按钮状态
                 receive: false,
-                complete: false
+                complete: false,
+                close: false
             }
         }
     },
@@ -110,8 +116,10 @@ export default {
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.materialOrderList
+                    // 初始化按钮的状态
                     this.btnState.receive  = !response.data.isRecive
                     this.btnState.complete = !response.data.isFinish
+                    this.btnState.close    = !response.data.isClose
                     // 
                     this.referData = _.cloneDeep(this.list)
                 }
@@ -120,48 +128,31 @@ export default {
             }
             this.loading = !1
         },
-        async receiveReturnOrder(callback){
+        async orderHandler(type, callback){
             try {
                 if (!this.checkBatchCodes()){
                     return this.$message.warning('请选择原料批号！')
                 }
                 this.btnLoading = !0
-                const response = await receiveLogisticsRetOrd({
-                    id: this.params.id,
-                    list: this.list.map(item => ({
-                        material_id: item.material_id,
-                        batch_code_text: item.batch_code_text
-                    }))
-                })
-                if (response.data.code == 1){
-                    this.$message.success(response.data.message)
-                    callback && callback()
-                    this.btnLoading = !1
-                    this.setLeaveRemind(!1)
-                } else {
-                    this.$message.error(response.data.message)
+                const _list = this.list.map(item => ({
+                    material_id: item.material_id,
+                    batch_code_text: item.batch_code_text
+                }))
+                let response = null
+                if (type === 'receive'){
+                    response = await receiveLogisticsRetOrd({
+                        id: this.params.id,
+                        list: _list
+                    })
+                } else if (type === 'complete'){
+                    response = await completeLogisticsRetOrd({
+                        id: this.params.id,
+                        list: _list
+                    })
                 }
-            } catch (error){
-                console.error(error)
-            }
-        },
-        async completeReturnOrder(callback){
-            try {
-                if (!this.checkBatchCodes()){
-                    return this.$message.warning('请选择原料批号！')
-                }
-                this.btnLoading = !0
-                const response = await completeLogisticsRetOrd({
-                    id: this.params.id,
-                    list: this.list.map(item => ({
-                        material_id: item.material_id,
-                        batch_code_text: item.batch_code_text
-                    }))
-                })
-                if (response.data.code == 1){
+                if (response && response.data.code == 1){
                     this.$message.success(response.data.message)
                     this.btnLoading = !1
-                    this.setLeaveRemind(!1)
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)
@@ -170,14 +161,32 @@ export default {
                 console.error(error)
             }
         },
-        receiveHandle(){
-            this.receiveReturnOrder(() => {
+        async cancleHandler(type, callback){
+            try {
+                this.btnLoading = !0
+                const response = await cancleReturnOrder({
+                    id: this.params.id,
+                    type: type
+                })
+                if (response.data.code == 1){
+                    this.$message.success(response.data.message)
+                    this.btnLoading = !1
+                    callback && callback()
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
+        returnOrderHandle(type){
+            this.orderHandler(type, () => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
-        completeHandle(){
-            this.completeReturnOrder(() => {
+        closeOrderHandle(type){
+            this.cancleHandler(type, () => {
                 this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })

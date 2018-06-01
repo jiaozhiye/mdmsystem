@@ -10,7 +10,7 @@
     </el-aside>
     <el-main :class="{on: sidebarState}" id="main">
       <transition name="router">
-        <router-view class="view-wrapper"></router-view>
+        <router-view class="view-wrapper" :key="key"></router-view>
       </transition>
     </el-main>
   </el-container>
@@ -28,15 +28,17 @@ import AppHeader from 'components/Header.vue'
 import AppSidebar from 'components/Sidebar.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   data (){
     return {
       perInfo: {},
       sidebarState: false
     }
   },
-  created(){
-    this.getPerInfo(() => this.createPersonalInfo(this.perInfo))
+  computed: {
+    key (){
+      return this.$route.name !== undefined ? this.$route.name + +new Date() : 'view-' + +new Date()
+    }
   },
   methods: {
     ...mapActions([
@@ -55,15 +57,15 @@ export default {
           this.perInfo.type = response.data.type // 0 -> 普通员工    1 -> 部门经理    2 -> 管理员
           callback && callback()
         } else {
-          this.$message({
-              type: 'error',
-              message: response.data.message
-          })
+          this.$message.error(response.data.message)
         }
       } catch (err){
-          console.error(err)
+        console.error(err)
       }
     }
+  },
+  created(){
+    this.getPerInfo(() => this.createPersonalInfo(this.perInfo))
   },
   components: {
     AppHeader,

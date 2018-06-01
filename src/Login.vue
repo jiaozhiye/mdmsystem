@@ -32,7 +32,7 @@ import 'assets/css/style.css'
 import {loginSystem} from 'api'
 
 export default {
-    name: 'app',
+    name: 'Login',
     data (){
         return {
             showDanger: false,
@@ -54,10 +54,7 @@ export default {
     methods: {
         async doLogin(){
             if (this.username == '' || this.password == ''){
-                return this.$message({
-                    message: '请正确填写用户名和密码！',
-                    type: 'warning'
-                })
+                return this.$message.warning('请正确填写用户名和密码！')
             }
             try {
                 const response = await loginSystem({

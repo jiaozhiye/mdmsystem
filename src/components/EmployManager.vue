@@ -151,8 +151,8 @@ export default {
                 })
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.list = response.data.list
-                    this.list.total = response.data.totalRow
+                    this.list = response.data.data.list
+                    this.list.total = response.data.data.totalRow
                 }
                 callback && callback()
             } catch (error){

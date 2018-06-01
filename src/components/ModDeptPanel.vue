@@ -70,7 +70,9 @@ export default {
         async getDeptList(){
             try {
                 const response = await getDeptInfo()
-                this.superdeptList = response.data
+                if (response.data.code == 1){
+                    this.superdeptList = response.data.list
+                }
             } catch (err){
                 console.error(err)
             }

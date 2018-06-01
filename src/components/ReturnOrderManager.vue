@@ -1,7 +1,7 @@
 <template>
 <div class="appManager-wrapper">
     <div class="appManager-top">
-        <el-dropdown class="fl">
+        <!-- <el-dropdown class="fl">
             <el-button type="primary">
                 新建操作 <i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
@@ -9,7 +9,8 @@
                 <el-dropdown-item @click.native="createRetOrdHandle()">退货单</el-dropdown-item>
                 <el-dropdown-item @click.native="createRetOrdHandle('hidden')">引单退货单</el-dropdown-item>
             </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown> -->
+        <el-button class="fl" @click.stop="createRetOrdHandle">新增退货单</el-button>
         <ul class="fr">
             <el-select 
                 class="fl" 
@@ -46,7 +47,7 @@
                     <el-tag size="medium">{{ scope.row.dname }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id, scope.row.isEdit)" type="text">
                         <i class="el-icon-view"></i> 详情
@@ -59,12 +60,12 @@
         </el-pagination>
     </div>
     <ExtractPanel :params="showRetOrdExtract" width="calc(100% - 200px)">
-        <span slot="title">{{ showRetOrdExtract.type }}退货单详情</span>
-        <ModReturnOrderPanel slot="panel" :params="showRetOrdExtract"></ModReturnOrderPanel>
+        <span slot="title">退货单详情</span>
+        <ModReturnOrderPanel slot="panel" :params="showRetOrdExtract" @reloadEvent="reloadGetData"></ModReturnOrderPanel>
     </ExtractPanel>
     <ExtractPanel :params="addRetOrdExtract" width="calc(100% - 200px)">
-        <span slot="title">新增{{ addRetOrdExtract.type }}退货单</span>
-        <AddReturnOrderPanel slot="panel" :params="addRetOrdExtract"></AddReturnOrderPanel>
+        <span slot="title">新增退货单</span>
+        <AddReturnOrderPanel slot="panel" :params="addRetOrdExtract" @reloadEvent="reloadGetData"></AddReturnOrderPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -89,11 +90,9 @@ export default {
             },
             loading: false,
             showRetOrdExtract: {
-                type: '', // 退货单类型   引单
                 isPlay: false
             },
             addRetOrdExtract: {
-                type: '', // 退货单类型   引单
                 isPlay: false
             }
         }
@@ -101,20 +100,11 @@ export default {
     methods: {
         createRetOrdHandle(isHidden){
             this.addRetOrdExtract.isPlay = !0
-            if (isHidden === 'hidden'){
-                this.addRetOrdExtract.type = '引单'
-            } else {
-                this.addRetOrdExtract.type = ''
-            }
         },
         showItemHandle(_id, _isEdit){
             this.showRetOrdExtract.isPlay = !0
             this.showRetOrdExtract.id = _id
-            if (_isEdit){
-                this.showRetOrdExtract.type = ''
-            } else {
-                this.showRetOrdExtract.type = '引单'
-            }
+            this.showRetOrdExtract.isEdit = _isEdit
         },
         async getStateList(){
             try {
@@ -157,6 +147,11 @@ export default {
         },
         searchHandle(){
             this.getReturnOrderList(1)
+        },
+        reloadGetData(res){
+            if (res == 'reload'){
+                this.getReturnOrderList(this.curPageIndex)
+            }
         }
     },
     created(){

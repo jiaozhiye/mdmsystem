@@ -14,7 +14,7 @@
             node-key="id" 
             default-expand-all 
             :expand-on-click-node="false" 
-            @check-change="checkChangeHandle" 
+            @check="checkChangeHandle" 
             :filter-node-method="filterNode" 
             :render-content="renderContent">
         </el-tree>
@@ -147,7 +147,7 @@ export default {
         },
         getCheckedKeys(){
             // 重置选中树的ID数组
-            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.parent_id != 0).map(item => item.id)
+            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
             // console.log(this.checkedKeys)
         },
         filterNode(value, data){

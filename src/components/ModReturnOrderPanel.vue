@@ -15,7 +15,7 @@
             v-loading="treeLoading"
             default-expand-all 
             :expand-on-click-node="false" 
-            @check-change="checkChangeHandle" 
+            @check="checkChangeHandle" 
             :filter-node-method="filterNode">
         </el-tree>
     </section>
@@ -41,8 +41,7 @@
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
-                            :stepVal="1"
-                            :disabled="scope.row.disabled">
+                            :stepVal="1">
                         </EditNumber>
                     </template>
                 </el-table-column>
@@ -52,8 +51,7 @@
                             type="textarea"
                             v-model="scope.row.remark"
                             :rows="2"
-                            placeholder="退货理由..."
-                            :disabled="scope.row.disabled">
+                            placeholder="退货理由...">
                         </el-input>
                     </template>
                 </el-table-column>
@@ -128,7 +126,7 @@ export default {
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
+            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
             // console.log(this.checkedKeys)
         },
         setCheckedKeys(){
@@ -146,9 +144,6 @@ export default {
                 if (response.data.code == 1){
                     // 原材料树新增 number 字段，默认值是 1
                     recursionTree(response.data.tree, item => {
-                        if (this.params.type !== ''){ // 说明是引单
-                            item.disabled = !0
-                        }
                         item.number = 1
                         item.remark = ''
                     })
@@ -169,9 +164,6 @@ export default {
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.tableList = response.data.materialOrderList
-                    if (this.params.type !== ''){ // 说明是引单
-                        this.tableList.forEach(item => item.disabled = !0)
-                    }
                     // 把编辑过的原材料同步到左侧树
                     recursionTree(this.list, (item) => {
                         let obj = this.tableList.find(val => val.id === item.id)
@@ -198,9 +190,6 @@ export default {
             this.multipleSelection = val
         },
         removeItemHandle(ids){
-            if (this.params.type !== ''){ // 说明是引单
-                return this.$message.warning('引单退货单不能修改！')
-            }
             if (!Array.isArray(ids)){
                 ids = this.multipleSelection.map(item => item.id)
                 if (ids.length == 0){
@@ -213,6 +202,13 @@ export default {
                     this.checkedKeys.splice(i--, 1)
                 }
             }
+            // 删除 tableList 中的记录
+            for (let i = 0; i < this.tableList.length; i++){
+                if (ids.findIndex(val => val === this.tableList[i].id) !== -1){
+                    this.tableList.splice(i--, 1)
+                }
+            }
+            // 重置树的选中状态
             this.setCheckedKeys()
         },
         async updateOrderHandle(callback){
@@ -228,7 +224,6 @@ export default {
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
-                    this.setLeaveRemind(!1)
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)

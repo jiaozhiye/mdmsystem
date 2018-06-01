@@ -16,7 +16,7 @@
         </el-select>
     </div>
     <div class="appManager-list">
-        <el-table :data="list" border v-loading="loading">
+        <el-table class="el-origin-table" :data="list" border v-loading="loading">
             <el-table-column prop="warehouse_text" label="仓库名称"></el-table-column>
             <el-table-column prop="code" label="编码"></el-table-column>
             <el-table-column prop="name" label="商品名称"></el-table-column>

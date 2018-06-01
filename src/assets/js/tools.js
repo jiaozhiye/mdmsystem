@@ -12,7 +12,7 @@ function cloneObj (obj){
         str = JSON.stringify(obj) //系列化对象
         newobj = JSON.parse(str)  //还原
     } else {
-        for(var i in obj){
+        for(let i in obj){
             newobj[i] = typeof obj[i] === 'object' ? 
             cloneObj(obj[i]) : obj[i]
         }
@@ -51,6 +51,29 @@ function getUrlHash(){
     return window.location.hash.slice(1) || ''
 }
 
+function getSearchParams(){
+    const search = window.location.search
+    let dataObj  = {}
+    if (search.indexOf('?') != -1){
+        let str = decodeURIComponent(search.substr(1))
+        let strs = str.split('&')
+        for (let i = 0; i < strs.length; i++){
+            dataObj[strs[i].split('=')[0]] = decodeURIComponent(strs[i].split('=')[1])
+        }
+    }
+    return dataObj
+}
+
+function setSearchParams(params){
+    const search = window.location.search
+    let str  = search.indexOf('?') == -1 ? '?' : '&'
+    let _arr = []
+    for (let i in params){
+        _arr.push(i + '=' + encodeURIComponent(params[i]))
+    }
+    return str + _arr.join('&')
+}
+
 function recursionTree(arr, callback){
     if (Array.isArray(arr)){
         for (let i = 0; i < arr.length; i++){
@@ -60,4 +83,4 @@ function recursionTree(arr, callback){
     }
 }
 
-export { cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash, recursionTree }
+export { cloneObj, getRandom, addCookie, getCookie, prefixCss, getUrlHash, getSearchParams, setSearchParams, recursionTree }

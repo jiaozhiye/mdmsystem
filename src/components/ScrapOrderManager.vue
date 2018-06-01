@@ -14,7 +14,7 @@
             node-key="id" 
             default-expand-all 
             :expand-on-click-node="false" 
-            @check-change="checkChangeHandle" 
+            @check="checkChangeHandle" 
             :filter-node-method="filterNode">
         </el-tree>
     </section>
@@ -106,7 +106,7 @@ export default {
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
+            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
             // console.log(this.checkedKeys)
         },
         setCheckedKeys(){
@@ -143,6 +143,13 @@ export default {
                     this.checkedKeys.splice(i--, 1)
                 }
             }
+            // 删除 tableList 中的记录
+            for (let i = 0; i < this.tableList.length; i++){
+                if (ids.findIndex(val => val === this.tableList[i].id) !== -1){
+                    this.tableList.splice(i--, 1)
+                }
+            }
+            // 重置树的选中状态
             this.setCheckedKeys()
         },
         async nextStepHandle(){

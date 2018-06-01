@@ -28,7 +28,7 @@
         </el-select>
     </div>
     <div class="appManager-list">
-        <el-table :data="list" border v-loading="loading">
+        <el-table class="el-origin-table" :data="list" border v-loading="loading">
             <el-table-column prop="code" label="物料编码" sortable></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="attribute_text" label="规格"></el-table-column>

@@ -2,9 +2,9 @@
 <div class="appManager-wrapper">
     <div class="appManager-top">
         <el-button class="fl" @click.stop="addGdtypeHandle">新增商品类别</el-button>
-        <el-input class="gdtype-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
+        <!-- <el-input class="gdtype-search fr" placeholder="请输入类别名称" prefix-icon="el-icon-search"
             v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
-        </el-input>
+        </el-input> -->
     </div>
     <div class="appManager-list">
         <div class="tree-show-line" v-loading="loading">

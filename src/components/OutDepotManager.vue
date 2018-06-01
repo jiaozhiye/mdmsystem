@@ -52,7 +52,8 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="出库单号" sortable></el-table-column>
             <el-table-column prop="store_text" label="门店"></el-table-column>
-            <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
+            <el-table-column prop="want_date" label="要货日期" sortable></el-table-column>
+            <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
             <el-table-column prop="warehourse_text" label="仓库"></el-table-column>
             <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
@@ -65,7 +66,7 @@
                         <i class="el-icon-view"></i> 详情
                     </el-button>
                     <el-button @click.stop="printHandle(scope.row.id)" type="text">
-                        <i class="el-icon-view"></i> 打印
+                        <i class="el-icon-printer"></i> 打印
                     </el-button>
                 </template>
             </el-table-column>
@@ -80,11 +81,12 @@
 
 <script>
 import moment from 'moment'
+import { setSearchParams } from 'assets/js/tools'
 
 import ExtractPanel from './ExtractPanel.vue'
 import OutOrderPanel from './OutOrderPanel.vue'
 
-import { getOutOrderInfo, getDepotList, getStoreList } from 'api'
+import { getOutOrderInfo, getDepotList, getStoreList, printOutOrder } from 'api'
 
 export default {
     name: 'OutDepotManager',
@@ -113,8 +115,18 @@ export default {
             this.showOutOrderExtract.isPlay = !0
             this.showOutOrderExtract.id = _id
         },
-        printHandle(_id){
-
+        async printHandle(_id){
+            try {
+                const response = await printOutOrder({ id: _id })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    window.open(`/static/print.html${setSearchParams(response.data.data)}`, '_blank')
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
         },
         async getDepotList(){
             try {
