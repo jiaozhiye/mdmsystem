@@ -21,6 +21,19 @@
     <div class="dayOrder-list-box">
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
+            <el-select 
+                class="fl" 
+                style="width: 120px; margin-left: 10px;"
+                v-model="form.orderType" 
+                clearable 
+                placeholder="订单类型">
+                <el-option
+                    v-for="(item, key) in orderTypeList"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.value">
+                </el-option>
+            </el-select>
             <ul class="fr">
                 <strong class="promptText fl">要货日期：</strong>
                 <el-date-picker
@@ -86,7 +99,7 @@ import EditNumber from './EditNumber.vue'
 import { mapActions } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
-import { getGoodsTree, saveGoodsClassify } from 'api'
+import { getGoodsTree, getDayOrderType, saveGoodsClassify } from 'api'
 
 export default {
     name: 'DayOrderManager',
@@ -94,12 +107,14 @@ export default {
         return {
             form: {
                 wantDate: '',
-                arriveDate: ''
+                arriveDate: '',
+                orderType: 'day'
             },
             list: [], // 商品分类树数组
             tableList: [], // 同步 商品分类树数组
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
+            orderTypeList: [],
             multipleSelection: [], // 选中记录的数组
             btnLoading: false,
             pickerOptions: {
@@ -158,6 +173,18 @@ export default {
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.list = response.data.tree
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
+        async getOrderTypeList(){
+            try {
+                const response = await getDayOrderType()
+                if (response.data.code == 1){
+                    this.orderTypeList = response.data.list
+                } else {
+                    this.$message.error(response.data.message)
                 }
             } catch (error){
                 console.error(error)
@@ -228,6 +255,7 @@ export default {
     created(){
         this.initDateFn()
         this.getGoodsTree()
+        this.getOrderTypeList()
     },
     mounted(){
         document.querySelector('.goods-table').addEventListener('keyup', this.keyUpHandle, false)

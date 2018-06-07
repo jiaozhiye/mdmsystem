@@ -23,7 +23,7 @@
                 v-for="(item, key) in orderTypeList"
                 :key="key"
                 :label="item.name"
-                :value="item.id">
+                :value="item.value">
             </el-option>
         </el-select>
         <el-select 
@@ -76,7 +76,8 @@
             <el-table-column prop="want_date" label="订货日期" sortable></el-table-column>
             <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
             <el-table-column prop="type_text" label="订单类型"></el-table-column>
-            <el-table-column label="状态" width="100">
+            <el-table-column prop="print_time" label="打印次数"></el-table-column>
+            <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>

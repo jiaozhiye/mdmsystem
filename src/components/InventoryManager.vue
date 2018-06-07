@@ -132,7 +132,7 @@ export default {
             this.tableList = _arr
         },
         checkHandle(data, check){
-            if (!data.isEdit) return
+            // if (!data.isEdit) return
             this.getCheckedKeys()
             this.asyncTableList()
             this.excuPagination()
@@ -195,6 +195,8 @@ export default {
                     this.tableList.splice(i--, 1)
                 }
             }
+            // 处理分页
+            this.excuPagination()
             // 重置树的选中状态
             this.setCheckedKeys()
         },

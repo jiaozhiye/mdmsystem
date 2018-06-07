@@ -429,7 +429,7 @@ export const getMoveDepotInfo = params => instance.get('/mgr/warehouse/warehouse
 
 // 获取移库单物品列表
 export const getMoveDepotList = params => instance.get('/mgr/warehouse/warehouseMovement/showDetailById', {params})
-// 135
+
 // 获取对账单信息列表
 export const getReconciliationInfo = params => instance.get('/mgr/logistics/reconciliation', {params})
 
@@ -466,8 +466,9 @@ export const printOrderType = () => instance.get('mgr/dict/showList3?dict=700')
 // 获取打印单历史列表
 export const getPrintOrderInfo = params => instance.get('mgr/print/print/getPrintDetail', {params})
 
-
-
+// 日订单的订单类型
+export const getDayOrderType = () => instance.get('/mgr/dict/showList2?dict=store_order_type')
+// 148
 
 
 

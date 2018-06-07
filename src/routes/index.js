@@ -36,6 +36,7 @@ const ScrapOrderListManager = () => import('components/ScrapOrderListManager.vue
 const StoreAccountManager = () => import('components/StoreAccountManager.vue')
 const StoreStockManager = () => import('components/StoreStockManager.vue')
 const PrintHistoryManager = () => import('components/PrintHistoryManager.vue')
+const OutOrderManager = () => import('components/OutOrderManager.vue')
 
 // 路由列表
 const routes = {
@@ -189,6 +190,11 @@ const routes = {
             path: '/logistics_manager/logistics_mgr_out_order_3',
             name: 'OutDepotManager', // 出入库管理 -> 出库单
             component: OutDepotManager
+        },
+        {
+            path: '/logistics_manager/logistics_mgr_out_order_list',
+            name: 'OutOrderManager', // 出入库管理 -> 出库单查询
+            component: OutOrderManager
         },
         {
             path: '/logistics_manager/logistics_return_order',

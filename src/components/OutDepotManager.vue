@@ -55,6 +55,7 @@
             <el-table-column prop="want_date" label="要货日期" sortable></el-table-column>
             <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
             <el-table-column prop="warehourse_text" label="仓库"></el-table-column>
+            <el-table-column prop="print_time" label="打印次数"></el-table-column>
             <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
                     <el-tag size="medium">{{ scope.row.status_text }}</el-tag>
