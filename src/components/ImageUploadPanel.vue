@@ -1,8 +1,10 @@
 <template>
+<div class="upload-wrapper">
     <el-upload
         class="upload-demo"
         ref="upload"
         action="http://127.0.0.1:2080/upload/do"
+        :data="uploadData"
         multiple
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
@@ -15,35 +17,40 @@
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过3M</div>
     </el-upload>
+    <div class="app-form-item tr" style="padding-top: 20px;">
+        <el-button @click.stop="closePanelHandle">退出</el-button>
+    </div>
+</div>
 </template>
 
 <script>
-// import ImageCompress from 'assets/js/img-compress'
 import HtmlImageCompress from 'html-image-compress'
 
 export default {
-    name: 'Home',
+    name: 'ImageUploadPanel',
+    props: {
+        params: Object
+    },
     data (){
         return {
-            fileList: []
+            uploadData: {orderId: this.params.id}, // 上传的额外参数
+            fileList: [],
+            imgUploadNum: 0, // 添加上传图片的数量
+            imgSuccessNum: 0 // 上传成功的数量
         }
     },
     methods: {
         compress(file){
             return new Promise((resolve, reject) => {
-                // new ImageCompress({
-                //     file,
-                //     quality: 0.7,
-                //     success(result){
-                //         resolve(result.file)
-                //     }
-                // })
                 const imageCompress = new HtmlImageCompress(file, { quality: 0.75 })
                 imageCompress.then((result) => resolve(result.file))
             })
         },
         handleSuccess(res, file){
-            console.log(res, file)
+            // console.log(res, file)
+            if (++this.imgSuccessNum == this.imgUploadNum){
+                this.$message.success('图片上传成功！')
+            }
         },
         beforeUpload(file){
             const isJPG = file.type == 'image/jpeg'
@@ -56,6 +63,7 @@ export default {
                 this.$message.error('上传头像图片大小不能超过 2MB!')
             }
             if ((isJPG || isPng) && isLt2M){
+                this.imgUploadNum++
                 // 图片压缩
                 return this.compress(file)
             } else {
@@ -67,10 +75,16 @@ export default {
         },
         handleRemove(file, fileList){
             
+        },
+        closePanelHandle(){
+            this.params.isPlay = false
         }
     }
 }
 </script>
 
 <style>
+.upload-wrapper {
+    padding: 20px 20px 0;
+}
 </style>

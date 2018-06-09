@@ -287,7 +287,7 @@ export const getOrderTypeList = () => instance.get('/mgr/dict/showList?dict=stor
 export const getStoreList = () => instance.get('/mgr/common/store/showList')
 
 // 获取订单状态列表
-export const getOrderStateList = () => instance.get('/mgr/dict/showList2?dict=store_order_status')
+export const getOrderStateList = params => instance.get('/mgr/dict/showList2', {params})
 
 // 新增仓库记录
 export const saveDepotRecord = params => instance.post('/mgr/warehouse/warehouseManager/add', params)
@@ -307,11 +307,14 @@ export const getDepotRecord = params => instance.get('/mgr/warehouse/warehouseMa
 // 更新仓库记录
 export const updateDepotRecord = params => instance.post('/mgr/warehouse/warehouseManager/updateById', params)
 
-// 获取订单详情
-export const getOrderDetail = params => instance.get('/mgr/logistics/storeOrder/showOrderDetailsById', {params})
+// 获取门店订单详情
+export const getStoreOrderDetail = params => instance.get('/mgr/storeOrderCtrl/showOrderDetailsById', {params})
 
-// 关闭订单
-export const closeOrder = params => instance.get('/mgr/logistics/storeOrder/closeOrder', {params})
+// 获取物流订单详情
+export const getLogisticOrderDetail = params => instance.get('/mgr/storeOrderCtrl/showOrderDetailsById', {params})
+
+// 退回物流订单
+export const returnLogisticOrder = params => instance.get('/mgr/logistics/storeOrder/closeOrder', {params})
 
 // 接收订单
 export const receiveOrder = params => instance.get('/mgr/logistics/storeOrder/accept', {params})
@@ -469,9 +472,11 @@ export const getPrintOrderInfo = params => instance.get('mgr/print/print/getPrin
 // 日订单的订单类型
 export const getDayOrderType = () => instance.get('/mgr/dict/showList2?dict=store_order_type')
 // 148
+// 获取门店订单列表
+export const getStoreOrderInfo = params => instance.get('/mgr/storeOrderCtrl/queryOrders', {params})
 
-
-
+// 撤销门店订单
+export const cancelStoreOrder = params => instance.get('/mgr/storeOrderCtrl/cancelOrder', {params})
 
 
 

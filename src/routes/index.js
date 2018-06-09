@@ -45,7 +45,7 @@ const routes = {
         {
             path: '/sys_setting',
             name: 'DeptManager', // 组织结构 -> 部门管理
-            component: DeptManager
+            component: Home
         },
         {
             path: '/sys_setting/dept_manger',

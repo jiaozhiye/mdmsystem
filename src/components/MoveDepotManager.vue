@@ -66,7 +66,7 @@
             <el-table-column prop="creater_name" label="操作人"></el-table-column>
             <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
-                    <el-tag size="medium">{{ scope.row.status_text }}</el-tag>
+                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="150">

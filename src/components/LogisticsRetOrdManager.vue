@@ -52,11 +52,15 @@
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="订单编号" sortable></el-table-column>
-            <el-table-column prop="store_name" label="门店名称"></el-table-column>
+            <el-table-column label="门店名称">
+                <template slot-scope="scope">
+                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="create_time" label="创建时间" sortable></el-table-column>
             <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
-                    <el-tag size="medium">{{ scope.row.dname }}</el-tag>
+                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.dname }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="100">

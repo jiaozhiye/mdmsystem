@@ -31,6 +31,7 @@
             style="width: 150px; margin-left: 10px;"
             v-model="search.state" 
             @change="searchHandle" 
+            clearable
             placeholder="选择状态">
             <el-option
                 v-for="(item, key) in stateList"
@@ -58,13 +59,17 @@
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="订单号" sortable></el-table-column>
-            <el-table-column prop="store_text" label="门店"></el-table-column>
+            <el-table-column label="门店名称">
+                <template slot-scope="scope">
+                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_text }}</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="want_date" label="订货日期" sortable></el-table-column>
             <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
             <el-table-column prop="type_text" label="订单类型"></el-table-column>
-            <el-table-column label="状态" width="100">
+            <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
-                    <el-tag size="medium">{{ scope.row.status_text }}</el-tag>
+                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="create_time_short" label="提交日期"></el-table-column>
@@ -82,7 +87,7 @@
     </div>
     <ExtractPanel :params="showOrderExtract">
         <span slot="title">订单详情</span>
-        <OrderDetailPanel slot="panel" :params="showOrderExtract"></OrderDetailPanel>
+        <OrderDetailPanel slot="panel" :params="showOrderExtract" @reloadEvent="reloadGetData"></OrderDetailPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -93,7 +98,7 @@ import moment from 'moment'
 import ExtractPanel from './ExtractPanel.vue'
 import OrderDetailPanel from './OrderDetailPanel.vue'
 
-import { getOrderInfo, getOrderTypeList, getOrderStateList } from 'api'
+import { getStoreOrderInfo, getOrderTypeList, getOrderStateList } from 'api'
 
 export default {
     name: 'StoreOrderManager',
@@ -106,7 +111,7 @@ export default {
             search: {
                 arrivalDate: [],
                 orderType: '',
-                state: '10',
+                state: '',
                 orderCode: ''
             },
             loading: false,
@@ -124,6 +129,7 @@ export default {
         showItemHandle(_id){
             this.showOrderExtract.isPlay = !0
             this.showOrderExtract.id = _id
+            this.showOrderExtract.type = 'store' // 门店订单详情
         },
         async getOrderTypeList(){
             try {
@@ -139,7 +145,7 @@ export default {
         },
         async getStateList(){
             try {
-                const response = await getOrderStateList()
+                const response = await getOrderStateList({ dict: 'store_order_status' })
                 if (response.data.code == 1){
                     this.stateList = response.data.list
                 } else {
@@ -153,7 +159,7 @@ export default {
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
             try {
                 this.loading = !0
-                const response = await getOrderInfo({
+                const response = await getStoreOrderInfo({
                     pageNum: curPage,
                     pageSize: 10,
                     arrivalDate: this.search.arrivalDate,
@@ -180,6 +186,11 @@ export default {
         },
         searchHandle(){
             this.getOrderList(1)
+        },
+        reloadGetData(res){
+            if (res == 'reload'){
+                this.getOrderList(this.curPageIndex)
+            }
         }
     },
     created(){

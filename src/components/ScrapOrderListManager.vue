@@ -53,10 +53,10 @@
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="废弃单号" sortable></el-table-column>
-            <el-table-column prop="order_number" label="废弃时间" sortable></el-table-column>
+            <el-table-column prop="create_time" label="废弃时间" sortable></el-table-column>
             <el-table-column label="状态" width="200">
                 <template slot-scope="scope">
-                    <el-tag size="medium">{{ scope.row.status_text }}</el-tag>
+                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="150">

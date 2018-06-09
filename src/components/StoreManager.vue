@@ -9,7 +9,11 @@
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
             <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column prop="name" label="门店名称" width="300" sortable></el-table-column>
+            <el-table-column label="门店名称" width="300" sortable>
+                <template slot-scope="scope">
+                    <span :style="{color: scope.row.store_color}">{{ scope.row.name }}</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="address" label="门店地址" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="门店电话" width="150"></el-table-column>
             <el-table-column label="状态" width="120">

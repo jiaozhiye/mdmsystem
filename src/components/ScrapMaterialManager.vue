@@ -22,6 +22,7 @@
     <div class="order-list-box">
         <div class="appManager-top">
             <el-button class="fl" @click.stop="removeItemHandle">批量移除</el-button>
+            <el-button class="fl" type="primary" plain style="margin-left: 10px;" @click.stop="imgUploadHandle">图片上传</el-button>
             <ul class="fr">
                 <el-button class="fl" type="primary" :loading="btnLoading" @click.stop="saveOrderHandle">保存</el-button>
             </ul>
@@ -57,11 +58,17 @@
             </el-table>
         </div>
     </div>
+    <ExtractPanel :params="showUploadExtract" width="40%">
+        <span slot="title">图片上传</span>
+        <ImageUploadPanel slot="panel" :params="showUploadExtract"></ImageUploadPanel>
+    </ExtractPanel>
 </div>
 </template>
 
 <script>
 import EditNumber from './EditNumber.vue'
+import ExtractPanel from './ExtractPanel.vue'
+import ImageUploadPanel from './ImageUploadPanel.vue'
 
 import { mapActions } from 'vuex'
 
@@ -79,7 +86,10 @@ export default {
             btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
-            multipleSelection: [] // 选中记录的数组
+            multipleSelection: [], // 选中记录的数组
+            showUploadExtract: {
+                isPlay: false
+            }
         }
     },
     watch: {
@@ -99,6 +109,10 @@ export default {
     },
     methods: {
         ...mapActions(['setLeaveRemind']),
+        imgUploadHandle(){
+            this.showUploadExtract.isPlay = !0
+            this.showUploadExtract.id = this.$route.params.id
+        },
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
@@ -248,7 +262,9 @@ export default {
         document.querySelector('.material-table').removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
-        EditNumber
+        EditNumber,
+        ExtractPanel,
+        ImageUploadPanel
     }
 }
 </script>

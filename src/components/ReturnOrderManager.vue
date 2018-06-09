@@ -41,10 +41,14 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="退货单号"></el-table-column>
             <el-table-column prop="return_time" label="退货日期" sortable></el-table-column>
-            <el-table-column prop="store_name" label="门店名称"></el-table-column>
+            <el-table-column label="门店名称">
+                <template slot-scope="scope">
+                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
+                </template>
+            </el-table-column>
             <el-table-column label="订单状态" width="200">
                 <template slot-scope="scope">
-                    <el-tag size="medium">{{ scope.row.dname }}</el-tag>
+                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.dname }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="100">
