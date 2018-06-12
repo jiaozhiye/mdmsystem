@@ -1,6 +1,14 @@
 <template>
 <div class="app-form-panel">
     <div class="app-form-item">
+        <label class="app-form-label"><i>*</i>选择城市</label>
+        <div class="app-input-block">
+            <el-select v-model="form.cityId" clearable placeholder="请选择城市">
+                <el-option v-for="(item, key) in cityList" :key="key" :label="item.name" :value="item.value"></el-option>
+            </el-select>
+        </div>
+    </div>
+    <div class="app-form-item">
         <label class="app-form-label"><i>*</i>门店名称</label>
         <div class="app-input-block">
             <el-input name="storename" v-model="form.name" v-validate="'required'" :class="{'formDanger': errors.has('storename')}" clearable placeholder="请输入门店名称..." ></el-input>
@@ -27,13 +35,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
-import {getStoreRecord, updateStoreRecord} from 'api'
+import { getCitysInfo, getStoreRecord, updateStoreRecord } from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'ModStorePanel',
@@ -43,7 +52,9 @@ export default {
     data(){
         return {
             itemId: this.params.itemId,
+            cityList: [],
             form: {
+                cityId: '',
                 name: '',
                 address: '',
                 phone: '',
@@ -51,8 +62,8 @@ export default {
             }
         }
     },
-    created(){
-        this.getItemInfo()
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getItemInfo(){
@@ -60,6 +71,7 @@ export default {
                 const response = await getStoreRecord({id: this.itemId})
                 // console.log(response.data)
                 if (response.data.code == 1){
+                    this.form.cityId = response.data.data.city
                     this.form.name = response.data.data.name || ''
                     this.form.address = response.data.data.address
                     this.form.phone = response.data.data.phone
@@ -69,6 +81,18 @@ export default {
                         type: 'error',
                         message: response.data.message
                     })
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
+        async getCityList(){
+            try {
+                const response = await getCitysInfo()
+                if (response.data.code == 1){
+                    this.cityList = response.data.list
+                } else {
+                    this.$message.error(response.data.message)
                 }
             } catch (error){
                 console.error(error)
@@ -108,6 +132,10 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created(){
+        this.getCityList()
+        this.getItemInfo()
     }
 }
 </script>

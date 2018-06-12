@@ -31,7 +31,7 @@
             <el-table-column prop="order_number" label="订单号" sortable></el-table-column>
             <el-table-column prop="creater_name" label="打印人"></el-table-column>
             <el-table-column prop="print_date" label="打印时间" sortable></el-table-column>
-            <el-table-column prop="sort" label="第几次打印"></el-table-column>
+            <el-table-column prop="sort" label="第几次打印" sortable></el-table-column>
         </el-table>
         <el-pagination background layout="prev, pager, next, jumper"
             :total="list.total" @current-change="handleCurrentChange">

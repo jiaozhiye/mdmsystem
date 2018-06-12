@@ -56,23 +56,27 @@
     </div>
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
-            <el-table-column prop="order_number" label="出库单号"></el-table-column>
-            <el-table-column prop="create_time" label="出库日期" sortable></el-table-column>
+            <el-table-column prop="order_number" label="出库单号" sortable></el-table-column>
+            <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
             <el-table-column label="门店名称">
                 <template slot-scope="scope">
-                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
+                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_text }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="store_name" label="仓库"></el-table-column>
-            <el-table-column label="状态" width="100">
+            <el-table-column prop="warehourse_text" label="仓库"></el-table-column>
+            <el-table-column prop="print_time" label="打印次数" sortable></el-table-column>
+            <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.dname }}</el-tag>
+                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 查看
+                    </el-button>
+                    <el-button @click.stop="printHandle(scope.row.id)" type="text">
+                        <i class="el-icon-printer"></i> 打印
                     </el-button>
                 </template>
             </el-table-column>
@@ -83,7 +87,7 @@
     </div>
     <ExtractPanel :params="showOrderExtract" width="60%">
         <span slot="title">出库单详情</span>
-        <LogisticsRetOrdPanel slot="panel" :params="showOrderExtract"></LogisticsRetOrdPanel>
+        <OrderDetailPanel slot="panel" :params="showOrderExtract"></OrderDetailPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -92,9 +96,9 @@
 import moment from 'moment'
 
 import ExtractPanel from './ExtractPanel.vue'
-import LogisticsRetOrdPanel from './LogisticsRetOrdPanel.vue'
+import OrderDetailPanel from './OrderDetailPanel.vue'
 
-import { getLogisticsRetOrdInfo, getDepotList, getStoreList, getRetOrdStateList } from 'api'
+import { getLogisticsOutOrder, getDepotList, getStoreList, getOutDepotStateList } from 'api'
 
 export default {
     name: 'OutOrderManager',
@@ -126,6 +130,7 @@ export default {
         showItemHandle(_id){
             this.showOrderExtract.isPlay = !0
             this.showOrderExtract.id = _id
+            this.showOrderExtract.type = 'logistic'  // 物流订单详情
         },
         async getDepotList(){
             try {
@@ -153,7 +158,7 @@ export default {
         },
         async getStateList(){
             try {
-                const response = await getRetOrdStateList()
+                const response = await getOutDepotStateList()
                 if (response.data.code == 1){
                     this.stateList = response.data.list
                 } else {
@@ -167,7 +172,7 @@ export default {
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
             try {
                 this.loading = !0
-                const response = await getLogisticsRetOrdInfo({
+                const response = await getLogisticsOutOrder({
                     pageNum: curPage,
                     pageSize: 10,
                     date: this.search.outDate,
@@ -177,8 +182,8 @@ export default {
                 })
                 // console.log(response.data)
                 if (response.data.code == 1){
-                    this.list = response.data.orderList.list
-                    this.list.total = response.data.orderList.totalRow
+                    this.list = response.data.data.list
+                    this.list.total = response.data.data.totalRow
                 } else {
                     this.list.total = 0
                 }
@@ -187,6 +192,19 @@ export default {
                 console.error(error)
             }
             this.loading = !1
+        },
+        async printHandle(_id){
+            try {
+                const response = await printOutOrder({ id: _id })
+                // console.log(response.data)
+                if (response.data.code == 1){
+                    window.open(`/static/print.html${setSearchParams(response.data.data)}`, '_blank')
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
         },
         handleCurrentChange(index){
             this.curPageIndex = index
@@ -205,7 +223,7 @@ export default {
     },
     components: {
         ExtractPanel,
-        LogisticsRetOrdPanel
+        OrderDetailPanel
     }
 }
 </script>

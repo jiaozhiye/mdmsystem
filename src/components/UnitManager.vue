@@ -84,6 +84,21 @@ export default {
             }
         }
     },
+    watch: {
+        sortUnitExtract: {
+            handler(newVal, oldVal){
+                if (newVal.isPlay){
+                    // 深拷贝数据
+                    this.cloneList = _.cloneDeep(this.list)
+                } else {
+                    if (newVal.recovery){ // 需要恢复数据
+                        this.resetList()
+                    }
+                }
+            },
+            deep: true
+        }
+    },
     methods: {
         addUnitHandle(){
             this.addUnitExtract.isPlay = !0
@@ -193,21 +208,6 @@ export default {
                     break
                 }
             }
-        }
-    },
-    watch: {
-        sortUnitExtract: {
-            handler(newVal, oldVal){
-                if (newVal.isPlay){
-                    // 深拷贝数据
-                    this.cloneList = _.cloneDeep(this.list)
-                } else {
-                    if (newVal.recovery){ // 需要恢复数据
-                        this.resetList()
-                    }
-                }
-            },
-            deep: true
         }
     },
     created(){

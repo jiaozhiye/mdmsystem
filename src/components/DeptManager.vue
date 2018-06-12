@@ -2,7 +2,7 @@
 <div class="appManager-wrapper">
     <div class="appManager-top">
         <el-button class="fl" @click.stop="addDeptHandle">新增部门</el-button>
-        <el-input class="dept-search fr" placeholder="请输入部门名称" prefix-icon="el-icon-search"
+        <el-input class="dept-search fr" placeholder="请输入部门名称/拼音" prefix-icon="el-icon-search"
             v-model="searchVal" @keyup.enter.native="searchHandle" clearable>
         </el-input>
     </div>

@@ -70,13 +70,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {getGdtypeTree, getInventoryList, getUnitList, getGoodsRecord, updateGoodsRecord} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'ModGoodsPanel',
@@ -102,11 +103,8 @@ export default {
             }
         }
     },
-    created(){
-        this.getItemInfo()
-        this.getGdtypeList()
-        this.getStoryList()
-        this.getUnitList()
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getGdtypeList(){
@@ -208,6 +206,12 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created(){
+        this.getItemInfo()
+        this.getGdtypeList()
+        this.getStoryList()
+        this.getUnitList()
     }
 }
 </script>

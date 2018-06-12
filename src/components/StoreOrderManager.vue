@@ -72,7 +72,7 @@
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time_short" label="提交日期"></el-table-column>
+            <el-table-column prop="create_time_short" label="提交日期" sortable></el-table-column>
             <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">

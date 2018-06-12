@@ -2,7 +2,7 @@
 <div class="appManager-wrapper">
     <section class="goods-tree-box">
         <el-input
-            placeholder="输入商品编号/名称" 
+            placeholder="输入商品编号/名称/拼音头" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -114,7 +114,7 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.label.indexOf(value) !== -1
+            return data.search_text.indexOf(value) !== -1
         },
         async getGoodsTree(){
             try {

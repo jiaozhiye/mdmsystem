@@ -59,19 +59,15 @@
             <el-table-column prop="want_date" label="要货日期" sortable></el-table-column>
             <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
             <el-table-column prop="warehourse_text" label="仓库"></el-table-column>
-            <el-table-column prop="print_time" label="打印次数"></el-table-column>
             <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 详情
-                    </el-button>
-                    <el-button @click.stop="printHandle(scope.row.id)" type="text">
-                        <i class="el-icon-printer"></i> 打印
                     </el-button>
                 </template>
             </el-table-column>
@@ -119,19 +115,6 @@ export default {
         showItemHandle(_id){
             this.showOutOrderExtract.isPlay = !0
             this.showOutOrderExtract.id = _id
-        },
-        async printHandle(_id){
-            try {
-                const response = await printOutOrder({ id: _id })
-                // console.log(response.data)
-                if (response.data.code == 1){
-                    window.open(`/static/print.html${setSearchParams(response.data.data)}`, '_blank')
-                } else {
-                    this.$message.error(response.data.message)
-                }
-            } catch (error){
-                console.error(error)
-            }
         },
         async getDepotList(){
             try {

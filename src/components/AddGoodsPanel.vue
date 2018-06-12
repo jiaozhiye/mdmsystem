@@ -69,13 +69,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {getGdtypeTree, getInventoryList, getUnitList, saveGoodsInfo} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'AddGoodsPanel',
@@ -99,6 +100,9 @@ export default {
                 desc: ''
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getGdtypeList(){

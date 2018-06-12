@@ -64,7 +64,7 @@ export default class Smaller {
         }
     }
 
-    compressImg(src) {
+    compressImg(_src) {
         var oImage = new Image(),
             canvas = document.createElement('canvas'),
             ctx = canvas.getContext('2d')
@@ -74,23 +74,20 @@ export default class Smaller {
             canvas.width  = w
             canvas.height = h
             ctx.drawImage(oImage, 0, 0, w, h, 0, 0, w, h)
-            let dataURL = canvas.toDataURL('image/jpeg', this.quality)
+            const dataURL = canvas.toDataURL('image/jpeg', this.quality)
 
             let arr = dataURL.split(','),
                 mime = arr[0].match(/:(.*?);/)[1],
                 bstr = atob(arr[1]),
                 n = bstr.length,
                 u8arr = new Uint8Array(n)
-            while (n--) {
+            while (n--){
                 u8arr[n] = bstr.charCodeAt(n)
             }
-            let blob = new Blob([u8arr], { type: mime })
+            const blob = new Blob([u8arr], { type: mime })
 
-            if (this.success) this.success({
-                url: dataURL,
-                file: blob
-            })
+            this.success && this.success({ url: dataURL, file: blob })            
         }
-        oImage.src = src
+        oImage.src = _src
     }
 }

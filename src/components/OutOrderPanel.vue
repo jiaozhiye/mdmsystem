@@ -21,10 +21,10 @@
     </section>
     <div class="out-order-box">
         <div class="appManager-top tr">
-            <el-button @click.stop="outDepotSaveHandle">出库</el-button>
+            <el-button type="danger" @click.stop="outDepotSaveHandle" :loading="btnLoading">出库</el-button>
             <el-button>打印</el-button>
             <el-button>打印历史</el-button>
-            <el-button type="primary" @click.stop="saveOutOrderHandle">保存</el-button>
+            <!-- <el-button type="primary" @click.stop="saveOutOrderHandle" :loading="btnLoading">保存</el-button> -->
         </div>
         <div style="margin: 20px 0;">
             <el-table class="out-order-table" :data="list" border v-loading="loading">
@@ -38,12 +38,7 @@
                         <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.batch_code }}</div>
                     </template>
                 </el-table-column>
-                <el-table-column label="一级规格" label-class-name="split-column-th" class-name="split-column">
-                    <template slot-scope="scope">
-                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.attribute_1_text }}</div>
-                    </template>
-                </el-table-column>
-                <el-table-column label="二级规格" label-class-name="split-column-th" class-name="split-column">
+                <el-table-column label="规格" label-class-name="split-column-th" class-name="split-column">
                     <template slot-scope="scope">
                         <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.attribute_2_text }}</div>
                     </template>
@@ -53,26 +48,15 @@
                         <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.warehouseStockNumber }}</div>
                     </template>
                 </el-table-column>
-                <el-table-column label="出货数量" label-class-name="split-column-th" class-name="split-column">
-                    <template slot-scope="scope">
-                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.send_number }}</div>
-                    </template>
-                </el-table-column>
                 <el-table-column label="发货数量" width="140" label-class-name="split-column-th" class-name="split-column">
                     <template slot-scope="scope">
                         <EditNumber
                             v-for="(item, key) in scope.row.warehouseStockInfo"
                             :key="key"
-                            v-model.number="item.number"
+                            v-model.number="item.send_number"
                             :stepVal="1"
-                            :maxVal="item.warehouseStockNumber"
-                            @change="computeFunc(item)">
+                            :maxVal="item.warehouseStockNumber">
                         </EditNumber>
-                    </template>
-                </el-table-column>
-                <el-table-column label="发货单位" label-class-name="split-column-th" class-name="split-column">
-                    <template slot-scope="scope">
-                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.send_unit_text }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" label-class-name="split-column-th" class-name="split-column" fixed="right">
@@ -87,7 +71,7 @@
             </el-table>
         </div>
         <div class="tr">
-            <el-button @click.stop="closePanelHandle">取消</el-button>
+            <el-button @click.stop="closePanelHandle">退出</el-button>
         </div>
     </div>
 </div>
@@ -96,7 +80,7 @@
 <script>
 import { recursionTree } from 'assets/js/tools'
 import EditNumber from './EditNumber.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { getMaterialTreeForOutDepot, getOutOrderDetail, closeOutOrder, outDepotSaveOrder } from 'api'
 
@@ -115,6 +99,9 @@ export default {
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [] // 树结构选中的ID数组
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         filterText(val){
@@ -171,14 +158,15 @@ export default {
             this.getCheckedKeys()
             // 判断执行 asyncTableList 方法
             if (this.checkedKeys.findIndex(item => item === data.id) !== -1){ // 选中
-                this.asyncTableList(data, true)
+                this.asyncTableList(data, true) // 执行插入
             } else {
-                this.asyncTableList(data, false)
+                this.asyncTableList(data, false) // 执行删除
             }
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
+            // this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
+            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
         },
         setCheckedKeys(){
             this.$refs.tree.setCheckedKeys(this.checkedKeys)
@@ -342,6 +330,7 @@ export default {
     }
 }
 
+// 树结构
 // [
 //     {
 //         id: '原材料id-批号',
@@ -367,6 +356,7 @@ export default {
 //     }
 // ]
 
+// table 数据结构
 // [
 //     {
 //         id: '原材料id-批号',

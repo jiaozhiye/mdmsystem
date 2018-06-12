@@ -70,7 +70,7 @@ import EditNumber from './EditNumber.vue'
 import ExtractPanel from './ExtractPanel.vue'
 import ImageUploadPanel from './ImageUploadPanel.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
 import { getScrapMaterialsTree, getEditedScrapMaterial, saveEditedScrapMaterial } from 'api'
@@ -83,7 +83,6 @@ export default {
             tableList: [], // 同步 原材料分类树数组
             loading: false,
             treeLoading: false,
-            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [], // 选中记录的数组
@@ -91,6 +90,9 @@ export default {
                 isPlay: false
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         filterText(val){
@@ -213,7 +215,6 @@ export default {
         },
         async saveOrderHandle(){
             try {
-                this.btnLoading = !0
                 const response = await saveEditedScrapMaterial({
                     list: this.tableList.map(item => ({
                         id: item.id,
@@ -229,7 +230,6 @@ export default {
                 } else {
                     this.$message.error(response.data.message)
                 }
-                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }

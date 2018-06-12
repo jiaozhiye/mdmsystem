@@ -16,7 +16,7 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="name" label="仓库名称" sortable></el-table-column>
-            <el-table-column prop="code" label="仓库编码"></el-table-column>
+            <el-table-column prop="code" label="仓库编码" sortable></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag size="medium" :type="scope.row.status == '1' ? '' : 'danger'">

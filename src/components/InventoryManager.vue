@@ -44,7 +44,7 @@
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" min-width="200" sortable></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
                 <el-table-column prop="attribute_2" label="规格" width="100"></el-table-column>
@@ -81,7 +81,7 @@
 import moment from 'moment'
 import EditNumber from './EditNumber.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
 import { getMaterialInventoryTree, saveInventoryMaterial } from 'api'
@@ -101,11 +101,13 @@ export default {
             },
             treeLoading: false,
             loading: false,
-            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [] // 选中记录的数组
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         ...mapActions(['setLeaveRemind']),
@@ -202,7 +204,6 @@ export default {
         },
         async saveInventoryHandle(){
             try {
-                this.btnLoading = !0
                 const response = await saveInventoryMaterial({
                     date: this.inveDate,
                     list: this.tableList.map(item => ({
@@ -216,7 +217,6 @@ export default {
                 } else {
                     this.$message.error(response.data.message)
                 }
-                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }

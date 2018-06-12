@@ -30,13 +30,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {getFirGdtypeInfo, getGdtypeRecord, updateGdtypeRecord} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'ModGoodsTypePanel',
@@ -55,9 +56,8 @@ export default {
             }
         }
     },
-    created(){
-        this.getItemInfo()
-        this.getFirstGdtypeList()
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getItemInfo(){
@@ -130,6 +130,10 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created(){
+        this.getItemInfo()
+        this.getFirstGdtypeList()
     }
 }
 </script>

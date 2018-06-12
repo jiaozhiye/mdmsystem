@@ -2,7 +2,7 @@
 <div class="appManager-wrapper" style="padding: 20px;">
     <section class="material-tree-box">
         <el-input
-            placeholder="输入原材料编号/名称" 
+            placeholder="输入原材料编号/名称/拼音头" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -33,7 +33,7 @@
                 border 
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" min-width="200" sortable></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
                 <el-table-column label="退货数量" width="140">
@@ -70,7 +70,7 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
 import { getReturnOrderTree, saveReturnOrder } from 'api'
@@ -85,7 +85,6 @@ export default {
             list: [], // 商品分类树数组
             tableList: [], // 同步 商品分类树数组
             treeLoading: false,
-            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [] // 选中记录的数组
@@ -102,6 +101,9 @@ export default {
                 this.setLeaveRemind(!1)
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         ...mapActions(['setLeaveRemind']),
@@ -128,7 +130,7 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.label.indexOf(value) !== -1
+            return data.search_text.indexOf(value) !== -1
         },
         async getReturnOrderTree(callback){
             try {
@@ -176,7 +178,6 @@ export default {
         },
         async saveOrderHandle(callback){
             try {
-                this.btnLoading = !0
                 const response = await saveReturnOrder({
                     list: this.tableList.map(item => ({
                         id: item.id,
@@ -190,7 +191,6 @@ export default {
                 } else {
                     this.$message.error(response.data.message)
                 }
-                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }

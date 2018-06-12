@@ -21,13 +21,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {updateUserInfo} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'ModPwdPanel',
@@ -41,6 +42,9 @@ export default {
             confirmPwd: '',
             isPrompt: false
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         submitHandle(){

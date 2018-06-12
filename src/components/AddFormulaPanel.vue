@@ -28,7 +28,7 @@
                 :disabled="item.disabled">
             </el-option>
         </el-select>
-        <el-input class="fl" placeholder="请输入原材料编号/名称" prefix-icon="el-icon-search"
+        <el-input class="fl" placeholder="请输入编号/名称/拼音" prefix-icon="el-icon-search"
             v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
         </el-input>
         

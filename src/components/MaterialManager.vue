@@ -2,7 +2,7 @@
 <div class="appManager-wrapper">
     <section class="material-tree-box">
         <el-input
-            placeholder="输入原材料编号/名称" 
+            placeholder="输入原材料编号/名称/拼音头" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -41,7 +41,7 @@
                         :value="item.id">
                     </el-option>
                 </el-select>
-                <el-input class="fl" placeholder="请输入原材料编号/名称" prefix-icon="el-icon-search"
+                <el-input class="fl" placeholder="请输入原材料编号/名称/拼音头" prefix-icon="el-icon-search"
                     v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
                 </el-input>
             </ul>
@@ -152,7 +152,7 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.label.indexOf(value) !== -1
+            return data.search_text.indexOf(value) !== -1
         },
         addMaterialHandle(_id){
             // console.log(_id)

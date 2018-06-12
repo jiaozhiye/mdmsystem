@@ -1,32 +1,38 @@
 <template>
     <div class="out-order-panel">
-        <div style="padding-bottom: 20px">
-            <el-table class="receive-order-panel" :data="list" border v-loading="loading">
-                <el-table-column prop="code" label="编号" sortable></el-table-column>
+        <div style="padding-bottom: 20px;">
+            <el-table class="out-order-table" :data="list" border v-loading="loading">
+                <el-table-column prop="code" label="编号" min-width="120" sortable fixed></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
-                <el-table-column prop="unit_text" label="单位"></el-table-column>
-                <el-table-column prop="order_material_num" label="采购数"></el-table-column>
-                <el-table-column label="应入库数" width="140">
+                <el-table-column prop="want_num" label="采购数"></el-table-column>
+                <el-table-column prop="unit" label="采购单位"></el-table-column>
+                <el-table-column prop="stock_num" label="当前库存"></el-table-column>
+                <el-table-column label="规格" label-class-name="split-column-th" class-name="split-column">
                     <template slot-scope="scope">
-                        <EditNumber
-                            v-model.number="scope.row.receive_num"
-                            :stepVal="1">
-                        </EditNumber>
+                        <div v-for="(item, key) in scope.row.orderInfo" :key="key">{{ item.attribute_2_text }}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="stock_num" label="当前库存"></el-table-column>
+                <el-table-column label="单位" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <div v-for="(item, key) in scope.row.orderInfo" :key="key">{{ item.out_unit }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="入库数量" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <div v-for="(item, key) in scope.row.orderInfo" :key="key">{{ item.send_number }}</div>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <div class="app-form-item tr">
             <el-button @click.stop="closePanelHandle">退出</el-button>
-            <el-button type="primary" @click.stop="submitHandle">保存</el-button>
+            <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">接收入库</el-button>
         </div>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import EditNumber from './EditNumber.vue'
 import { getReceiveOrderDetail, saveReceiveOrder } from 'api'
@@ -42,6 +48,9 @@ export default {
             referData: [], // 用于对比的数据
             loading: false
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         list: {
@@ -78,8 +87,8 @@ export default {
                     id: this.params.id,
                     list: this.list.map(item => ({
                         id: item.id,
-                        receive_num: item.receive_num,
-                        material_id: item.material_id
+                        material_id: item.material_id,
+                        receive_num: item.send_number
                     }))
                 })
                 if (response.data.code == 1){
@@ -92,8 +101,9 @@ export default {
                 console.error(error)
             }
         },
-        submitHandle(){  
+        submitHandle(){
             this.saveReceiveOrder(() => {
+                this.$emit('reloadEvent', 'reload')
                 this.closePanelHandle()
             })
         },
@@ -104,7 +114,7 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.receive-order-panel > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(document.querySelectorAll('.out-order-table > .el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -120,10 +130,10 @@ export default {
         this.getReceiveOrderInfo()
     },
     mounted(){
-        document.querySelector('.receive-order-panel').addEventListener('keyup', this.keyUpHandle, false)
+        document.querySelector('.out-order-table').addEventListener('keyup', this.keyUpHandle, false)
     },
     destroyed(){
-        document.querySelector('.receive-order-panel').removeEventListener('keyup', this.keyUpHandle)
+        document.querySelector('.out-order-table').removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber
@@ -135,5 +145,27 @@ export default {
 .out-order-panel {
     padding: 20px;
     overflow: hidden;
+}
+
+.out-order-table .split-column {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.out-order-table .split-column .cell {
+    padding: 0;
+    outline: none;
+}
+.out-order-table .split-column .cell > div {
+    height: 48px;
+    line-height: 48px;
+    padding: 0 10px;
+    outline: none;
+    max-width: 100%;
+}
+.out-order-table .split-column .cell > div:not(:last-child) {
+    border-bottom: 1px solid #ebeef5;
+}
+.out-order-table .split-column-th .cell {
+    padding-left: 10px;
 }
 </style>

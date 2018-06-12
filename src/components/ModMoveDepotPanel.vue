@@ -5,8 +5,8 @@
         <ul class="fr">
             <el-button @click.stop="removeItemHandle" v-if="!disabled">批量移除</el-button>
             <el-button @click.stop="addMaterialHandle" v-if="!disabled">添加物品</el-button>
-            <el-button @click.stop="saveMaterialHandle('save')" :disabled="disabled">保存</el-button>
-            <el-button type="primary" @click.stop="saveMaterialHandle('submit')" :disabled="disabled">提交</el-button>
+            <el-button @click.stop="saveMaterialHandle('save')" :loading="btnLoading" :disabled="disabled">保存</el-button>
+            <el-button type="primary" @click.stop="saveMaterialHandle('submit')" :loading="btnLoading" :disabled="disabled">提交</el-button>
         </ul>
     </div>
     <div class="appManager-list">
@@ -51,7 +51,7 @@ import EditNumber from './EditNumber.vue'
 import ExtractPanel from './ExtractPanel.vue'
 import ShiftMaterialPanel from './ShiftMaterialPanel.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { getMoveDepotList, saveMoveDepotInfo, submitMoveDepotInfo } from 'api'
 
@@ -80,6 +80,9 @@ export default {
                 isPlay: false
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         list: {

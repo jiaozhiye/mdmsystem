@@ -74,7 +74,7 @@ import ExtractPanel from './ExtractPanel.vue'
 import AddFormulaPanel from './AddFormulaPanel'
 import EditNumber from './EditNumber.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import {getGoodsFormulaInfo, saveGdRelation} from 'api'
 
@@ -89,7 +89,6 @@ export default {
             list: [],
             referData: [], // 用于对比的数据
             loading: false,
-            btnLoading: false,
             multipleSelection: [], // 选中记录的数组
             addFormulaExtract: {
                 formulaIds: [], // 配方(原材料)记录的ID数组
@@ -98,6 +97,7 @@ export default {
         }
     },
     computed: {
+        ...mapState(['btnLoading']),
         totalPrice(){ // 配方估算成本求和
             let sum = 0
             this.list.forEach(item => sum += item.total_price)
@@ -228,7 +228,6 @@ export default {
         },
         async insertRelationInfo(callback){
             try {
-                this.btnLoading = !0
                 const response = await saveGdRelation({
                     id: this.goodsId,
                     list: this.list,
@@ -239,7 +238,6 @@ export default {
                         type: 'success',
                         message: '商品配方设置成功!'
                     })
-                    this.btnLoading = !1
                     callback && callback()
                 } else {
                     this.$message({

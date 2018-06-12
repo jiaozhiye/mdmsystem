@@ -3,13 +3,13 @@
         <div class="order-detail-top tr">
             <el-button 
                 @click.stop="returnOrderHandle('receive')" 
-                :disabled="btnState.receive" 
-                :loading="btnLoading">接收</el-button>
+                :loading="btnLoading"
+                :disabled="btnState.receive">接收</el-button>
             <el-button 
                 type="primary" 
                 @click.stop="returnOrderHandle('complete')" 
-                :disabled="btnState.complete" 
-                :loading="btnLoading">完成</el-button>
+                :loading="btnLoading"
+                :disabled="btnState.complete">完成</el-button>
         </div>
         <div style="padding-bottom: 20px">
             <el-table 
@@ -48,15 +48,15 @@
             <el-button @click.stop="closePanelHandle">退出</el-button>
             <el-button
                 type="primary" 
-                @click.stop="closeOrderHandle('l')" 
-                :disabled="btnState.close" 
-                :loading="btnLoading">关闭订单</el-button>
+                @click.stop="closeOrderHandle('l')"
+                :loading="btnLoading" 
+                :disabled="btnState.close">关闭订单</el-button>
         </div>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { getLogisticsRetOrdDetail, receiveLogisticsRetOrd, completeLogisticsRetOrd, cancleReturnOrder } from 'api'
 
@@ -70,13 +70,15 @@ export default {
             list: [], // 数组
             referData: [], // 用于对比的数据
             loading: false,
-            btnLoading: false,
             btnState: { // 按钮状态
                 receive: false,
                 complete: false,
                 close: false
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         list: {
@@ -133,7 +135,6 @@ export default {
                 if (!this.checkBatchCodes()){
                     return this.$message.warning('请选择原料批号！')
                 }
-                this.btnLoading = !0
                 const _list = this.list.map(item => ({
                     material_id: item.material_id,
                     batch_code_text: item.batch_code_text
@@ -152,7 +153,6 @@ export default {
                 }
                 if (response && response.data.code == 1){
                     this.$message.success(response.data.message)
-                    this.btnLoading = !1
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)
@@ -163,14 +163,12 @@ export default {
         },
         async cancleHandler(type, callback){
             try {
-                this.btnLoading = !0
                 const response = await cancleReturnOrder({
                     id: this.params.id,
                     type: type
                 })
                 if (response.data.code == 1){
                     this.$message.success(response.data.message)
-                    this.btnLoading = !1
                     callback && callback()
                 } else {
                     this.$message.error(response.data.message)

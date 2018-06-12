@@ -2,7 +2,7 @@
 <div class="appManager-wrapper" style="padding: 20px;">
     <section class="material-tree-box">
         <el-input
-            placeholder="输入原材料编号/名称" 
+            placeholder="输入原材料编号/名称/拼音头" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -34,7 +34,7 @@
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" min-width="200" sortable></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
                 <el-table-column label="退货数量" width="140">
@@ -71,7 +71,7 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
 import { getReturnOrderTree, getReturnOrderDetail, updateReturnOrder } from 'api'
@@ -88,11 +88,13 @@ export default {
             referData: [], // 用于对比的数据
             treeLoading: false,
             loading: false,
-            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [] // 选中记录的数组
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         filterText(val){
@@ -134,7 +136,7 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.label.indexOf(value) !== -1
+            return data.search_text.indexOf(value) !== -1
         },
         async getReturnOrderTree(callback){
             try {
@@ -213,7 +215,6 @@ export default {
         },
         async updateOrderHandle(callback){
             try {
-                this.btnLoading = !0
                 const response = await updateReturnOrder({
                     orderId: this.params.id,
                     list: this.tableList.map(item => ({
@@ -228,7 +229,6 @@ export default {
                 } else {
                     this.$message.error(response.data.message)
                 }
-                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }

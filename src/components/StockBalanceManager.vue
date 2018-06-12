@@ -18,12 +18,12 @@
     <div class="appManager-list">
         <el-table class="el-origin-table" :data="list" border v-loading="loading">
             <el-table-column prop="warehouse_text" label="仓库名称"></el-table-column>
-            <el-table-column prop="code" label="编码"></el-table-column>
+            <el-table-column prop="code" label="编码" sortable></el-table-column>
             <el-table-column prop="name" label="商品名称"></el-table-column>
             <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
             <el-table-column prop="unit_text" label="单位"></el-table-column>
             <el-table-column prop="batch_code" label="批号"></el-table-column>
-            <el-table-column prop="number" label="结存数量"></el-table-column>
+            <el-table-column prop="number" label="结存数量" sortable></el-table-column>
         </el-table>
     </div>
 </div>

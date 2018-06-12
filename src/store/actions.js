@@ -25,6 +25,12 @@ const actions = {
             info: params
         })
     },
+    setBtnLoading ({commit}, params){
+        commit({
+            type: types.BUTTON_LOADING,
+            info: params
+        })
+    },
     setLeaveRemind ({commit}, params){
         commit({
             type: types.LEAVE_REMIND,

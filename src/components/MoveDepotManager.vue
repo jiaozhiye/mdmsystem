@@ -55,7 +55,7 @@
                 :value="item.value">
             </el-option>
         </el-select>
-        <el-button class="fr" type="primary" @click.stop="creareMoveDepotHandle">新建</el-button>
+        <el-button class="fr" type="primary" @click.stop="creareMoveDepotHandle">新 建</el-button>
     </div>
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">

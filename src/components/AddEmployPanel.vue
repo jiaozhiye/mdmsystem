@@ -60,13 +60,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {getJobInfo, getDeptList, saveEmployRecord} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'AddEmployPanel',
@@ -89,9 +90,8 @@ export default {
             }
         }
     },
-    created(){
-        this.getDeptList()
-        this.getJobList()
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getJobList(){
@@ -153,6 +153,10 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created(){
+        this.getDeptList()
+        this.getJobList()
     }
 }
 </script>

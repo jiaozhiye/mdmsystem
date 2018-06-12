@@ -32,8 +32,8 @@
         <ul class="fr">
             <el-button @click.stop="removeItemHandle">批量移除</el-button>
             <el-button @click.stop="addMaterialHandle">添加物品</el-button>
-            <el-button @click.stop="saveMaterialHandle('save')">保存</el-button>
-            <el-button type="primary" @click.stop="saveMaterialHandle('submit')">提交</el-button>
+            <el-button @click.stop="saveMaterialHandle('save')" :loading="btnLoading">保存</el-button>
+            <el-button type="primary" @click.stop="saveMaterialHandle('submit')" :loading="btnLoading">提交</el-button>
         </ul>
     </div>
     <div class="appManager-list">
@@ -76,7 +76,7 @@ import EditNumber from './EditNumber.vue'
 import ExtractPanel from './ExtractPanel.vue'
 import ShiftMaterialPanel from './ShiftMaterialPanel.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { getDepotInfoSelect, saveMoveDepotInfo, submitMoveDepotInfo } from 'api'
 
@@ -98,6 +98,9 @@ export default {
                 isPlay: false
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         list(newVal, oldval){

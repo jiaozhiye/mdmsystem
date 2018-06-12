@@ -4,14 +4,19 @@
             <el-button 
                 type="primary" 
                 v-if=" params.menuType === 'store' " 
-                @click.stop="submitHandle('save')" 
+                @click.stop="submitHandle('save')"
+                :loading="btnLoading" 
                 :disabled="!params.isEdit">保存</el-button>
             <el-button 
                 type="primary" 
                 v-if=" params.menuType === 'logistic' " 
                 @click.stop="submitHandle('receive')" 
+                :loading="btnLoading"
                 :disabled="!params.isEdit">接收</el-button>
-            <el-button type="primary" @click.stop="submitHandle('close')" :disabled="!params.isEdit">关闭订单</el-button>
+            <el-button type="primary" 
+                @click.stop="submitHandle('close')"
+                :loading="btnLoading" 
+                :disabled="!params.isEdit">关闭订单</el-button>
         </div>
         <div style="padding: 20px 0;">
             <el-table class="scrap-order-panel" :data="list" border v-loading="loading">
@@ -40,7 +45,7 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { getEditedScrapMaterial, saveEditedScrapMaterial, changeScrapOrderState, getLogisticScrapMaterial, receiveEditedScrapMaterial, changeLogisticScrapOrderState } from 'api'
 
@@ -55,6 +60,9 @@ export default {
             referData: [], // 用于对比的数据
             loading: false
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         list: {

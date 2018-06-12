@@ -23,13 +23,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {getDeptInfo, saveDeptInfo} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'AddDeptPanel',
@@ -44,8 +45,8 @@ export default {
             deptdesc: ''
         }
     },
-    created(){
-        this.getDeptList()
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getDeptList(){
@@ -96,6 +97,9 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created(){
+        this.getDeptList()
     }
 }
 </script>

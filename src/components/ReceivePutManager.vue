@@ -1,15 +1,12 @@
 <template>
 <div class="appManager-wrapper">
-    <div class="appManager-top">
-        <el-button class="fr" type="primary" @click.stop="receiveHandle">接收入库</el-button>
-    </div>
-    <div class="appManager-list">
+    <div class="appManager-list" style="margin-top: 0;">
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="warehouse_out_order_number" label="出库单号"></el-table-column>
-            <el-table-column prop="out_time" label="出库日期"></el-table-column>
+            <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
             <el-table-column prop="store_order_number" label="订货单号"></el-table-column>
-            <el-table-column prop="create_time_short" label="订单日期"></el-table-column>
-            <el-table-column prop="arrive_date" label="预计到货日期"></el-table-column>
+            <el-table-column prop="create_time_short" label="订单日期" sortable></el-table-column>
+            <el-table-column prop="arrive_date" label="预计到货日期" sortable></el-table-column>
             <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.stop="viewItemHandle(scope.row.store_order_id)" type="text">
@@ -21,7 +18,7 @@
     </div>
     <ExtractPanel :params="receiveOrderExtract">
         <span slot="title">入库单详情</span>
-        <ReceiveOrderPanel slot="panel" :params="receiveOrderExtract"></ReceiveOrderPanel>
+        <ReceiveOrderPanel slot="panel" :params="receiveOrderExtract" @reloadEvent="reloadGetData"></ReceiveOrderPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -48,9 +45,6 @@ export default {
             this.receiveOrderExtract.isPlay = !0
             this.receiveOrderExtract.id = _id
         },
-        receiveHandle(){
-
-        },
         async getReceiveOrderList(callback){
             try {
                 this.loading = !0
@@ -64,6 +58,11 @@ export default {
                 console.error(error)
             }
             this.loading = !1
+        },
+        reloadGetData(res){
+            if (res == 'reload'){
+                this.getReceiveOrderList()
+            }
         }
     },
     created(){

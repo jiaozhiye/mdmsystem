@@ -81,19 +81,19 @@
             <el-table-column prop="want_date" label="订货日期" sortable></el-table-column>
             <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
             <el-table-column prop="type_text" label="订单类型"></el-table-column>
-            <el-table-column prop="print_time" label="打印次数"></el-table-column>
+            <el-table-column prop="print_time" label="打印次数" sortable></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time_short" label="提交日期"></el-table-column>
+            <el-table-column prop="create_time_short" label="提交日期" sortable></el-table-column>
             <el-table-column label="操作" width="310">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 查看
                     </el-button>
-                    <el-button @click.stop="receiveOrderHandle(scope.row)" type="text">
+                    <el-button @click.stop="receiveOrderHandle(scope.row.id)" type="text">
                         <i class="el-icon-edit-outline"></i> 接收
                     </el-button>
                     <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text">
@@ -245,17 +245,11 @@ export default {
                 this.getOrderList(this.curPageIndex)
             }
         },
-        async receiveOrderHandle(item){
+        async receiveOrderHandle(_id){
             try {
-                const response = await receiveOrder({ id: item.id })
+                const response = await receiveOrder({ id: _id })
                 if (response.data.code == 1){
-                    // 修改状态
-                    item.status = '200'
-                    item.status_text = '已接收'
-                    // this.$message.success(response.data.message)
-                    setTimeout(() => {
-                        this.getOrderList(this.curPageIndex)
-                    }, 500)
+                    this.getOrderList(this.curPageIndex)
                 } else {
                     this.$message.error(response.data.message)
                 }

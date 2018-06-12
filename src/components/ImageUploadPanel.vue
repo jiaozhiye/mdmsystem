@@ -5,13 +5,13 @@
         ref="upload"
         action="http://127.0.0.1:2080/upload/do"
         :data="uploadData"
-        multiple
-        :on-success="handleSuccess"
-        :before-upload="beforeUpload"
-        :on-remove="handleRemove"
         :file-list="fileList"
         list-type="picture"
         :auto-upload="false"
+        multiple
+        :before-upload="beforeUpload"
+        :on-success="handleSuccess"
+        :on-remove="handleRemove"
     >
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
@@ -33,7 +33,7 @@ export default {
     },
     data (){
         return {
-            uploadData: {orderId: this.params.id}, // 上传的额外参数
+            uploadData: { orderId: this.params.id }, // 上传的额外参数
             fileList: [],
             imgUploadNum: 0, // 添加上传图片的数量
             imgSuccessNum: 0 // 上传成功的数量
@@ -43,7 +43,7 @@ export default {
         compress(file){
             return new Promise((resolve, reject) => {
                 const imageCompress = new HtmlImageCompress(file, { quality: 0.75 })
-                imageCompress.then((result) => resolve(result.file))
+                imageCompress.then(result => resolve(result.file))
             })
         },
         handleSuccess(res, file){
@@ -60,7 +60,7 @@ export default {
                 this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!')
             }
             if (!isLt2M){
-                this.$message.error('上传头像图片大小不能超过 2MB!')
+                this.$message.error('上传头像图片大小不能超过 3MB!')
             }
             if ((isJPG || isPng) && isLt2M){
                 this.imgUploadNum++

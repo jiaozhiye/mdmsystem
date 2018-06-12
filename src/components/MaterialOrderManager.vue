@@ -2,7 +2,7 @@
 <div class="appManager-wrapper">
     <section class="material-tree-box">
         <el-input
-            placeholder="输入原材料编号/名称" 
+            placeholder="输入原材料编号/名称/拼音头" 
             prefix-icon="el-icon-search" 
             v-model="filterText">
         </el-input>
@@ -91,7 +91,7 @@
 <script>
 import EditNumber from './EditNumber.vue'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
 import { getMaterialsTree, getEditedMaterial, saveEditedMaterial } from 'api'
@@ -109,7 +109,6 @@ export default {
             referData: [], // 用于对比的数据
             loading: false,
             treeLoading: false,
-            btnLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [], // 选中记录的数组
@@ -119,6 +118,9 @@ export default {
                 }
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         filterText(val){
@@ -160,7 +162,7 @@ export default {
         },
         filterNode(value, data){
             if (!value) return true
-            return data.label.indexOf(value) !== -1
+            return data.search_text.indexOf(value) !== -1
         },
         async getMaterialsTree(callback){
             try {
@@ -242,7 +244,6 @@ export default {
         },
         async saveOrderHandle(){
             try {
-                this.btnLoading = !0
                 const response = await saveEditedMaterial({
                     list: this.tableList.map(item => ({
                         id: item.id,
@@ -258,7 +259,6 @@ export default {
                 } else {
                     this.$message.error(response.data.message)
                 }
-                this.btnLoading = !1
             } catch (err){
                 console.error(err)
             }

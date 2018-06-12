@@ -1,6 +1,14 @@
 <template>
 <div class="app-form-panel">
     <div class="app-form-item">
+        <label class="app-form-label"><i>*</i>选择城市</label>
+        <div class="app-input-block">
+            <el-select v-model="form.cityId" clearable placeholder="请选择城市">
+                <el-option v-for="(item, key) in cityList" :key="key" :label="item.name" :value="item.value"></el-option>
+            </el-select>
+        </div>
+    </div>
+    <div class="app-form-item">
         <label class="app-form-label"><i>*</i>门店名称</label>
         <div class="app-input-block">
             <el-input name="storename" v-model="form.name" v-validate="'required'" :class="{'formDanger': errors.has('storename')}" clearable placeholder="请输入门店名称..." ></el-input>
@@ -27,13 +35,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
-import {saveStoreRecord} from 'api'
+import { getCitysInfo, saveStoreRecord } from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'AddStorePanel',
@@ -42,13 +51,18 @@ export default {
     },
     data(){
         return {
+            cityList: [],
             form: {
+                cityId: '',
                 name: '',
                 address: '',
                 phone: '',
                 desc: ''
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         submitHandle(){
@@ -57,8 +71,20 @@ export default {
                 this.closePanelHandle()
             })
         },
+        async getCityList(){
+            try {
+                const response = await getCitysInfo()
+                if (response.data.code == 1){
+                    this.cityList = response.data.list
+                } else {
+                    this.$message.error(response.data.message)
+                }
+            } catch (error){
+                console.error(error)
+            }
+        },
         async insertStoreInfo(callback){
-            if (this.form.name == ''){
+            if (this.form.cityId == '' || this.form.name == ''){
                 return this.$message({
                     message: '请正确填写门店信息再提交！',
                     type: 'warning'
@@ -66,6 +92,7 @@ export default {
             }
             try {
                 const response = await saveStoreRecord({
+                    city: this.form.cityId,
                     name: this.form.name,
                     address: this.form.address,
                     phone: this.form.phone,
@@ -91,6 +118,9 @@ export default {
         closePanelHandle(){
             this.params.isPlay = false
         }
+    },
+    created (){
+        this.getCityList()
     }
 }
 </script>

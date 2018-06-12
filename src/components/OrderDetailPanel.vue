@@ -11,19 +11,19 @@
                 退回理由：{{ order.returnReason }}
             </dl>
         </div>
-        <div style="padding-bottom: 20px">
+        <div style="padding-bottom: 20px;">
             <el-table :data="order.list" border v-loading="loading">
                 <el-table-column prop="code" label="原料编号" sortable></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
                 <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="out_unit" label="单位"></el-table-column>
-                <el-table-column prop="want_num" label="数量"></el-table-column>
-                <el-table-column prop="real_send_num" label="已出数量"></el-table-column>
+                <el-table-column prop="want_num" label="数量" sortable></el-table-column>
+                <el-table-column prop="real_send_num" label="已出数量" sortable></el-table-column>
             </el-table>
         </div>
         <div class="app-form-item tr">
             <el-button @click.stop="closePanelHandle">退出</el-button>
-            <el-button type="danger" @click.stop="submitHandle(params.type)" :disabled="buttonState">
+            <el-button type="danger" @click.stop="submitHandle(params.type)" :disabled="buttonState" :loading="btnLoading">
                 {{ params.type === 'store' ? '撤销' : '退回' }}
             </el-button>
         </div>
@@ -35,7 +35,7 @@
                 v-model="remark">
             </el-input>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click.stop="backOrderHandle">确 定</el-button>
+                <el-button type="primary" @click.stop="backOrderHandle" :loading="btnLoading">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -43,6 +43,7 @@
 
 <script>
 import { getStoreOrderDetail, getLogisticOrderDetail, returnLogisticOrder, cancelStoreOrder } from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'OrderDetailPanel',
@@ -64,6 +65,9 @@ export default {
             buttonState: false,
             dialogVisible: false
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         async getOrderInfo(){

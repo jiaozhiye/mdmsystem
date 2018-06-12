@@ -2,7 +2,7 @@
 <div class="appManager-wrapper">
     <div class="appManager-top">
         <el-button class="fl" @click.stop="addStoreHandle">新增门店</el-button>
-        <el-input class="store-search fr" placeholder="请输入门店名称" prefix-icon="el-icon-search"
+        <el-input class="store-search fr" placeholder="请输入门店名称/拼音头" prefix-icon="el-icon-search"
             v-model="search.searchVal" @keyup.enter.native="searchHandle" clearable>
         </el-input>
     </div>

@@ -79,13 +79,14 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
 
 <script>
 import {getMaterialRecord, getMaterialSelTree, getStuffToryList, getUnitList, updateMaterialRecord} from 'api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'ModMaterialPanel',
@@ -115,6 +116,9 @@ export default {
                 desc: ''
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     watch: {
         classid(val){

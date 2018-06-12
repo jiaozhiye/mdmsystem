@@ -1,6 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
 import common from 'assets/js/common'
+import store from '../store'
+import { Message } from 'element-ui'
 
 console.info(common.env)
 
@@ -21,10 +23,29 @@ const instance = axios.create({
     }
 })
 
+// http 请求拦截器
+instance.interceptors.request.use(config => {
+    store.dispatch('setBtnLoading', !0)
+    return config
+}, error => {
+    store.dispatch('setBtnLoading', !1)
+    Message.error('数据加载超时！')
+    return Promise.reject(error)
+})
+
+// http 响应拦截器
+instance.interceptors.response.use(response => {
+    store.dispatch('setBtnLoading', !1)
+    return response
+}, error => {
+    store.dispatch('setBtnLoading', !1)
+    Message.error('数据加载失败！')
+    return Promise.reject(error)
+})
+
 /**
  * 向后台请求数据的 API 接口
  */
-
 // 登录接口
 export const loginSystem = params => instance.post('/login', params)
 
@@ -311,7 +332,7 @@ export const updateDepotRecord = params => instance.post('/mgr/warehouse/warehou
 export const getStoreOrderDetail = params => instance.get('/mgr/storeOrderCtrl/showOrderDetailsById', {params})
 
 // 获取物流订单详情
-export const getLogisticOrderDetail = params => instance.get('/mgr/storeOrderCtrl/showOrderDetailsById', {params})
+export const getLogisticOrderDetail = params => instance.get('/mgr/logistics/storeOrder/showOrderDetailsById', {params})
 
 // 退回物流订单
 export const returnLogisticOrder = params => instance.get('/mgr/logistics/storeOrder/closeOrder', {params})
@@ -471,24 +492,29 @@ export const getPrintOrderInfo = params => instance.get('mgr/print/print/getPrin
 
 // 日订单的订单类型
 export const getDayOrderType = () => instance.get('/mgr/dict/showList2?dict=store_order_type')
-// 148
+
 // 获取门店订单列表
 export const getStoreOrderInfo = params => instance.get('/mgr/storeOrderCtrl/queryOrders', {params})
 
 // 撤销门店订单
 export const cancelStoreOrder = params => instance.get('/mgr/storeOrderCtrl/cancelOrder', {params})
 
+// 获取城市的列表
+export const getCitysInfo = () => instance.get('mgr/dict/showList3?dict=70')
 
+// 出库单查询列表
+export const getLogisticsOutOrder = params => instance.get('/mgr/logistics/outWarehouseOrder/statisticsList', {params})
 
+// 获取出库单状态
+export const getOutDepotStateList = () => instance.get('/mgr/dict/showList2?dict=logistics_view_order_type')
+// 153
+// 添加原材料的订单类型
+export const getOrderTypeInfo = () => instance.get('')
 
+// 添加原材料的存储条件
+export const getStoreConditionInfo = () => instance.get('')
 
-
-
-
-
-
-
-
-
+// 添加原材料的单位数组
+export const getMaterialUnitInfo = () => instance.get('')
 
 
