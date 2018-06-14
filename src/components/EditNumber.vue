@@ -1,5 +1,5 @@
 <template>
-<el-tooltip :content="promptMsg" placement="top">
+<el-tooltip :content="promptMsg" placement="top" popper-class="app-tooltip">
     <div class="input-number-wrapper">
         <el-input-number 
             size="mini"
@@ -11,6 +11,7 @@
             :disabled="disabled"
             @input.native="handleInput($event, $event.target.value)"
             @change="handleChange"
+            @blur="blurHandle"
             @click.native.stop="">
         </el-input-number>
     </div>
@@ -34,11 +35,11 @@ export default {
         },
         minVal: {
             type: Number,
-            default: 0
+            default: 1
         },
         maxVal: {
             type: Number,
-            default: 999999
+            default: 99999999
         },
         stepVal: {
             type: Number,
@@ -70,7 +71,7 @@ export default {
             let num = prefix ? list[0].slice(1) : list[0]
             let result = ''
             while (num.length > 3){
-                result = `,${num.slice(-3)}${result}`
+                result = `, ${num.slice(-3)}${result}`
                 num = num.slice(0, num.length - 3)
             }
             if (num){
@@ -82,23 +83,40 @@ export default {
             const reg = /^(0|[1-9][0-9]*)(\.[0-9]*)?$/
             // console.log( (!isNaN(val) && reg.test(val)) || val === '' )
             if ((!isNaN(val) && reg.test(val)) || val === ''){ // 格式合法
+                if (val === '') return
                 if (val > this.maxVal){
-                    val = Number(this.maxVal)
-                    this.$nextTick(() => event.target.value = val)
+                    val = this.maxVal
+                    this.setInputValue(event, val)
+                }
+                if (val < this.minVal){
+                    val = this.minVal
+                    this.setInputValue(event, val)
                 }
                 this.dataVal = Number(val)
-                // 触发传入组件 change 自定义事件，带出数值
-                this.$emit('change', this.dataVal)
-                // 触发传入组件 input 自定义事件，带出数值
-                this.$emit('input',  this.dataVal)
+                this.emitDataToOuter(this.dataVal)
             } else { // 格式非法
-                this.$nextTick(() => event.target.value = this.dataVal)
+                this.setInputValue(event, this.dataVal)
             }
         },
         handleChange(val){
             this.dataVal = Number(val)
-            this.$emit('change', this.dataVal)
-            this.$emit('input',  this.dataVal)
+            this.emitDataToOuter(this.dataVal)
+        },
+        blurHandle(event){
+            if (event.target.value === ''){ // 如果失去焦点时输入框为空
+                this.dataVal = this.minVal
+                this.emitDataToOuter(this.dataVal)
+                this.setInputValue(event, this.dataVal)
+            }
+        },
+        emitDataToOuter(val){
+            // 触发传入组件 change 自定义事件，带出数值
+            this.$emit('change', val)
+            // 触发传入组件 input 自定义事件，带出数值
+            this.$emit('input',  val)
+        },
+        setInputValue(event, val){
+            this.$nextTick(() => event.target.value = val)
         }
     }
 }
@@ -111,5 +129,8 @@ export default {
 }
 .input-number-wrapper .el-input-number {
     width: 100%;
+}
+.app-tooltip {
+    font-size: 20px;
 }
 </style>

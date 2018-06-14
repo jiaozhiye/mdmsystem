@@ -44,10 +44,25 @@
             class="fl" 
             style="width: 140px; margin-left: 10px;"
             v-model="search.state" 
+            clearable
             @change="searchHandle" 
             placeholder="选择状态">
             <el-option
                 v-for="(item, key) in stateList"
+                :key="key"
+                :label="item.name"
+                :value="item.value">
+            </el-option>
+        </el-select>
+        <el-select 
+            class="fl" 
+            style="width: 120px; margin-left: 10px;"
+            v-model="search.printFlag"
+            clearable 
+            @change="searchHandle" 
+            placeholder="打印标识">
+            <el-option
+                v-for="(item, key) in printList"
                 :key="key"
                 :label="item.name"
                 :value="item.value">
@@ -94,11 +109,12 @@
 
 <script>
 import moment from 'moment'
+import { setSearchParams } from 'assets/js/tools'
 
 import ExtractPanel from './ExtractPanel.vue'
 import OrderDetailPanel from './OrderDetailPanel.vue'
 
-import { getLogisticsOutOrder, getDepotList, getStoreList, getOutDepotStateList } from 'api'
+import { getLogisticsOutOrder, getDepotList, getStoreList, getOutDepotStateList, printOutOrder } from 'api'
 
 export default {
     name: 'OutOrderManager',
@@ -108,12 +124,14 @@ export default {
             depotList: [], // 仓库列表
             storeList: [], // 门店列表
             stateList: [], // 状态列表
+            printList: [{name: '全部', value: '-1'}, {name: '未打印', value: '0'}, {name: '已打印', value: '1'}], // 打印标志
             curPageIndex: 1, // 当前页码
             search: {
                 outDate: [],
                 depot: '',
                 store: '',
-                state: ''
+                state: '',
+                printFlag: ''
             },
             loading: false,
             showOrderExtract: {
@@ -178,7 +196,8 @@ export default {
                     date: this.search.outDate,
                     depot: this.search.depot,
                     store: this.search.store,
-                    state: this.search.state
+                    state: this.search.state,
+                    printFlag: this.search.printFlag
                 })
                 // console.log(response.data)
                 if (response.data.code == 1){

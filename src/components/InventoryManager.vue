@@ -53,7 +53,8 @@
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
-                            :stepVal="1">
+                            :stepVal="1"
+                            :minVal="0">
                         </EditNumber>
                     </template>
                 </el-table-column>
@@ -232,6 +233,7 @@ export default {
                 index = (++index) % inputNumberArr.length
                 // console.log(index)
                 inputNumberArr[index].focus()
+                inputNumberArr[index].select()
             }
             return false
         }

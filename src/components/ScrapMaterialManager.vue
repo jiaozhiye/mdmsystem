@@ -11,7 +11,7 @@
             ref="tree" 
             show-checkbox 
             :data="list" 
-            v-loading="treeLoading" 
+            v-loading="loading" 
             node-key="id" 
             default-expand-all 
             :expand-on-click-node="false" 
@@ -29,6 +29,7 @@
         </div>
         <div class="appManager-list fixedTable-list">
             <el-table
+                ref="materialTable"
                 class="material-table"
                 :data="tableList" 
                 border 
@@ -75,6 +76,8 @@ import { mapActions, mapState } from 'vuex'
 import { recursionTree } from 'assets/js/tools'
 import { getScrapMaterialsTree, getEditedScrapMaterial, saveEditedScrapMaterial } from 'api'
 
+import axios from 'axios'
+
 export default {
     name: 'ScrapMaterialManager',
     data(){
@@ -82,7 +85,6 @@ export default {
             list: [], // 原材料分类树数组
             tableList: [], // 同步 原材料分类树数组
             loading: false,
-            treeLoading: false,
             filterText: '', // 树结构过滤条件文本
             checkedKeys: [], // 树结构选中的ID数组
             multipleSelection: [], // 选中记录的数组
@@ -124,9 +126,29 @@ export default {
             })
             this.tableList = _arr
         },
+        setTableCurrent(){
+            this.$nextTick(() => {
+                const aTboays = this.$refs.materialTable.$el.getElementsByTagName('tbody')
+                // 先清空所有的高亮 class
+                for (let i = 0; i < aTboays.length; i++){
+                    for (let k = 0; k < aTboays[i].children.length; k++){
+                        aTboays[i].children[k].classList.remove('current-row')
+                    }
+                }
+                this.tableList.forEach((item, key) => {
+                    if (item.isEdit){ // 追加高亮 class
+                        for (let i = 0; i < aTboays.length; i++){
+                            aTboays[i].children[key].classList.add('current-row')
+                        }
+                        this.$refs.materialTable.toggleRowSelection(item, true)
+                    }
+                })
+            })
+        },
         checkChangeHandle(){
             this.getCheckedKeys()
             this.asyncTableList()
+            this.setTableCurrent()
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
@@ -140,32 +162,23 @@ export default {
             if (!value) return true
             return data.search_text.indexOf(value) !== -1
         },
-        async getMaterialsTree(callback){
-            try {
-                this.treeLoading = !0
-                const response = await getScrapMaterialsTree({ id: this.$route.params.id })
-                // console.log(response.data)
-                if (response.data.code == 1){
-                    // 原材料树新增 number 字段，默认值是 1
-                    recursionTree(response.data.tree, item => item.number = 1)
-                    this.list = response.data.tree
-                    callback && callback()
-                }
-            } catch (error){
-                console.error(error)
-            }
-            this.treeLoading = !1
-        },
-        async getEditedMaterial(){
+        getAllData(){
             this.loading = !0
-            try {
-                const response = await getEditedScrapMaterial({
-                    id: this.$route.params.id
-                })
-                // console.log(response.data)
-                if (response.data.code == 1){
-                    this.tableList = response.data.list
+            axios.all([getScrapMaterialsTree({ id: this.$route.params.id }), getEditedScrapMaterial({ id: this.$route.params.id })]).then(axios.spread((trees, tables) => {
+                this.loading = !1
+                if (trees.data.code == 1){
+                    // 原材料树新增 number 字段，默认值是 1
+                    recursionTree(trees.data.tree, item => item.number = 1)
+                    this.list = trees.data.tree
+                }
+                if (tables.data.code == 1){
+                    this.tableList = tables.data.list
 
+                    // 处理 number
+                    this.tableList.forEach(item => {
+                        item.isEdit = !1
+                        if (item.number < 1) item.number = 1
+                    })
                     // 把编辑过的原材料同步到左侧树
                     recursionTree(this.list, (item) => {
                         let obj = this.tableList.find(val => val.id === item.id)
@@ -183,10 +196,10 @@ export default {
                     this.checkedKeys = this.tableList.map(item => item.id)
                     this.setCheckedKeys()
                 }
-            } catch (error){
-                console.error(error)
-            }
-            this.loading = !1
+            })).catch (error => {
+                this.loading = !1
+                console.log(error)
+            })
         },
         handleSelectionChange(val){
             this.multipleSelection = val
@@ -212,6 +225,7 @@ export default {
             }
             // 重置树的选中状态
             this.setCheckedKeys()
+            this.setTableCurrent()
         },
         async saveOrderHandle(){
             try {
@@ -245,15 +259,13 @@ export default {
                 index = (++index) % inputNumberArr.length
                 // console.log(index)
                 inputNumberArr[index].focus()
+                inputNumberArr[index].select()
             }
             return false
         }
     },
     created(){
-        // 先获取原材料树
-        this.getMaterialsTree(() => { // 再获取已编辑商品原材料
-            this.getEditedMaterial()
-        })
+        this.getAllData()
     },
     mounted(){
         document.querySelector('.material-table').addEventListener('keyup', this.keyUpHandle, false)

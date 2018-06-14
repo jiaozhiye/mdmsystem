@@ -196,6 +196,7 @@ export default {
                 index = (++index) % inputNumberArr.length
                 // console.log(index)
                 inputNumberArr[index].focus()
+                inputNumberArr[index].select()
             }
             return false
         }

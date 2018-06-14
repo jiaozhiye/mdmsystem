@@ -87,7 +87,7 @@
     </div>
     <ExtractPanel :params="showOrderExtract">
         <span slot="title">订单详情</span>
-        <OrderDetailPanel slot="panel" :params="showOrderExtract" @reloadEvent="reloadGetData"></OrderDetailPanel>
+        <StoreOrderDetailPanel slot="panel" :params="showOrderExtract" @reloadEvent="reloadGetData"></StoreOrderDetailPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -96,7 +96,7 @@
 import moment from 'moment'
 
 import ExtractPanel from './ExtractPanel.vue'
-import OrderDetailPanel from './OrderDetailPanel.vue'
+import StoreOrderDetailPanel from './StoreOrderDetailPanel.vue'
 
 import { getStoreOrderInfo, getOrderTypeList, getOrderStateList } from 'api'
 
@@ -201,7 +201,7 @@ export default {
     },
     components: {
         ExtractPanel,
-        OrderDetailPanel
+        StoreOrderDetailPanel
     }
 }
 </script>

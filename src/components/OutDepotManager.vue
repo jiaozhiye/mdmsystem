@@ -66,7 +66,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                    <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
+                    <el-button @click.stop="showItemHandle(scope.row.id, scope.row.warehouse_id)" type="text">
                         <i class="el-icon-view"></i> 详情
                     </el-button>
                 </template>
@@ -82,12 +82,11 @@
 
 <script>
 import moment from 'moment'
-import { setSearchParams } from 'assets/js/tools'
 
 import ExtractPanel from './ExtractPanel.vue'
 import OutOrderPanel from './OutOrderPanel.vue'
 
-import { getOutOrderInfo, getDepotList, getStoreList, printOutOrder } from 'api'
+import { getOutOrderInfo, getDepotList, getStoreList } from 'api'
 
 export default {
     name: 'OutDepotManager',
@@ -112,9 +111,10 @@ export default {
         initOutDate(){
             this.search.outDate = moment().format('YYYY-MM-DD')
         },
-        showItemHandle(_id){
+        showItemHandle(_id, _depotId){
             this.showOutOrderExtract.isPlay = !0
             this.showOutOrderExtract.id = _id
+            this.showOutOrderExtract.depotId = _depotId
         },
         async getDepotList(){
             try {

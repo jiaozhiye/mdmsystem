@@ -2,10 +2,9 @@
 <div class="appManager-wrapper">
     <div class="appManager-list" style="margin-top: 0;">
         <el-table :data="list" border v-loading="loading">
-            <el-table-column prop="warehouse_out_order_number" label="出库单号"></el-table-column>
-            <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
             <el-table-column prop="store_order_number" label="订货单号"></el-table-column>
             <el-table-column prop="create_time_short" label="订单日期" sortable></el-table-column>
+            <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
             <el-table-column prop="arrive_date" label="预计到货日期" sortable></el-table-column>
             <el-table-column label="操作" width="100">
                 <template slot-scope="scope">

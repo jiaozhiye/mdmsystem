@@ -88,19 +88,19 @@
                 </template>
             </el-table-column>
             <el-table-column prop="create_time_short" label="提交日期" sortable></el-table-column>
-            <el-table-column label="操作" width="310">
+            <el-table-column label="操作" width="360">
                 <template slot-scope="scope">
                     <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
                         <i class="el-icon-view"></i> 查看
                     </el-button>
-                    <el-button @click.stop="receiveOrderHandle(scope.row.id)" type="text">
+                    <el-button @click.stop="receiveOrderHandle(scope.row.id)" type="text" :disabled=" scope.row.status !== '10' ">
                         <i class="el-icon-edit-outline"></i> 接收
                     </el-button>
-                    <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text">
+                    <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text" :disabled=" scope.row.status !== '20' ">
                         <i class="el-icon-document"></i> 生成出库单
                     </el-button>
                     <el-button @click.stop="printHandle(scope.row.id)" type="text">
-                        <i class="el-icon-printer"></i> 打印
+                        <i class="el-icon-printer"></i> 打印送货单
                     </el-button>
                 </template>
             </el-table-column>
@@ -111,7 +111,7 @@
     </div>
     <ExtractPanel :params="showOrderExtract">
         <span slot="title">订单详情</span>
-        <OrderDetailPanel slot="panel" :params="showOrderExtract" @reloadEvent="reloadGetData"></OrderDetailPanel>
+        <LogisticOrderDetailPanel slot="panel" :params="showOrderExtract" @reloadEvent="reloadGetData"></LogisticOrderDetailPanel>
     </ExtractPanel>
 </div>
 </template>
@@ -121,7 +121,7 @@ import moment from 'moment'
 import { setSearchParams } from 'assets/js/tools'
 
 import ExtractPanel from './ExtractPanel.vue'
-import OrderDetailPanel from './OrderDetailPanel.vue'
+import LogisticOrderDetailPanel from './LogisticOrderDetailPanel.vue'
 
 import { getOrderInfo, getOrderTypeList, getStoreList, getOrderStateList, receiveOrder, createOutOrder, printGoodsOrder } from 'api'
 
@@ -280,7 +280,7 @@ export default {
     },
     components: {
         ExtractPanel,
-        OrderDetailPanel
+        LogisticOrderDetailPanel
     }
 }
 </script>

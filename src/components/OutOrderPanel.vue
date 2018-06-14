@@ -22,16 +22,14 @@
     <div class="out-order-box">
         <div class="appManager-top tr">
             <el-button type="danger" @click.stop="outDepotSaveHandle" :loading="btnLoading">出库</el-button>
-            <el-button>打印</el-button>
-            <el-button>打印历史</el-button>
             <!-- <el-button type="primary" @click.stop="saveOutOrderHandle" :loading="btnLoading">保存</el-button> -->
         </div>
         <div style="margin: 20px 0;">
             <el-table class="out-order-table" :data="list" border v-loading="loading">
                 <el-table-column prop="code" label="物料编号" min-width="120" sortable fixed></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column prop="want_num" label="订货数量"></el-table-column>
+                <el-table-column prop="unit" label="订货单位"></el-table-column>
                 <el-table-column prop="security_stock" label="安存数量"></el-table-column>
                 <el-table-column label="批号" label-class-name="split-column-th" class-name="split-column">
                     <template slot-scope="scope">
@@ -57,6 +55,11 @@
                             :stepVal="1"
                             :maxVal="item.warehouseStockNumber">
                         </EditNumber>
+                    </template>
+                </el-table-column>
+                <el-table-column label="提货单位" label-class-name="split-column-th" class-name="split-column">
+                    <template slot-scope="scope">
+                        <div v-for="(item, key) in scope.row.warehouseStockInfo" :key="key">{{ item.out_unit }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100" label-class-name="split-column-th" class-name="split-column" fixed="right">
@@ -97,7 +100,8 @@ export default {
             treeLoading: false,
             loading: false,
             filterText: '', // 树结构过滤条件文本
-            checkedKeys: [] // 树结构选中的ID数组
+            checkedKeys: [], // 树结构选中的ID数组
+            contrasts: [] // 用于和 checkedKeys 对比的数组
         }
     },
     computed: {
@@ -156,30 +160,46 @@ export default {
         checkHandle(data, state){
             // 当分类树选中状态有变化，重置 checkedKeys 数组
             this.getCheckedKeys()
-            // 判断执行 asyncTableList 方法
-            if (this.checkedKeys.findIndex(item => item === data.id) !== -1){ // 选中
-                this.asyncTableList(data, true) // 执行插入
-            } else {
-                this.asyncTableList(data, false) // 执行删除
+            
+            if (this.checkedKeys.length > this.contrasts.length){ // 将要执行新增
+                let _arr = this.checkedKeys.filter(item => this.contrasts.findIndex(val => val === item) === -1)
+                state.checkedNodes.forEach(item => {
+                    if (_arr.findIndex(val => val === item.id) !== -1){
+                        this.asyncTableList(item, true) // 执行插入
+                    }
+                })
+            } else { // 将要执行删除
+                let _arr = this.contrasts.filter(item => this.checkedKeys.findIndex(val => val === item) === -1)
+                recursionTree(this.treeList, item => {
+                    if (_arr.findIndex(val => val === item.id) !== -1){
+                        this.asyncTableList(item, false) // 执行删除
+                    }
+                })
             }
+
+            // 设置 checkedKeys 的对比数组
+            this.setContrasts()
+
+            // 判断执行 asyncTableList 方法
+            // if (this.checkedKeys.findIndex(item => item === data.id) !== -1){ // 选中
+            //     this.asyncTableList(data, true) // 执行插入
+            // } else {
+            //     this.asyncTableList(data, false) // 执行删除
+            // }
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            // this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
             this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
         },
         setCheckedKeys(){
             this.$refs.tree.setCheckedKeys(this.checkedKeys)
         },
+        setContrasts(){
+            this.contrasts = _.cloneDeep(this.checkedKeys)
+        },
         filterNode(value, data){
             if (!value) return true
             return data.search_text.indexOf(value) !== -1
-        },
-        computeFunc(item){
-            // console.log(item)
-            this.$nextTick(() => {
-                item.send_number = Number(item.number) * Number(attribute_1_number) * Number(attribute_2_number)
-            })
         },
         removeItemHandle(materialId, batchCode){ // 原材料ID  批号
             // 处理 checkedKeys 数组
@@ -192,11 +212,11 @@ export default {
         async getMaterialTree(callback){
             try {
                 this.treeLoading = !0
-                const response = await getMaterialTreeForOutDepot()
-                recursionTree(response.data.list, item => {
-                    // 禁用一二级分类项
-                    if (!item.isEdit) item.disabled = true
-                })
+                const response = await getMaterialTreeForOutDepot({ warehouseId: this.params.depotId })
+                // recursionTree(response.data.list, item => {
+                //     // 禁用一二级分类项
+                //     if (!item.isEdit) item.disabled = true
+                // })
                 // console.log(response.data)
                 if (response.data.code == 1){
                     this.treeList = response.data.list
@@ -302,6 +322,7 @@ export default {
                 index = (++index) % inputNumberArr.length
                 // console.log(index)
                 inputNumberArr[index].focus()
+                inputNumberArr[index].select()
             }
             return false
         }
@@ -311,13 +332,13 @@ export default {
             this.getMaterialTree()
             this.getOutOrderInfo(() => {
                 // 处理 checkedKeys 数组
-                this.list.forEach(item => {
-                    this.checkedKeys = this.checkedKeys.concat(item.warehouseStockInfo.map(val => val.id))
-                })
+                this.list.forEach(item => this.checkedKeys = this.checkedKeys.concat(item.warehouseStockInfo.map(val => val.id)))
                 // 重置结构树的选中状态
                 this.setCheckedKeys()
+                // 设置 checkedKeys 的对比数组
+                this.setContrasts()
             })
-        }, 600)
+        }, 500)
     },
     mounted(){
         document.querySelector('.out-order-table').addEventListener('keyup', this.keyUpHandle, false)

@@ -8,7 +8,7 @@ console.info(common.env)
 
 const instance = axios.create({
     baseURL: common.serverUrl,
-    timeout: 4000,
+    timeout: 5000,
     // withCredentials: true, // 跨域请求时是否需要使用凭证
     paramsSerializer: params => {
         // 序列化 GET 请求参数 -> a: [1, 2] => a=1&a=2
@@ -356,7 +356,7 @@ export const getOutOrderDetail = params => instance.get('/mgr/logistics/outWareh
 export const closeOutOrder = params => instance.post('/mgr/logistics/outWarehouseOrder/save', params)
 
 // 获取出库单原材料树结构
-export const getMaterialTreeForOutDepot = () => instance.get('/mgr/warehouse/warehouseStockMaterialTree')
+export const getMaterialTreeForOutDepot = params => instance.get('/mgr/warehouse/warehouseStockMaterialTree', {params})
 
 // 获取盘点原材料树
 export const getMaterialInventoryTree = params => instance('mgr/storeStock/getMaterialAll', {params})
@@ -503,11 +503,14 @@ export const cancelStoreOrder = params => instance.get('/mgr/storeOrderCtrl/canc
 export const getCitysInfo = () => instance.get('mgr/dict/showList3?dict=70')
 
 // 出库单查询列表
-export const getLogisticsOutOrder = params => instance.get('/mgr/logistics/outWarehouseOrder/statisticsList', {params})
+export const getLogisticsOutOrder = params => instance.get('/mgr/logistics/outWarehouseOrderStatistics/statisticsList', {params})
 
 // 获取出库单状态
 export const getOutDepotStateList = () => instance.get('/mgr/dict/showList2?dict=logistics_view_order_type')
-// 153
+
+// 获取出库单详情信息
+export const getOutDepotOrderInfo = params => instance.get('/mgr/logistics/outWarehouseOrderStatistics/showDetailById', {params})
+// 154
 // 添加原材料的订单类型
 export const getOrderTypeInfo = () => instance.get('')
 
@@ -516,5 +519,11 @@ export const getStoreConditionInfo = () => instance.get('')
 
 // 添加原材料的单位数组
 export const getMaterialUnitInfo = () => instance.get('')
+
+
+
+
+
+
 
 
