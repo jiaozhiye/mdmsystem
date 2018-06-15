@@ -32,10 +32,10 @@
                 border 
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="商品名称" sortable></el-table-column>
-                <el-table-column prop="code" label="商品编码" width="100"></el-table-column>
-                <el-table-column prop="attribute_2_text" label="商品规格" width="100"></el-table-column>
-                <el-table-column prop="unit_text" label="单位" width="100"></el-table-column>
+                <el-table-column prop="name" label="商品名称" min-width="200" sortable></el-table-column>
+                <el-table-column prop="code" label="商品编码"></el-table-column>
+                <el-table-column prop="attribute_2_text" label="商品规格"></el-table-column>
+                <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column label="数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber

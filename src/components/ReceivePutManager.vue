@@ -15,7 +15,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <ExtractPanel :params="receiveOrderExtract">
+    <ExtractPanel :params="receiveOrderExtract" width="60%">
         <span slot="title">入库单详情</span>
         <ReceiveOrderPanel slot="panel" :params="receiveOrderExtract" @reloadEvent="reloadGetData"></ReceiveOrderPanel>
     </ExtractPanel>

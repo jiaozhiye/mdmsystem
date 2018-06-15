@@ -21,13 +21,13 @@
     </section>
     <div class="out-order-box">
         <div class="appManager-top tr">
-            <el-button type="danger" @click.stop="outDepotSaveHandle" :loading="btnLoading">出库</el-button>
+            <el-button type="primary" @click.stop="outDepotSaveHandle" :loading="btnLoading">出库</el-button>
             <!-- <el-button type="primary" @click.stop="saveOutOrderHandle" :loading="btnLoading">保存</el-button> -->
         </div>
         <div style="margin: 20px 0;">
             <el-table class="out-order-table" :data="list" border v-loading="loading">
-                <el-table-column prop="code" label="物料编号" min-width="120" sortable fixed></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="name" label="名称" min-width="150" fixed></el-table-column>
+                <el-table-column prop="code" label="物料编号"></el-table-column>
                 <el-table-column prop="want_num" label="订货数量"></el-table-column>
                 <el-table-column prop="unit" label="订货单位"></el-table-column>
                 <el-table-column prop="security_stock" label="安存数量"></el-table-column>
@@ -53,6 +53,7 @@
                             :key="key"
                             v-model.number="item.send_number"
                             :stepVal="1"
+                            :minVal="0"
                             :maxVal="item.warehouseStockNumber">
                         </EditNumber>
                     </template>
@@ -72,9 +73,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </div>
-        <div class="tr">
-            <el-button @click.stop="closePanelHandle">退出</el-button>
         </div>
     </div>
 </div>

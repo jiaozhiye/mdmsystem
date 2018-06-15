@@ -36,8 +36,8 @@
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
                 <el-table-column prop="name" label="原材料名称" min-width="200" sortable></el-table-column>
-                <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
-                <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
+                <el-table-column prop="code" label="原材料编码"></el-table-column>
+                <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column label="退货数量" width="140">
                     <template slot-scope="scope">
                         <EditNumber

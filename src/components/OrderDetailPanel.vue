@@ -14,8 +14,8 @@
         <div style="padding-bottom: 20px;">
             <el-table :data="order.list" border v-loading="loading">
                 <el-table-column prop="code" label="原料编号" sortable></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="send_num" label="发货数量" sortable></el-table-column>
+                <el-table-column prop="name" label="名称" min-width="150"></el-table-column>
+                <el-table-column prop="send_num" label="发货数量"></el-table-column>
                 <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="out_unit" label="单位"></el-table-column>
                 <el-table-column prop="batch_code" label="批号"></el-table-column>

@@ -51,7 +51,7 @@
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="出库单号" sortable></el-table-column>
-            <el-table-column label="门店名称">
+            <el-table-column label="门店名称" min-width="150">
                 <template slot-scope="scope">
                     <span :style="{color: scope.row.store_color}">{{ scope.row.store_text }}</span>
                 </template>

@@ -28,8 +28,8 @@
         <div style="padding: 20px 0">
             <el-table :data="list" border v-loading="loading" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50"></el-table-column>
+                <el-table-column prop="name" label="名称" min-width="120"></el-table-column>
                 <el-table-column prop="type_2_text" label="分类"></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
                 <el-table-column prop="code" label="物料编码"></el-table-column>
                 <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>

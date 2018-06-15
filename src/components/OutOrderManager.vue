@@ -73,13 +73,13 @@
         <el-table :data="list" border v-loading="loading">
             <el-table-column prop="order_number" label="出库单号" sortable></el-table-column>
             <el-table-column prop="out_time" label="出库日期" sortable></el-table-column>
-            <el-table-column label="门店名称">
+            <el-table-column label="门店名称" min-width="150">
                 <template slot-scope="scope">
                     <span :style="{color: scope.row.store_color}">{{ scope.row.store_text }}</span>
                 </template>
             </el-table-column>
             <el-table-column prop="warehourse_text" label="仓库"></el-table-column>
-            <el-table-column prop="print_time" label="打印次数" sortable></el-table-column>
+            <el-table-column prop="print_time" label="打印次数" width="120" sortable></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
@@ -100,7 +100,7 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
-    <ExtractPanel :params="showOrderExtract" width="60%">
+    <ExtractPanel :params="showOrderExtract">
         <span slot="title">出库单详情</span>
         <OrderDetailPanel slot="panel" :params="showOrderExtract"></OrderDetailPanel>
     </ExtractPanel>

@@ -2,8 +2,7 @@
 <div id="app">
     <el-row>
         <el-col :span="6" :offset="9">
-            <div class="hd-logo"></div>
-            <h3 class="hd-welcome">欢迎使用</h3>
+            <h3 class="hd-welcome"></h3>
             <el-alert v-if="showDanger" title="用户名或密码有误" type="error" show-icon></el-alert>
             <div class="app-form">
                 <div class="app-form-item">
@@ -79,16 +78,11 @@ export default {
 body {
     background-color: #f9f9f9;
 }
-.hd-logo {
-    margin: 50px 0 20px;
-    height: 100px;
-    background: url('./assets/img/logo.png') 50% 0 no-repeat;
-    background-size: auto 100%;
-}
 .hd-welcome {
+    height: 150px;
     text-align: center;
     padding: 20px;
-    font-size: 30px;
+    font-size: 26px;
 }
 
 #app .el-alert {

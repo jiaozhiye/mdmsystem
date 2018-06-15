@@ -14,7 +14,7 @@
         <div style="padding-bottom: 20px;">
             <el-table :data="order.list" border v-loading="loading">
                 <el-table-column prop="code" label="原料编号" sortable></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="name" label="名称" min-width="150"></el-table-column>
                 <el-table-column prop="unit" label="单位"></el-table-column>
                 <el-table-column prop="want_num" label="数量" sortable></el-table-column>
             </el-table>

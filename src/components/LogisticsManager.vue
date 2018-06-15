@@ -72,36 +72,38 @@
     </div> -->
     <div class="appManager-list">
         <el-table :data="list" border v-loading="loading">
-            <el-table-column prop="order_number" label="订单号" sortable></el-table-column>
-            <el-table-column label="门店名称">
+            <el-table-column prop="order_number" label="订单号" sortable min-width="180"></el-table-column>
+            <el-table-column label="门店名称" min-width="150">
                 <template slot-scope="scope">
                     <span :style="{color: scope.row.store_color}">{{ scope.row.store_text }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="want_date" label="订货日期" sortable></el-table-column>
-            <el-table-column prop="arrive_date" label="到货日期" sortable></el-table-column>
-            <el-table-column prop="type_text" label="订单类型"></el-table-column>
-            <el-table-column prop="print_time" label="打印次数" sortable></el-table-column>
+            <el-table-column prop="want_date" label="订货日期" sortable min-width="120"></el-table-column>
+            <el-table-column prop="arrive_date" label="到货日期" sortable min-width="120"></el-table-column>
+            <el-table-column prop="type_text" label="订单类型" min-width="80"></el-table-column>
+            <el-table-column prop="print_time" label="打印次数" min-width="80"></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time_short" label="提交日期" sortable></el-table-column>
-            <el-table-column label="操作" width="360">
+            <el-table-column prop="create_time_short" label="提交日期" sortable min-width="120"></el-table-column>
+            <el-table-column label="操作" width="320" fixed="right">
                 <template slot-scope="scope">
-                    <el-button @click.stop="showItemHandle(scope.row.id)" type="text">
-                        <i class="el-icon-view"></i> 查看
+                    <el-button @click.stop="showItemHandle(scope.row.id)" type="text">查看</el-button>
+                    <el-button @click.stop="receiveOrderHandle(scope.row.id)" 
+                        type="text"
+                        :loading="btnLoading"
+                        :disabled=" scope.row.status !== '10' ">
+                        接收
                     </el-button>
-                    <el-button @click.stop="receiveOrderHandle(scope.row.id)" type="text" :disabled=" scope.row.status !== '10' ">
-                        <i class="el-icon-edit-outline"></i> 接收
+                    <el-button @click.stop="createOutOrderHandle(scope.row.id)"
+                        type="text"
+                        :loading="btnLoading"
+                        :disabled=" scope.row.status !== '20' ">
+                        生成出库单
                     </el-button>
-                    <el-button @click.stop="createOutOrderHandle(scope.row.id)" type="text" :disabled=" scope.row.status !== '20' ">
-                        <i class="el-icon-document"></i> 生成出库单
-                    </el-button>
-                    <el-button @click.stop="printHandle(scope.row.id)" type="text">
-                        <i class="el-icon-printer"></i> 打印送货单
-                    </el-button>
+                    <el-button @click.stop="printHandle(scope.row.id)" type="text">打印送货单</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -119,6 +121,8 @@
 <script>
 import moment from 'moment'
 import { setSearchParams } from 'assets/js/tools'
+
+import { mapState } from 'vuex'
 
 import ExtractPanel from './ExtractPanel.vue'
 import LogisticOrderDetailPanel from './LogisticOrderDetailPanel.vue'
@@ -146,6 +150,9 @@ export default {
                 isPlay: false
             }
         }
+    },
+    computed: {
+        ...mapState(['btnLoading'])
     },
     methods: {
         initArrivalDate(){

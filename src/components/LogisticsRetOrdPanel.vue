@@ -4,12 +4,23 @@
             <el-button 
                 @click.stop="returnOrderHandle('receive')" 
                 :loading="btnLoading"
-                :disabled="btnState.receive">接收</el-button>
+                :disabled="btnState.receive">
+                接收
+            </el-button>
             <el-button 
                 type="primary" 
                 @click.stop="returnOrderHandle('complete')" 
                 :loading="btnLoading"
-                :disabled="btnState.complete">完成</el-button>
+                :disabled="btnState.complete">
+                完成
+            </el-button>
+            <el-button
+                type="danger" 
+                @click.stop="closeOrderHandle('l')"
+                :loading="btnLoading" 
+                :disabled="btnState.close">
+                关闭订单
+            </el-button>
         </div>
         <div style="padding-bottom: 20px">
             <el-table 
@@ -20,8 +31,8 @@
                 v-loading="loading" 
                 highlight-current-row
                 @row-click="rowClickHandle">
-                <el-table-column prop="order_number" label="订单编号"></el-table-column>
-                <el-table-column prop="store_name" label="门店名称"></el-table-column>
+                <el-table-column prop="order_number" label="订单编号" fixed></el-table-column>
+                <el-table-column prop="store_name" label="门店名称" min-width="150"></el-table-column>
                 <el-table-column prop="name" label="原料名称"></el-table-column>
                 <el-table-column prop="attribute2_text" label="规格"></el-table-column>
                 <el-table-column prop="number" label="数量"></el-table-column>
@@ -46,11 +57,6 @@
         </div>
         <div class="app-form-item tr">
             <el-button @click.stop="closePanelHandle">退出</el-button>
-            <el-button
-                type="primary" 
-                @click.stop="closeOrderHandle('l')"
-                :loading="btnLoading" 
-                :disabled="btnState.close">关闭订单</el-button>
         </div>
     </div>
 </template>

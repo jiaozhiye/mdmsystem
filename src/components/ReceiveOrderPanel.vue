@@ -2,8 +2,8 @@
     <div class="out-order-panel">
         <div style="padding-bottom: 20px;">
             <el-table class="out-order-table" :data="list" border v-loading="loading">
-                <el-table-column prop="code" label="编号" min-width="120" sortable fixed></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="code" label="编号" sortable></el-table-column>
+                <el-table-column prop="name" label="名称" min-width="150"></el-table-column>
                 <el-table-column prop="want_num" label="采购数"></el-table-column>
                 <el-table-column prop="unit" label="采购单位"></el-table-column>
                 <el-table-column prop="stock_num" label="当前库存"></el-table-column>

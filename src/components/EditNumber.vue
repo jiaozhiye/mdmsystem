@@ -12,7 +12,7 @@
             @input.native="handleInput($event, $event.target.value)"
             @change="handleChange"
             @blur="blurHandle"
-            @click.native.stop="">
+            @click.native.stop>
         </el-input-number>
     </div>
 </el-tooltip>
@@ -52,7 +52,7 @@ export default {
     },
     data (){
         return {
-            dataVal: this.value
+            inputVal: this.value
         }
     },
     computed: {
@@ -92,21 +92,21 @@ export default {
                     val = this.minVal
                     this.setInputValue(event, val)
                 }
-                this.dataVal = Number(val)
-                this.emitDataToOuter(this.dataVal)
+                this.inputVal = Number(val)
+                this.emitDataToOuter(this.inputVal)
             } else { // 格式非法
-                this.setInputValue(event, this.dataVal)
+                this.setInputValue(event, this.inputVal)
             }
         },
         handleChange(val){
-            this.dataVal = Number(val)
-            this.emitDataToOuter(this.dataVal)
+            this.inputVal = Number(val)
+            this.emitDataToOuter(this.inputVal)
         },
         blurHandle(event){
             if (event.target.value === ''){ // 如果失去焦点时输入框为空
-                this.dataVal = this.minVal
-                this.emitDataToOuter(this.dataVal)
-                this.setInputValue(event, this.dataVal)
+                this.inputVal = this.minVal
+                this.emitDataToOuter(this.inputVal)
+                this.setInputValue(event, this.inputVal)
             }
         },
         emitDataToOuter(val){

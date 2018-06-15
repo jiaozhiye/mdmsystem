@@ -55,7 +55,7 @@
                 :data="list" 
                 border 
                 v-loading="loading">
-                <el-table-column prop="name" label="商品名称" min-width="200" sortable fixed></el-table-column>
+                <el-table-column prop="name" label="商品名称" min-width="150" sortable fixed></el-table-column>
                 <el-table-column prop="type_2_text" label="商品中类" width="120"></el-table-column>
                 <el-table-column prop="code" label="商品编号" width="120" sortable></el-table-column>
                 <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>

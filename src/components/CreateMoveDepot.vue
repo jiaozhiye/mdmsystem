@@ -32,7 +32,7 @@
         <ul class="fr">
             <el-button @click.stop="removeItemHandle">批量移除</el-button>
             <el-button @click.stop="addMaterialHandle">添加物品</el-button>
-            <el-button @click.stop="saveMaterialHandle('save')" :loading="btnLoading">保存</el-button>
+            <el-button @click.stop="saveMaterialHandle('save')" type="primary" plain :loading="btnLoading">保存</el-button>
             <el-button type="primary" @click.stop="saveMaterialHandle('submit')" :loading="btnLoading">提交</el-button>
         </ul>
     </div>
@@ -40,7 +40,7 @@
         <el-table class="move-depot-table" :data="list" border @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="type_2_text" label="分类"></el-table-column>
-            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="name" label="名称" min-width="150"></el-table-column>
             <el-table-column prop="code" label="物料编码"></el-table-column>
             <el-table-column prop="attribute_2_text" label="规格"></el-table-column>
             <el-table-column prop="unit_text" label="单位"></el-table-column>
@@ -64,7 +64,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <ExtractPanel :params="addMaterialExtract">
+    <ExtractPanel :params="addMaterialExtract" width="60%">
         <span slot="title">选择原材料</span>
         <ShiftMaterialPanel slot="panel" :params="addMaterialExtract" @reloadEvent="reloadGetData"></ShiftMaterialPanel>
     </ExtractPanel>

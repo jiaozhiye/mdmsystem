@@ -36,7 +36,7 @@
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50"></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="250"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
                 <el-table-column prop="code" label="原材料编码"></el-table-column>
                 <el-table-column prop="unit_text" label="单位"></el-table-column>
                 <el-table-column prop="stock" label="库存数量"></el-table-column>

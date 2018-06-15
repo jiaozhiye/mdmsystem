@@ -15,7 +15,7 @@
             v-loading="loading" 
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50" fixed></el-table-column>
-            <el-table-column prop="name" label="原材料名称" min-width="200" fixed sortable></el-table-column>
+            <el-table-column prop="name" label="原材料名称" min-width="150" fixed sortable></el-table-column>
             <el-table-column prop="type_2_text" label="原材料中类" width="120"></el-table-column>
             <el-table-column prop="code" label="原材料编号" width="120"></el-table-column>
             <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>

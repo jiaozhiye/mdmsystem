@@ -75,7 +75,7 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
-    <ExtractPanel :params="showOrderExtract" width="60%">
+    <ExtractPanel :params="showOrderExtract" width="70%">
         <span slot="title">物流退货单详情</span>
         <LogisticsRetOrdPanel slot="panel" :params="showOrderExtract" @reloadEvent="reloadGetData"></LogisticsRetOrdPanel>
     </ExtractPanel>

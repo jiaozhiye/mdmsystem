@@ -59,7 +59,7 @@
                 v-loading="loading"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
-                <el-table-column prop="name" label="原材料名称" min-width="200"></el-table-column>
+                <el-table-column prop="name" label="原材料名称" min-width="200" fixed></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit" label="单位" width="80"></el-table-column>
                 <el-table-column prop="nextOneNum" label="明日预计数量" width="110"></el-table-column>
@@ -72,7 +72,8 @@
                     <template slot-scope="scope">
                         <EditNumber
                             v-model.number="scope.row.number"
-                            :stepVal="1">
+                            :stepVal="1"
+                            :minVal="0">
                         </EditNumber>
                     </template>
                 </el-table-column>
@@ -191,8 +192,8 @@ export default {
             axios.all([getMaterialsTree({ id: this.$route.params.id }), getEditedMaterial({ id: this.$route.params.id })]).then(axios.spread((trees, tables) => {
                 this.loading = !1
                 if (trees.data.code == 1){
-                    // 原材料树新增 number 字段，默认值是 1
-                    recursionTree(trees.data.tree, item => item.number = 1)
+                    // 原材料树新增 number 字段，默认值是 0
+                    recursionTree(trees.data.tree, item => item.number = 0)
                     this.list = trees.data.tree
                 }
                 if (tables.data.code == 1){
@@ -202,7 +203,7 @@ export default {
                     // 处理 number
                     this.tableList.forEach(item => {
                         item.isEdit = !1
-                        if (item.number < 1) item.number = 1
+                        if (item.number < 0) item.number = 0
                     })
                     // 把编辑过的原材料同步到左侧树
                     recursionTree(this.list, (item) => {

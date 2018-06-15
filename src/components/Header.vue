@@ -1,7 +1,7 @@
 <template>
 <div class="app-header clearFix">
     <div class="app-head-logo fl">
-        <router-link to="/">面对面管理系统</router-link>
+        <router-link to="/">面对面供应链管理系统</router-link>
     </div>
     <div class="app-top-nav fl">
         <HeadNav></HeadNav>

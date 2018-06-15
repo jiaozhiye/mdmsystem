@@ -3,6 +3,7 @@
         <div class="tr">
             <el-button 
                 type="primary" 
+                plain
                 v-if=" params.menuType === 'store' " 
                 @click.stop="submitHandle('save')"
                 :loading="btnLoading" 
@@ -13,7 +14,7 @@
                 @click.stop="submitHandle('receive')" 
                 :loading="btnLoading"
                 :disabled="!params.isEdit">接收</el-button>
-            <el-button type="primary" 
+            <el-button type="danger"
                 @click.stop="submitHandle('close')"
                 :loading="btnLoading" 
                 :disabled="!params.isEdit">关闭订单</el-button>
