@@ -31,7 +31,8 @@ const dictionary = {
         purchaseprice: '采购价',
         balanceprice: '默认结算价',
         yieldrate: '出成率',
-        depotname: '仓库名称'
+        depotname: '仓库名称',
+        storeprice: '餐厅价'
       }
    }
 }

@@ -510,16 +510,16 @@ export const getOutDepotStateList = () => instance.get('/mgr/dict/showList2?dict
 
 // 获取出库单详情信息
 export const getOutDepotOrderInfo = params => instance.get('/mgr/logistics/outWarehouseOrderStatistics/showDetailById', {params})
-// 154
+
 // 添加原材料的订单类型
-export const getOrderTypeInfo = () => instance.get('')
+export const getOrderTypeInfo = () => instance.get('mgr/dict/showList3?dict=1100')
 
 // 添加原材料的存储条件
-export const getStoreConditionInfo = () => instance.get('')
+export const getStoreConditionInfo = () => instance.get('mgr/dict/showList3?dict=1000')
 
 // 添加原材料的单位数组
-export const getMaterialUnitInfo = () => instance.get('')
-
+export const getMaterialUnitInfo = () => instance.get('mgr/dict/getUnit?dict=material')
+// 157
 
 
 

@@ -16,14 +16,14 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>原材料名称</label>
         <div class="app-input-block">
-            <el-input name="materialname" v-model="form.name" v-validate="'required'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称..." ></el-input>
+            <el-input name="materialname" v-model="form.name" v-validate="'required'" :class="{'formDanger': errors.has('materialname')}" clearable placeholder="请输入原材料名称" ></el-input>
             <span v-if="errors.has('materialname')" class="prompt-title">{{ errors.first('materialname') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">原材料编号</label>
         <div class="app-input-block">
-            <el-input v-model="form.code" clearable placeholder="请输入原材料编号..." ></el-input>
+            <el-input v-model="form.code" clearable placeholder="请输入原材料编号" ></el-input>
         </div>
     </div>
     <div class="app-form-item">
@@ -31,11 +31,11 @@
         <div class="app-input-block">
             <el-input type="number" v-model="form.calcNum" style="width: 200px"></el-input>
             <el-select v-model="form.calc_unit_1" placeholder="单位" style="width: 80px;" @change="changeHandle">
-                <el-option v-for="(val, key) in tempList" :key="key" :label="val" :value="val"></el-option>
+                <el-option v-for="(val, key) in unitList" :key="key" :label="val" :value="val"></el-option>
             </el-select>
             <em class="slant-line">/</em>
             <el-select v-model="form.calc_unit_2" :disabled="unitDisabled" clearable placeholder="单位" style="width: 80px;" @change="changeHandle">
-                <el-option v-for="(val, key) in tempList" :key="key" :label="val" :value="val"></el-option>
+                <el-option v-for="(val, key) in unitList" :key="key" :label="val" :value="val"></el-option>
             </el-select>
         </div>
     </div>
@@ -46,7 +46,7 @@
             <el-input v-model="form.calc_unit_2" style="width: 80px" disabled></el-input>
             <em class="slant-line">/</em>
             <el-select v-model="form.pack_unit" :disabled="unitDisabled" clearable placeholder="单位" style="width: 80px;" @change="changeHandle">
-                <el-option v-for="(val, key) in tempList" :key="key" :label="val" :value="val"></el-option>
+                <el-option v-for="(val, key) in unitList" :key="key" :label="val" :value="val"></el-option>
             </el-select>
         </div>
     </div>
@@ -61,7 +61,7 @@
     <div class="app-form-item">
         <label class="app-form-label">保质期</label>
         <div class="app-input-block">
-            <el-input type="number" v-model="form.quality_time" placeholder="请输入保质期天数..." >
+            <el-input type="number" v-model="form.quality_time" placeholder="请输入保质期天数" >
                 <template slot="append">天</template>
             </el-input>
         </div>
@@ -70,14 +70,14 @@
         <label class="app-form-label">存储条件</label>
         <div class="app-input-block">
             <el-select v-model="form.storeConditionId" clearable placeholder="请选择存储条件">
-                <el-option v-for="(item, key) in repTypeList" :key="key" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="(item, key) in storeConditionList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">到货周期</label>
         <div class="app-input-block">
-            <el-input type="number" v-model="form.arrival_time" placeholder="请输入到货周期天数..." >
+            <el-input type="number" v-model="form.arrival_time" placeholder="请输入到货周期天数" >
                 <template slot="append">天</template>
             </el-input>
         </div>
@@ -86,12 +86,12 @@
         <label class="app-form-label">订单类型</label>
         <div class="app-input-block">
             <el-select v-model="form.orderTypeId" clearable placeholder="请选择订单类型">
-                <el-option v-for="(item, key) in repTypeList" :key="key" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="(item, key) in orderTypeList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label"><i>*</i>库存类型</label>
+        <label class="app-form-label">库存类型</label>
         <div class="app-input-block">
             <el-select v-model="form.reptypeId" clearable placeholder="请选择库存类型">
                 <el-option v-for="(item, key) in repTypeList" :key="key" :label="item.name" :value="item.id"></el-option>
@@ -101,56 +101,55 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>出成率</label>
         <div class="app-input-block">
-            <el-input name="yieldrate" v-model="form.yield_rate" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('yieldrate')}" clearable placeholder="请输入出成率..." >
+            <el-input name="yieldrate" v-model="form.yield_rate" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('yieldrate')}" clearable placeholder="请输入出成率" >
                 <template slot="append">%</template>
             </el-input>
             <span v-if="errors.has('yieldrate')" class="prompt-title">{{ errors.first('yieldrate') }}</span>
         </div>
     </div>
     <div class="app-form-item">
-        <label class="app-form-label"><i>*</i>单位</label>
-        <div class="app-input-block">
-            <el-select v-model="form.unitId" clearable placeholder="请选商品单位">
-                <el-option v-for="(item, key) in unitList" :key="key" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-        </div>
-    </div>
-    <div class="app-form-item">
         <label class="app-form-label"><i>*</i>采购(成本)价</label>
         <div class="app-input-block">
-            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价..." ></el-input>
+            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价" ></el-input>
             <span v-if="errors.has('purchaseprice')" class="prompt-title">{{ errors.first('purchaseprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>默认结算价</label>
         <div class="app-input-block">
-            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价..." ></el-input>
+            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价" ></el-input>
             <span v-if="errors.has('balanceprice')" class="prompt-title">{{ errors.first('balanceprice') }}</span>
+        </div>
+    </div>
+    <div class="app-form-item">
+        <label class="app-form-label"><i>*</i>餐厅价</label>
+        <div class="app-input-block">
+            <el-input name="storeprice" v-model="form.out_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('storeprice')}"  clearable placeholder="请输入餐厅价" ></el-input>
+            <span v-if="errors.has('storeprice')" class="prompt-title">{{ errors.first('storeprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">规格/型号</label>
         <div class="app-input-block">
-            <el-input v-model="form.spec" placeholder="请输入原材料规格、型号..." clearable></el-input>
+            <el-input v-model="form.spec" placeholder="请输入原材料规格、型号" clearable></el-input>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">尺寸大小</label>
         <div class="app-input-block">
-            <el-input v-model="form.size" placeholder="请输入原材料尺寸..." clearable></el-input>
+            <el-input v-model="form.size" placeholder="请输入原材料尺寸" clearable></el-input>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">品牌</label>
         <div class="app-input-block">
-            <el-input v-model="form.brand" placeholder="请输入原材料品牌..." clearable></el-input>
+            <el-input v-model="form.brand" placeholder="请输入原材料品牌" clearable></el-input>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label">原材料排序</label>
         <div class="app-input-block">
-            <el-input type="number" v-model="form.sort" placeholder="请输入原材料排序..." ></el-input>
+            <el-input type="number" v-model="form.sort" placeholder="请输入原材料排序" ></el-input>
         </div>
     </div>
     <div class="app-form-item">
@@ -205,9 +204,9 @@ export default {
                 orderTypeId: '', // 订单类型
                 reptypeId: '',
                 yield_rate: '100',
-                unitId: '',
                 purchase_price: '',
                 balance_price: '',
+                out_price: '', // 餐厅价
                 spec: '', // 规格型号
                 size: '', // 尺寸
                 brand: '', // 品牌
@@ -251,21 +250,11 @@ export default {
                 console.error(error)
             }
         },
-        async getUnitList(){
-            try {
-                const response = await getUnitList()
-                if (response.data.code == 1){
-                    this.unitList = response.data.list
-                }
-            } catch (error){
-                console.error(error)
-            }
-        },
         async getMaterialUnitList(){
             try {
                 const response = await getMaterialUnitInfo()
                 if (response.data.code == 1){
-                    // this.unitList = response.data.list
+                    this.unitList = response.data.list
                 }
             } catch (error){
                 console.error(error)
@@ -319,11 +308,24 @@ export default {
                     code: this.form.code,
                     wm_type: this.form.reptypeId,
                     yield_rate: this.form.yield_rate,
-                    unit: this.form.unitId,
                     purchase_price: this.form.purchase_price,
                     balance_price: this.form.balance_price,
+                    out_price: this.form.out_price,
                     sort: this.form.sort,
-                    desc: this.form.desc
+                    desc: this.form.desc,
+                    unit_num: this.form.calcNum, // 计量单位的数值
+                    unit: this.form.calc_unit_1, // 计量单位 - 前
+                    unit_big: this.form.calc_unit_2, // 计量单位 - 后
+                    box_attr_num: this.form.packNum, // 装箱单位的数值
+                    box_attr: this.form.pack_unit, // 装箱单位
+                    out_unit: this.form.take_unit, // 提货单位
+                    shelf_life_num: this.form.quality_time, // 保质期
+                    security_time: this.form.arrival_time, // 到货周期
+                    storage_condition: this.form.storeConditionId, // 存储条件
+                    order_type: this.form.orderTypeId, // 订单类型
+                    model: this.form.spec, // 规格型号
+                    size: this.form.size, // 尺寸
+                    brand: this.form.brand // 品牌
                 })
                 if (response.data.code == 1){
                     this.$message({
@@ -348,7 +350,6 @@ export default {
     created(){
         this.getStufftypeList()
         this.getStoryList()
-        this.getUnitList()
         this.getMaterialUnitList()
         this.getOrderTypeList()
         this.getStoreConditionList()

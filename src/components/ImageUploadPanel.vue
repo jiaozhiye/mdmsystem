@@ -24,6 +24,7 @@
 </template>
 
 <script>
+// import ImageCompress from 'assets/js/img-compress'
 import HtmlImageCompress from 'html-image-compress'
 
 export default {
@@ -41,6 +42,13 @@ export default {
     },
     methods: {
         compress(file){
+            // new ImageCompress({
+            //     file,
+            //     quality: 0.7,
+            //     success(result){
+            //         resolve(result.file)
+            //     }
+            // })
             return new Promise((resolve, reject) => {
                 const imageCompress = new HtmlImageCompress(file, { quality: 0.75 })
                 imageCompress.then(result => resolve(result.file))
