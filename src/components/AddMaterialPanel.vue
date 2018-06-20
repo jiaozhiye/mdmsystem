@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import {getMaterialSelTree, getStuffToryList, getUnitList, getMaterialUnitInfo, getOrderTypeInfo, getStoreConditionInfo, saveMaterialInfo} from 'api'
+import {getMaterialSelTree, getStuffToryList, getMaterialUnitInfo, getOrderTypeInfo, getStoreConditionInfo, saveMaterialInfo} from 'api'
 import { mapState } from 'vuex'
 
 export default {
@@ -186,7 +186,6 @@ export default {
             storeConditionList: [], // 存储条件数组
             unitList: [], // 单位数组
             variableUnitList: [], // 可变的单位数组
-            tempList: ['克', '个', '袋', '箱', '瓶'],
             unitDisabled: true, // 单位的可操作状态    true - 禁用
             form: {
                 stufftypeId: this.classid,
