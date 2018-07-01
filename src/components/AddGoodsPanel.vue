@@ -49,6 +49,13 @@
         </div>
     </div>
     <div class="app-form-item">
+        <label class="app-form-label"><i>*</i>成本价</label>
+        <div class="app-input-block">
+            <el-input name="costprice" v-model="form.cost_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('costprice')}"  clearable placeholder="请输入成本价格..." ></el-input>
+            <span v-if="errors.has('costprice')" class="prompt-title">{{ errors.first('costprice') }}</span>
+        </div>
+    </div>
+    <div class="app-form-item">
         <label class="app-form-label">商品状态</label>
         <div class="app-input-block">
             <el-radio v-model="form.state" label="1">启用</el-radio>
@@ -95,6 +102,7 @@ export default {
                 reptypeId: '',
                 unitId: '',
                 price: '',
+                cost_price: '', // 成本价
                 state: '1',
                 sort: '1000',
                 desc: ''
@@ -162,6 +170,7 @@ export default {
                     wm_type: this.form.reptypeId,
                     unit: this.form.unitId,
                     price: this.form.price,
+                    cost_price: this.form.cost_price,
                     state: this.form.state,
                     sort: this.form.sort,
                     desc: this.form.desc

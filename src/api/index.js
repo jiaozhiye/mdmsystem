@@ -415,9 +415,6 @@ export const getStockBalanceList = params => instance.get('/mgr/warehouse/wareho
 // 获取仓库下原材料
 export const getDepotMaterialInfo = params => instance.get('mgr/warehouse/warehouseMovement/queryBalanceList', {params})
 
-// 保存库原材料
-export const saveDepotMaterial = params => instance.post('', params)
-
 // 获取原材料分类
 export const getMaterialClassify = () => instance.get('/mgr/common/selectDataBuilder/showMaterialType')
 
@@ -519,7 +516,7 @@ export const getStoreConditionInfo = () => instance.get('mgr/dict/showList3?dict
 
 // 添加原材料的单位数组
 export const getMaterialUnitInfo = () => instance.get('mgr/dict/getUnit?dict=material')
-// 157
+// 156
 
 
 

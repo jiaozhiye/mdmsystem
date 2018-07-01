@@ -286,6 +286,9 @@ export default {
             this.form.calc_unit_2 !== '' ? _arr.push(this.form.calc_unit_2) : ''
             this.form.pack_unit !== '' ? _arr.push(this.form.pack_unit) : ''
             this.variableUnitList = [...new Set(_arr)]
+            if (this.variableUnitList.indexOf(this.form.take_unit) === -1){
+                this.form.take_unit = this.variableUnitList[0] ? this.variableUnitList[0] : ''
+            }
         },
         submitHandle(){
             this.insertMaterialInfo(() => {

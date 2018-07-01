@@ -101,7 +101,7 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>出成率</label>
         <div class="app-input-block">
-            <el-input name="yieldrate" v-model="form.yield_rate" v-validate="'required|decimal:5'" :class="{'formDanger': errors.has('yieldrate')}" clearable placeholder="请输入出成率" >
+            <el-input name="yieldrate" v-model="form.yield_rate" v-validate="'required'" :class="{'formDanger': errors.has('yieldrate')}" clearable placeholder="请输入出成率" >
                 <template slot="append">%</template>
             </el-input>
             <span v-if="errors.has('yieldrate')" class="prompt-title">{{ errors.first('yieldrate') }}</span>
@@ -110,21 +110,21 @@
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>采购(成本)价</label>
         <div class="app-input-block">
-            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价" ></el-input>
+            <el-input name="purchaseprice" v-model="form.purchase_price" v-validate="'required'" :class="{'formDanger': errors.has('purchaseprice')}"  clearable placeholder="请输入采购价" ></el-input>
             <span v-if="errors.has('purchaseprice')" class="prompt-title">{{ errors.first('purchaseprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>默认结算价</label>
         <div class="app-input-block">
-            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价" ></el-input>
+            <el-input name="balanceprice" v-model="form.balance_price" v-validate="'required'" :class="{'formDanger': errors.has('balanceprice')}"  clearable placeholder="请输入默认结算价" ></el-input>
             <span v-if="errors.has('balanceprice')" class="prompt-title">{{ errors.first('balanceprice') }}</span>
         </div>
     </div>
     <div class="app-form-item">
         <label class="app-form-label"><i>*</i>餐厅价</label>
         <div class="app-input-block">
-            <el-input name="storeprice" v-model="form.out_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('storeprice')}"  clearable placeholder="请输入餐厅价" ></el-input>
+            <el-input name="storeprice" v-model="form.out_price" v-validate="'required'" :class="{'formDanger': errors.has('storeprice')}"  clearable placeholder="请输入餐厅价" ></el-input>
             <span v-if="errors.has('storeprice')" class="prompt-title">{{ errors.first('storeprice') }}</span>
         </div>
     </div>
@@ -160,7 +160,7 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" v-if="isShowBtn" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
@@ -187,7 +187,8 @@ export default {
             storeConditionList: [], // 存储条件数组
             unitList: [], // 单位数组
             variableUnitList: [], // 可变的单位数组
-            unitDisabled: true, // 单位的可操作状态    true - 禁用
+            unitDisabled: false, // 单位的可操作状态    true - 禁用
+            isShowBtn: true, // 默认显示确定按钮
             form: {
                 stufftypeId: this.classid,
                 name: '',
@@ -287,6 +288,9 @@ export default {
             this.form.calc_unit_2 !== '' ? _arr.push(this.form.calc_unit_2) : ''
             this.form.pack_unit !== '' ? _arr.push(this.form.pack_unit) : ''
             this.variableUnitList = [...new Set(_arr)]
+            if (this.variableUnitList.indexOf(this.form.take_unit) === -1){
+                this.form.take_unit = this.variableUnitList[0] ? this.variableUnitList[0] : ''
+            }
         },
         async getItemInfo(){
             try {
@@ -316,6 +320,8 @@ export default {
                     this.form.spec = response.data.data.model // 规格型号
                     this.form.size = response.data.data.size // 尺寸
                     this.form.brand = response.data.data.brand // 品牌
+
+                    this.isShowBtn = response.data.author.material_sbi_submit === 1 ? true : false
                 } else {
                     this.$message({
                         type: 'error',

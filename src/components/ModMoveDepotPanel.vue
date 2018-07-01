@@ -19,7 +19,7 @@
             <el-table-column prop="unit_text" label="单位"></el-table-column>
             <el-table-column prop="batch_code" label="批号"></el-table-column>
             <el-table-column prop="warehouse_stock_num" label="当前库存"></el-table-column>
-            <el-table-column label="移库数量">
+            <el-table-column label="移库数量" width="140">
                 <template slot-scope="scope">
                     <EditNumber
                         v-if="!disabled"

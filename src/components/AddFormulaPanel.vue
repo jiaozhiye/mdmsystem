@@ -2,6 +2,7 @@
 <div class="appManager-wrapper formula-wrapper">
     <div class="appManager-top formula-top">
         <el-select class="fl" v-model="search.inventoryId" 
+            style="width: 150px;"
             clearable 
             @change="searchHandle" 
             placeholder="请选择库存类型">
@@ -13,10 +14,10 @@
             </el-option>
         </el-select>
         <el-select
+            class="fl" 
             v-model="search.stufftypeId" 
             multiple 
             collapse-tags 
-            class="fl" 
             clearable 
             @change="searchHandle" 
             placeholder="请选原材料分类">

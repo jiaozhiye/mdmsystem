@@ -21,12 +21,13 @@
             <el-table-column prop="wm_type_text" label="库存类型" width="120"></el-table-column>
             <el-table-column prop="goods_unit_text" label="单位(标准)" width="100"></el-table-column>
             <el-table-column prop="purchase_price" label="估算单价" width="100"></el-table-column>
-            <el-table-column label="净料数量" width="120">
+            <el-table-column label="净料数量" width="140">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.isEdit">{{ scope.row.net_num }}</span>
                     <EditNumber
                         v-if="scope.row.isEdit"
                         v-model.number="scope.row.net_num"
+                        :minVal="0"
                         :stepVal="1"
                         @change="computeJlPrice(scope.row)">
                     </EditNumber>
@@ -35,12 +36,13 @@
             <el-table-column label="出成率" width="100">
                 <template slot-scope="scope">{{ scope.row.yield_rate * 100 + '%' }}</template>
             </el-table-column>
-            <el-table-column label="毛料数量" width="120">
+            <el-table-column label="毛料数量" width="140">
                 <template slot-scope="scope">
                     <span v-if="!scope.row.isEdit">{{ scope.row.gross_num }}</span>
                     <EditNumber
                         v-if="scope.row.isEdit"
                         v-model.number="scope.row.gross_num"
+                        :minVal="0"
                         :stepVal="1"
                         @change="computeMlPrice(scope.row)">
                     </EditNumber>
@@ -59,7 +61,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <ExtractPanel :params="addFormulaExtract" width="60%" top="0px">
+    <ExtractPanel :params="addFormulaExtract" width="70%" top="0px">
         <span slot="title">添加配方(原材料)</span>
         <AddFormulaPanel slot="panel" 
             :params="addFormulaExtract" 
@@ -227,6 +229,9 @@ export default {
             })
         },
         async insertRelationInfo(callback){
+            if (this.list.length === 0){
+                return this.$message.warning('请添加原材料配方再保存！')
+            }
             try {
                 const response = await saveGdRelation({
                     id: this.goodsId,

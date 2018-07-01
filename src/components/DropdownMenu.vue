@@ -19,18 +19,24 @@ export default {
         placement: {
             type: String,
             default: 'left'
+        },
+        timeLen: {
+            type: Number,
+            default: 300
         }
     },
     data(){
         return {
-            isOpen: false
+            isOpen: false,
+            timer: 0
         }
     },
     methods: {
         hoverHandle(){
-            this.isOpen = !0
+            this.timer = setTimeout(() => this.isOpen = !0, this.timeLen)
         },
         outHandle(){
+            clearTimeout(this.timer)
             this.isOpen = !1
         }
     }

@@ -50,6 +50,13 @@
         </div>
     </div>
     <div class="app-form-item">
+        <label class="app-form-label"><i>*</i>成本价</label>
+        <div class="app-input-block">
+            <el-input name="costprice" v-model="form.cost_price" v-validate="'required|decimal:2'" :class="{'formDanger': errors.has('costprice')}"  clearable placeholder="请输入成本价格..." ></el-input>
+            <span v-if="errors.has('costprice')" class="prompt-title">{{ errors.first('costprice') }}</span>
+        </div>
+    </div>
+    <div class="app-form-item">
         <label class="app-form-label">商品状态</label>
         <div class="app-input-block">
             <el-radio v-model="form.state" label="1">启用</el-radio>
@@ -70,7 +77,7 @@
     </div>
     <div class="app-form-item tr">
         <el-button @click.stop="closePanelHandle">取消</el-button>
-        <el-button type="primary" @click.stop="submitHandle" :loading="btnLoading">确定</el-button>
+        <el-button type="primary" @click.stop="submitHandle" v-if="isShowBtn" :loading="btnLoading">确定</el-button>
     </div>
 </div>
 </template>
@@ -90,6 +97,7 @@ export default {
             gdtypeList: [],
             repTypeList: [], // 库存类型列表
             unitList: [],
+            isShowBtn: true, // 默认显示确定按钮
             form: {
                 gdtypeId: '',
                 name: '',
@@ -97,6 +105,7 @@ export default {
                 reptypeId: '',
                 unitId: '',
                 price: '',
+                cost_price: '', // 成本价
                 state: '',
                 sort: '',
                 desc: ''
@@ -154,9 +163,12 @@ export default {
                     this.form.reptypeId = response.data.data.wm_type
                     this.form.unitId = response.data.data.unit
                     this.form.price = response.data.data.price
+                    this.form.cost_price = response.data.data.cost_price
                     this.form.state = response.data.data.status
                     this.form.sort = response.data.data.sort
                     this.form.desc = response.data.data.desc
+
+                    this.isShowBtn = response.data.author.goods_sbi_submit === 1 ? true : false
                 } else {
                     this.$message({
                         type: 'error',
@@ -183,6 +195,7 @@ export default {
                     wm_type: this.form.reptypeId,
                     unit: this.form.unitId,
                     price: this.form.price,
+                    cost_price: this.form.cost_price,
                     state: this.form.state,
                     sort: this.form.sort,
                     desc: this.form.desc
