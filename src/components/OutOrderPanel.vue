@@ -25,7 +25,7 @@
             <!-- <el-button type="primary" @click.stop="saveOutOrderHandle" :loading="btnLoading">保存</el-button> -->
         </div>
         <div style="margin: 20px 0;">
-            <el-table class="out-order-table" :data="list" border v-loading="loading">
+            <el-table class="out-order-table" ref="table" :data="list" border v-loading="loading">
                 <el-table-column prop="name" label="名称" min-width="150" fixed></el-table-column>
                 <el-table-column prop="code" label="物料编号"></el-table-column>
                 <el-table-column prop="want_num" label="订货数量"></el-table-column>
@@ -187,7 +187,9 @@ export default {
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
+            // this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
+            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
+            // console.log(this.checkedKeys)
         },
         setCheckedKeys(){
             this.$refs.tree.setCheckedKeys(this.checkedKeys)
@@ -312,7 +314,7 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.out-order-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(this.$refs.table.$el.querySelectorAll('.el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -339,10 +341,10 @@ export default {
         }, 500)
     },
     mounted(){
-        document.querySelector('.out-order-table').addEventListener('keyup', this.keyUpHandle, false)
+        this.$refs.table.$el.addEventListener('keyup', this.keyUpHandle, false)
     },
-    destroyed(){
-        document.querySelector('.out-order-table').removeEventListener('keyup', this.keyUpHandle)
+    beforeDestroy(){
+        this.$refs.table.$el.removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber

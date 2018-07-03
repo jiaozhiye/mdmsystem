@@ -28,9 +28,10 @@
         </div>
         <div class="appManager-list fixedTable-list">
             <el-table
-                class="material-table"
+                ref="table"
                 :data="tableList" 
                 border 
+                highlight-current-row
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed></el-table-column>
                 <el-table-column prop="name" label="原材料名称" min-width="200" sortable></el-table-column>
@@ -122,7 +123,8 @@ export default {
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
+            // this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
+            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
             // console.log(this.checkedKeys)
         },
         setCheckedKeys(){
@@ -208,13 +210,14 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.material-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(this.$refs.table.$el.querySelectorAll('.el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
                 }
                 index = (++index) % inputNumberArr.length
                 // console.log(index)
+                this.$refs.table.setCurrentRow(this.tableList[index])
                 inputNumberArr[index].focus()
                 inputNumberArr[index].select()
             }
@@ -226,10 +229,10 @@ export default {
         this.getReturnOrderTree()
     },
     mounted(){
-        document.querySelector('.material-table').addEventListener('keyup', this.keyUpHandle, false)
+        this.$refs.table.$el.addEventListener('keyup', this.keyUpHandle, false)
     },
-    destroyed(){
-        document.querySelector('.material-table').removeEventListener('keyup', this.keyUpHandle)
+    beforeDestroy(){
+        this.$refs.table.$el.removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber

@@ -34,7 +34,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="出成率" width="100">
-                <template slot-scope="scope">{{ scope.row.yield_rate * 100 + '%' }}</template>
+                <template slot-scope="scope">{{ parseInt(scope.row.yield_rate * 100) + '%' }}</template>
             </el-table-column>
             <el-table-column label="毛料数量" width="140">
                 <template slot-scope="scope">

@@ -1,7 +1,7 @@
 <template>
     <div class="out-order-panel">
         <div style="padding-bottom: 20px;">
-            <el-table class="out-order-table" :data="list" border v-loading="loading">
+            <el-table class="out-order-table" ref="table" :data="list" border v-loading="loading">
                 <el-table-column prop="code" label="编号" sortable></el-table-column>
                 <el-table-column prop="name" label="名称" min-width="150"></el-table-column>
                 <el-table-column prop="want_num" label="采购数"></el-table-column>
@@ -114,7 +114,7 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.out-order-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(this.$refs.table.$el.querySelectorAll('.el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -131,10 +131,10 @@ export default {
         this.getReceiveOrderInfo()
     },
     mounted(){
-        document.querySelector('.out-order-table').addEventListener('keyup', this.keyUpHandle, false)
+        this.$refs.table.$el.addEventListener('keyup', this.keyUpHandle, false)
     },
-    destroyed(){
-        document.querySelector('.out-order-table').removeEventListener('keyup', this.keyUpHandle)
+    beforeDestroy(){
+        this.$refs.table.$el.removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber

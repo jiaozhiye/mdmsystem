@@ -10,7 +10,7 @@
         </ul>
     </div>
     <div class="appManager-list">
-        <el-table class="move-depot-table" :data="list" border v-loading="loading" @selection-change="handleSelectionChange">
+        <el-table ref="table" highlight-current-row :data="list" border v-loading="loading" @selection-change="handleSelectionChange">
             <el-table-column :type="!disabled ? 'selection' : 'index'" width="50"></el-table-column>
             <el-table-column prop="type_2_text" label="分类"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
@@ -188,13 +188,14 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.move-depot-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(this.$refs.table.$el.querySelectorAll('.el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
                 }
                 index = (++index) % inputNumberArr.length
                 // console.log(index)
+                this.$refs.table.list(this.list[index])
                 inputNumberArr[index].focus()
                 inputNumberArr[index].select()
             }
@@ -205,10 +206,10 @@ export default {
         this.getMoveDepotList()
     },
     mounted(){
-        document.querySelector('.move-depot-table').addEventListener('keyup', this.keyUpHandle, false)
+        this.$refs.table.$el.addEventListener('keyup', this.keyUpHandle, false)
     },
-    destroyed(){
-        document.querySelector('.move-depot-table').removeEventListener('keyup', this.keyUpHandle)
+    beforeDestroy(){
+        this.$refs.table.$el.removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber,

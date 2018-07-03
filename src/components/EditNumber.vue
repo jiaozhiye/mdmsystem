@@ -11,8 +11,7 @@
             :disabled="disabled"
             @input.native="handleInput($event, $event.target.value)"
             @change="handleChange"
-            @blur="blurHandle"
-            @click.native.stop>
+            @blur="blurHandle">
         </el-input-number>
     </div>
 </el-tooltip>

@@ -29,7 +29,6 @@
         <div class="appManager-list fixedTable-list">
             <el-table
                 ref="materialTable"
-                class="material-table"
                 :data="tableList" 
                 border 
                 v-loading="loading"
@@ -134,7 +133,7 @@ export default {
                     }
                 }
                 this.tableList.forEach((item, key) => {
-                    if (item.isEdit){ // 追加高亮 class
+                    if (item.isCurrent){ // 追加高亮 class
                         for (let i = 0; i < aTboays.length; i++){
                             aTboays[i].children[key].classList.add('current-row')
                         }
@@ -150,7 +149,8 @@ export default {
         },
         getCheckedKeys(){
             // 重置选中树的ID数组 - 过滤掉一级二级分类
-            this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
+            // this.checkedKeys = this.$refs.tree.getCheckedKeys(true)
+            this.checkedKeys = this.$refs.tree.getCheckedNodes().filter(item => item.isEdit).map(item => item.id)
             // console.log(this.checkedKeys)
         },
         setCheckedKeys(){
@@ -169,6 +169,8 @@ export default {
                     recursionTree(trees.data.tree, item => {
                         item.number = 1
                         item.remark = ''
+                        // 是否高亮
+                        item.isCurrent = !0
                     })
                     this.list = trees.data.tree
                 }
@@ -177,7 +179,7 @@ export default {
                     
                     // 处理 number
                     this.tableList.forEach(item => {
-                        item.isEdit = !1
+                        item.isCurrent = !1
                         if (item.number < 1) item.number = 1
                     })
                     // 把编辑过的原材料同步到左侧树
@@ -261,7 +263,7 @@ export default {
         keyUpHandle(event){
             event.stopPropagation()
             if (event.keyCode === 13 && event.target.classList.value.search('el-input__inner') !== -1){
-                const inputNumberArr = Array.from(document.querySelectorAll('.material-table > .el-table__body-wrapper .el-input__inner'))
+                const inputNumberArr = Array.from(this.$refs.materialTable.$el.querySelectorAll('.el-table__body-wrapper .el-input__inner'))
                 let index = inputNumberArr.findIndex(item => item === event.target)
                 if (index === -1){
                     return
@@ -278,10 +280,10 @@ export default {
         this.getAllData()
     },
     mounted(){
-        document.querySelector('.material-table').addEventListener('keyup', this.keyUpHandle, false)
+        this.$refs.materialTable.$el.addEventListener('keyup', this.keyUpHandle, false)
     },
-    destroyed(){
-        document.querySelector('.material-table').removeEventListener('keyup', this.keyUpHandle)
+    beforeDestroy(){
+        this.$refs.materialTable.$el.removeEventListener('keyup', this.keyUpHandle)
     },
     components: {
         EditNumber

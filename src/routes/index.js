@@ -74,7 +74,7 @@ const routes = {
         },
         {
             path: '/sys_setting/mtype_manager',
-            name: 'StuffTypeManager', // 商品设置 -> 商品原材料管理
+            name: 'StuffTypeManager', // 商品设置 -> 商品原材料类别管理
             component: StuffTypeManager
         },
         {
