@@ -13,7 +13,9 @@ module.exports = {
     port: 8080,
 
     // Source Maps
-    devtool: 'cheap-module-eval-source-map'
+    devtool: 'cheap-module-eval-source-map',
+    cacheBusting: true,
+    cssSourceMap: true
   },
 
   build: {
@@ -27,7 +29,7 @@ module.exports = {
     assetsPublicPath: './',
 
     // Source Maps
-    productionSourceMap: true,
+    productionSourceMap: false,
     devtool: '#source-map'
   }
 }

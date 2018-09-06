@@ -86,7 +86,7 @@ import EditNumber from './EditNumber.vue'
 import { mapActions, mapState } from 'vuex'
 
 import { recursionTree } from 'assets/js/tools'
-import { getMaterialInventoryTree, saveInventoryMaterial } from 'api'
+import { getMaterialInventoryTree, saveInventoryMaterial, checkReceiveDepot } from 'api'
 
 export default {
     name: 'InventoryManager',
@@ -162,6 +162,19 @@ export default {
         handleCurrentChange(index){
             this.pagination.number = index
             this.excuPagination()
+        },
+        async isReceiveDepot(){
+            try {
+                const response = await checkReceiveDepot()
+                if (response.data.code == 1){
+                    
+                } else {
+                    this.$message.error(response.data.message)
+                    setTimeout(() => this.$router.push({path: '/storer_manager/store_receive_material'}), 400) 
+                }
+            } catch (err){
+                console.error(err)
+            }
         },
         async getMaterialsTree(callback){
             try {
@@ -243,6 +256,7 @@ export default {
     created(){
         // 先获取原材料树
         this.getMaterialsTree()
+        this.isReceiveDepot()
     },
     mounted(){
         this.$refs.table.$el.addEventListener('keyup', this.keyUpHandle, false)

@@ -2,6 +2,7 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('./webpack.conf')
+const vueLoaderConfig = require('./vue-loader.conf')
 
 const env = process.env.NODE_ENV
 
@@ -34,7 +35,8 @@ module.exports = {
     module: {
         rules: [{
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: vueLoaderConfig
             },
             {
                 test: /\.js$/,

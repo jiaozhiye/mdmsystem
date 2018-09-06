@@ -61,10 +61,12 @@
                 <el-table-column prop="name" label="原材料名称" min-width="200" fixed></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit" label="单位" width="80"></el-table-column>
-                <el-table-column prop="nextOneNum" label="明日预计数量" width="110"></el-table-column>
+                <!-- <el-table-column prop="nextOneNum" label="明日预计数量" width="110"></el-table-column>
                 <el-table-column prop="nextOneGetNum" label="明日到货数量" width="110"></el-table-column>
                 <el-table-column prop="nextTwoNum" label="后天预计数量" width="110"></el-table-column>
-                <el-table-column prop="nextTwoGetNum" label="后天到货数量" width="110"></el-table-column>
+                <el-table-column prop="nextTwoGetNum" label="后天到货数量" width="110"></el-table-column> -->
+                <el-table-column prop="out_unit" label="出货单位" width="80"></el-table-column>
+                <el-table-column prop="out_number" label="原始出货数量" width="110"></el-table-column>
                 <el-table-column prop="actual_order" label="预计订货数量" width="110"></el-table-column>
                 <el-table-column prop="stock" label="库存数量" width="80"></el-table-column>
                 <el-table-column label="需要订货数量" width="140">

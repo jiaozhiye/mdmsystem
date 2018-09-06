@@ -516,7 +516,10 @@ export const getStoreConditionInfo = () => instance.get('mgr/dict/showList3?dict
 
 // 添加原材料的单位数组
 export const getMaterialUnitInfo = () => instance.get('mgr/dict/getUnit?dict=material')
-// 156
+
+// 盘点前时候否需要接收入库
+export const checkReceiveDepot = () => instance.get('mgr/storeStock/isAllow')
+// 157
 
 
 
