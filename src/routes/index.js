@@ -100,8 +100,7 @@ const routes = {
         // 店长管理
         {
             path: '/storer_manager',
-            name: 'DayOrderManager', // 订单管理 -> 日订单
-            component: DayOrderManager
+            redirect: '/storer_manager/day_order',
         },
         // {
         //     path: '/storer_manager/imp_sale',
@@ -162,8 +161,7 @@ const routes = {
         // 安全存量
         {
             path: '/sstock_manager',
-            name: 'StockManager', // 安全存量 -> 预估
-            component: StockManager
+            redirect: '/sstock_manager/budget_manager',
         },
         {
             path: '/sstock_manager/budget_manager',
@@ -173,8 +171,7 @@ const routes = {
         // 物流管理
         {
             path: '/logistics_manager',
-            name: 'LogisticsManager', // 订单管理 -> 门店订单
-            component: LogisticsManager
+            redirect: '/logistics_manager/logistics_store_order',
         },
         {
             path: '/logistics_manager/logistics_store_order',
@@ -215,8 +212,7 @@ const routes = {
         // 库存管理
         {
             path: '/stock_manager_1',
-            name: 'DepotManager', // 基础管理 -> 仓库管理
-            component: DepotManager
+            redirect: '/stock_manager_1/Warehouse_manager_3',
         },
         {
             path: '/stock_manager_1/Warehouse_manager_3',

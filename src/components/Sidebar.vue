@@ -1,6 +1,6 @@
 <template>
     <el-menu router unique-opened class="app-sidebar-menu" 
-        :default-active="getNavActive.hash" 
+        :default-active="$route.path" 
         background-color="#273240" 
         text-color="#fff" 
         active-text-color="#ffd04b">
@@ -23,49 +23,13 @@ import {getUrlHash} from 'assets/js/tools'
 export default {
     name: 'Sidebar',
     data(){
-        return {
-            menuItemList: []
-        }
+        return {}
     },
     computed: {
         ...mapGetters([
             'getNavInfo',
             'getNavActive'
         ])
-    },
-    watch: {
-        getNavActive (newVal, oldVal){
-            if (getUrlHash().split('/').length < 3){
-                this.$nextTick(() => {
-                    this.getDomList()
-                    this.bindEvent(this.menuItemList)
-                    this.toggleNavStyle(this.menuItemList, 0)
-                })
-            }
-        }
-    },
-    methods: {
-        getDomList(){
-            this.menuItemList = this.$el.getElementsByClassName('el-menu-item')
-        },
-        toggleNavStyle(arr, index){
-            for (let i = 0; i < arr.length; i++){
-                arr[i].classList.remove('is-active')
-                arr[i].style.color = 'rgb(255, 255, 255)'
-            }
-            arr[index].classList.add('is-active')
-            arr[index].style.color = 'rgb(255, 208, 75)'
-        },
-        bindEvent(arr){
-            const _this = this
-            for (let i = 0; i < arr.length; i++){
-                arr[i].index = i
-                arr[i].onclick = function(ev){
-                    // ev.stopPropagation()
-                    _this.toggleNavStyle(arr, this.index)
-                }
-            }
-        }
     }
 }
 </script>

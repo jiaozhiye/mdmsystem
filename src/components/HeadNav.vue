@@ -1,7 +1,7 @@
 <template>
 <nav class="head-nav">
    <ul class="clearFix">
-        <li v-for="(item, key) in list" :key="key" :class="{active: key == curIndex}">
+        <li v-for="(item, key) in list" :key="key" :class="{active: routerPath.indexOf(item.link) != -1}">
             <router-link :to="item.link">
                 <i class="icon" :class="'graph-' + item.iconName"></i>
                 <span>{{ item.title }}</span>
@@ -20,23 +20,21 @@ export default {
     name: 'HeadNav',
     data(){
         return {
-            curIndex: 0, // 当前一级分类索引
-            defaultDir: 'sys_setting', // 默认跳转的一级分类
-            parentDepth: '', // 父级元素的深度
+            defaultDir: '/sys_setting', // 默认跳转的一级分类
             list: []
         }
     },
     created(){
-        this.getMenuList(() => {
-            this.iterFunc(this.list, '')
-            this.setNavInfo()
-        })
+        this.getMenuList(() => this.setNavInfo())
+    },
+    computed: {
+        routerPath(){
+            return this.$route.path
+        }
     },
     watch: {
         $route(to, from){
-            if (this.list.length > 0 && to.path.split('/').length < 3){
-                this.setNavInfo()
-            }
+            this.setNavInfo()
         }
     },
     methods: {
@@ -50,7 +48,9 @@ export default {
                 // console.log(response.data.list)
                 if (response.data.code == 1){
                     this.list = response.data.list
-                    this.defaultDir = response.data.defaultLink
+                    let defaultDir = response.data.defaultLink || this.defaultDir
+                    // 生成可访问的路由表
+                    this.$router.addRoutes([{ path: '*', redirect: defaultDir }])
                     callback && callback()
                 } else {
                     console.error(response.data.message)
@@ -60,48 +60,12 @@ export default {
             }
         },
         setNavInfo(){
-            // 处理 hash 值
-            let _hash = getUrlHash() 
-            if (_hash == '/'){
-                window.location.hash = _hash = this.defaultDir
-            }
-            // 获取一级分类索引
-            this.curIndex = this.list.findIndex(item => item.link === '/' + _hash.split('/')[1])
-            if (this.curIndex === -1){
-                return
+            let curNavObj = this.list.find(item => item.link === '/' + this.routerPath.split('/')[1])
+            if (!curNavObj){
+                curNavObj = this.list[0] || []
             }
             // vuex 设置导航菜单信息
-            this.createNavInfo(this.list[this.curIndex].list)
-            if (_hash.split('/').length < 3 || _hash.split('/')[2] == ''){
-                _hash = this.list[this.curIndex].list[0].list[0].link
-            }
-            // 获取父元素的深度
-            this.findParDepth(this.list, _hash)
-            // console.log(_hash, this.parentDepth)
-            // vuex 切换导航菜单选中状态
-            this.changeNavtActive({
-                hash: _hash,
-                depth: this.parentDepth
-            })
-        },
-        iterFunc(arr, str){
-            for (let i = 0; i < arr.length; i++){
-                arr[i].depth = str + i
-                if (_.isArray(arr[i].list)){
-                    this.iterFunc(arr[i].list, arr[i].depth + '-')
-                }
-            }
-        },
-        findParDepth(arr, str){
-            for (let i = 0; i < arr.length; i++){
-                if (arr[i].link === str){
-                    this.parentDepth = arr[i].depth.slice(0, -2)
-                } else {
-                    if (_.isArray(arr[i].list)){
-                        this.findParDepth(arr[i].list, str)
-                    }
-                }
-            }
+            this.createNavInfo(curNavObj.list)
         }
     }
 }
