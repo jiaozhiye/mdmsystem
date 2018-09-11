@@ -7,7 +7,6 @@
 const state = {
     personalInfo: {},
     navInfo: [],
-    defaultActive: {},
     btnLoading: false, // 按钮的加载中状态
     isLeaveRemind: false // true -> 开启提醒     false -> 关闭提醒
 }

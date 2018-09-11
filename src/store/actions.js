@@ -19,12 +19,6 @@ const actions = {
             info: params
         })
     },
-    changeNavtActive ({commit}, params){
-        commit({
-            type: types.NAVACTIVE,
-            info: params
-        })
-    },
     setBtnLoading ({commit}, params){
         commit({
             type: types.BUTTON_LOADING,

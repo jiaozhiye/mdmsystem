@@ -48,7 +48,7 @@
                 <el-table-column prop="name" label="原材料名称" min-width="200" sortable></el-table-column>
                 <el-table-column prop="code" label="原材料编码" width="100"></el-table-column>
                 <el-table-column prop="unit_text" label="单位" width="80"></el-table-column>
-                <!-- <el-table-column prop="attribute_2" label="规格" width="100"></el-table-column> -->
+                <el-table-column prop="attribute_2" label="规格" width="100"></el-table-column>
                 <el-table-column prop="stock" label="历史库存" width="80"></el-table-column>
                 <el-table-column label="库存数量" width="140">
                     <template slot-scope="scope">

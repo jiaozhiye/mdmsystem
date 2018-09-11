@@ -38,10 +38,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([
-            'createNavInfo',
-            'changeNavtActive'
-        ]),
+        ...mapActions(['createNavInfo']),
         async getMenuList(callback){
             try {
                 const response = await getMenuInfo()

@@ -13,9 +13,6 @@ const mutations = {
     [types.NAVINFO](state, payload){
         state.navInfo = payload.info
     },
-    [types.NAVACTIVE](state, payload){
-        state.defaultActive = payload.info
-    },
     [types.BUTTON_LOADING](state, payload){
         state.btnLoading = payload.info
     },

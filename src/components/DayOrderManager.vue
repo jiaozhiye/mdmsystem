@@ -141,6 +141,12 @@ export default {
             this.form.wantDate = moment().format('YYYY-MM-DD')
             this.form.arriveDate = moment().add(3, 'day').format('YYYY-MM-DD')
         },
+        confirmHandle(){
+            this.$alert('订货前请先盘点库存，否则会影响订货数据！', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {}
+            })
+        },
         asyncTableList(){
             let _arr = []
             recursionTree(this.list, (item) => {
@@ -258,6 +264,7 @@ export default {
         this.initDateFn()
         this.getGoodsTree()
         this.getOrderTypeList()
+        this.confirmHandle()
     },
     mounted(){
         this.$refs.table.$el.addEventListener('keyup', this.keyUpHandle, false)

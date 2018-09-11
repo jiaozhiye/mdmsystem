@@ -10,9 +10,6 @@ const getters = {
     },
     getNavInfo (state){
         return state.navInfo
-    },
-    getNavActive (state){
-        return state.defaultActive
     }
 }
 

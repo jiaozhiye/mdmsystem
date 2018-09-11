@@ -6,6 +6,5 @@
  */
 export const PERSONAL = 'PERSONAL'
 export const NAVINFO = 'NAVINFO'
-export const NAVACTIVE = 'NAVACTIVE'
 export const BUTTON_LOADING = 'BUTTON_LOADING'
 export const LEAVE_REMIND = 'LEAVE_REMIND'

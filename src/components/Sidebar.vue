@@ -26,10 +26,7 @@ export default {
         return {}
     },
     computed: {
-        ...mapGetters([
-            'getNavInfo',
-            'getNavActive'
-        ])
+        ...mapGetters(['getNavInfo'])
     }
 }
 </script>
